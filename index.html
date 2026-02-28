@@ -559,7 +559,7 @@ window.addEventListener('load',async()=>{
 });
 
 function loginWithDiscord(){
-  window.location.href=`https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify%20guilds.members.read`;
+  window.location.href=`https://discord.com/oauth2/authorize?client_id=1477279042230157404&response_type=code&redirect_uri=+https%3A%2F%2Fjojolm24.github.io%2Fbeta-dev%2F&scope=identify+guilds.members.read+guilds.channels.read+guilds`;
 }
 
 async function fetchUser(token){
