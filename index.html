@@ -539,21 +539,40 @@ function goHome(){showPage('page-home');}
 function showSection(s){showPage({'features':'page-features','about':'page-about','reviews':'page-reviews'}[s]||'page-home');}
 function openDash(){if(!CU){loginWithDiscord();return;}showPage('page-dashboard');refreshDash();}
 
-// DISCORD AUTH
-window.addEventListener('load',async()=>{
-  const h=window.location.hash;
-  const p=new URLSearchParams(h.startsWith('#')?h.slice(1):'');
-  const tk=p.get('access_token');
+// DISCORD AUTH — runs as early as possible, before any rendering
+(function detectToken(){
+  // Discord returns: https://your-uri/#access_token=TOKEN&token_type=Bearer&...
+  const raw = window.location.hash || '';
+  // Sometimes GitHub Pages URL-encodes the hash — decode it first
+  const decoded = decodeURIComponent(raw);
+  const str = decoded.startsWith('#') ? decoded.slice(1) : decoded;
+  const params = new URLSearchParams(str);
+  const tk = params.get('access_token');
   if(tk){
-    sessionStorage.setItem('dct',tk);
-    history.replaceState(null,'',window.location.pathname);
-    await fetchUser(tk);
-    openDash();return;
+    // Save immediately before any history manipulation
+    sessionStorage.setItem('dct', tk);
+    sessionStorage.setItem('dc_pending_dash', '1');
+    // Clean URL without reloading
+    try { history.replaceState(null, '', window.location.pathname); } catch(e){}
   }
-  const sv=sessionStorage.getItem('dcu');
+})();
+
+window.addEventListener('DOMContentLoaded', async () => {
+  const tk = sessionStorage.getItem('dct');
+  const pendingDash = sessionStorage.getItem('dc_pending_dash');
+
+  if(tk && pendingDash){
+    sessionStorage.removeItem('dc_pending_dash');
+    await fetchUser(tk);
+    openDash();
+    return;
+  }
+
+  // Restore existing session
+  const sv = sessionStorage.getItem('dcu');
   if(sv){
-    CU=JSON.parse(sv);
-    isStaff=sessionStorage.getItem('dcs')==='true';
+    CU = JSON.parse(sv);
+    isStaff = sessionStorage.getItem('dcs') === 'true';
     updateNav();
   }
 });
