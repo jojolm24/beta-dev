@@ -762,7 +762,7 @@ const saveTk = () => localStorage.setItem('dctk', JSON.stringify(tickets));
 // ═══════════════════════════════════════════════
 function loginWithDiscord(){
   // Only use 'identify' scope — guilds.members.read requires special OAuth2 verification
-  const url = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify`;
+  const url = `https://discord.com/oauth2/authorize?client_id=1477279042230157404&response_type=code&redirect_uri=+https%3A%2F%2Fjojolm24.github.io%2Fbeta-dev%2F&scope=identify+guilds.members.read+guilds.channels.read+guilds`;
   window.location.href = url;
 }
 
