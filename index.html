@@ -6,1048 +6,808 @@
 <title>Dev Center</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0a0d1a;
-    --bg2: #0f1326;
-    --card: #131728;
-    --border: rgba(99,102,241,0.18);
-    --accent: #6366f1;
-    --accent2: #a855f7;
-    --accent3: #22d3ee;
-    --text: #e2e8f0;
-    --muted: #8892b0;
-    --green: #4ade80;
-    --gold: #fbbf24;
-  }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  html { scroll-behavior: smooth; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Syne', sans-serif;
-    overflow-x: hidden;
-  }
+:root{
+  --bg:#07080f;--bg2:#0b0d1a;--bg3:#0f1220;
+  --card:#10131f;--card2:#141828;
+  --border:rgba(255,255,255,0.06);--border2:rgba(99,102,241,0.22);
+  --accent:#6366f1;--accent2:#a855f7;--accent3:#22d3ee;
+  --text:#e8ecf4;--muted:#7a85a3;
+  --green:#4ade80;--red:#f87171;--gold:#fbbf24;
+  --sidebar-w:240px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;overflow-x:hidden;min-height:100vh;}
+#orb-canvas{position:fixed;inset:0;pointer-events:none;z-index:0;}
+body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:1;}
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
 
-  /* NOISE OVERLAY */
-  body::before {
-    content:'';
-    position:fixed; inset:0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-    pointer-events:none; z-index:999; opacity:.4;
-  }
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 5%;height:68px;background:rgba(7,8,15,0.85);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
+.nav-logo{display:flex;align-items:center;gap:10px;font-size:1.25rem;font-weight:800;color:#fff;text-decoration:none;letter-spacing:-0.5px;cursor:pointer;}
+.nav-links{display:flex;gap:2rem;list-style:none;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:.88rem;font-weight:600;transition:color .2s;cursor:pointer;}
+.nav-links a:hover{color:#fff;}
+.nav-actions{display:flex;gap:.7rem;align-items:center;}
+#nav-user{display:flex;align-items:center;gap:.6rem;}
+#nav-avatar{width:32px;height:32px;border-radius:50%;border:2px solid var(--border2);}
+#nav-user-name{font-size:.88rem;font-weight:700;}
 
-  /* GLOW ORBS */
-  .orb {
-    position:fixed; border-radius:50%;
-    filter: blur(120px); pointer-events:none; z-index:0;
-  }
-  .orb1 { width:500px; height:500px; background:rgba(99,102,241,0.12); top:-100px; left:-100px; }
-  .orb2 { width:400px; height:400px; background:rgba(168,85,247,0.08); bottom:-100px; right:-50px; }
-  .orb3 { width:300px; height:300px; background:rgba(34,211,238,0.06); top:50%; left:50%; transform:translate(-50%,-50%); }
+.btn{padding:.55rem 1.3rem;border-radius:8px;font-family:'Syne',sans-serif;font-weight:700;font-size:.85rem;cursor:pointer;border:none;transition:all .2s;text-decoration:none;display:inline-flex;align-items:center;gap:.5rem;}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;box-shadow:0 0 20px rgba(99,102,241,0.25);}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 0 35px rgba(99,102,241,0.45);}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text);}
+.btn-outline:hover{border-color:var(--accent);color:#fff;}
+.btn-discord{background:#5865F2;color:#fff;}
+.btn-discord:hover{background:#4752c4;transform:translateY(-1px);}
+.btn-sm{padding:.35rem .9rem;font-size:.78rem;}
+.btn-danger{background:rgba(248,113,113,0.1);color:var(--red);border:1px solid rgba(248,113,113,0.3);}
+.btn-danger:hover{background:rgba(248,113,113,0.2);}
+.btn-success{background:rgba(74,222,128,0.1);color:var(--green);border:1px solid rgba(74,222,128,0.3);}
+.btn-success:hover{background:rgba(74,222,128,0.2);}
+.btn-warning{background:rgba(251,191,36,0.1);color:var(--gold);border:1px solid rgba(251,191,36,0.3);}
+.btn-warning:hover{background:rgba(251,191,36,0.2);}
 
-  /* NAV */
-  nav {
-    position: fixed; top:0; left:0; right:0; z-index:100;
-    display:flex; align-items:center; justify-content:space-between;
-    padding: 0 5%; height: 70px;
-    background: rgba(10,13,26,0.85);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border);
-  }
-  .nav-logo {
-    display:flex; align-items:center; gap:10px;
-    font-size:1.3rem; font-weight:800; color:#fff;
-    text-decoration:none; letter-spacing:-0.5px;
-  }
-  .nav-logo svg { width:28px; height:28px; }
-  .nav-links {
-    display:flex; gap:2rem; list-style:none;
-  }
-  .nav-links a {
-    color: var(--muted); text-decoration:none;
-    font-size:.9rem; font-weight:600;
-    transition: color .2s;
-    letter-spacing:.3px;
-  }
-  .nav-links a:hover { color:#fff; }
-  .nav-actions { display:flex; gap:.8rem; align-items:center; }
+.page{display:none;position:relative;z-index:2;}
+.page.active{display:block;}
 
-  /* BUTTONS */
-  .btn {
-    padding: .55rem 1.3rem; border-radius: 8px;
-    font-family:'Syne',sans-serif; font-weight:700;
-    font-size:.85rem; cursor:pointer;
-    border:none; transition: all .2s;
-    text-decoration:none; display:inline-flex; align-items:center; gap:.5rem;
-  }
-  .btn-primary {
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    color:#fff;
-    box-shadow: 0 0 20px rgba(99,102,241,0.3);
-  }
-  .btn-primary:hover { transform:translateY(-1px); box-shadow: 0 0 30px rgba(99,102,241,0.5); }
-  .btn-outline {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--text);
-  }
-  .btn-outline:hover { border-color: var(--accent); color:#fff; }
-  .btn-discord {
-    background: #5865F2;
-    color:#fff;
-    box-shadow: 0 0 20px rgba(88,101,242,0.3);
-  }
-  .btn-discord:hover { background:#4752c4; transform:translateY(-1px); }
+/* HERO */
+.hero{min-height:100vh;display:flex;align-items:center;padding:120px 5% 80px;position:relative;}
+.hero-content{max-width:600px;}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.25);padding:.4rem 1rem;border-radius:100px;font-size:.78rem;font-weight:700;color:var(--accent3);margin-bottom:2rem;letter-spacing:.5px;animation:fadeUp .6s ease both;}
+.hero h1{font-size:clamp(2.6rem,4.5vw,4.2rem);font-weight:800;line-height:1.1;letter-spacing:-2px;margin-bottom:1.5rem;animation:fadeUp .6s .1s ease both;}
+.hero h1 .hl{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero p{font-family:'Space Mono',monospace;font-size:.88rem;color:var(--muted);line-height:1.75;margin-bottom:2.5rem;max-width:480px;animation:fadeUp .6s .2s ease both;}
+.hero-cta{display:flex;gap:1rem;flex-wrap:wrap;animation:fadeUp .6s .3s ease both;}
+.hero-terminal{position:absolute;right:5%;top:50%;transform:translateY(-50%);width:400px;background:#080b14;border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:0 40px 80px rgba(0,0,0,.7),0 0 60px rgba(99,102,241,0.08);animation:fadeUp .6s .4s ease both;}
+.term-head{background:#0e1120;padding:.75rem 1rem;display:flex;align-items:center;gap:.5rem;border-bottom:1px solid var(--border);}
+.dot{width:11px;height:11px;border-radius:50%;}
+.dot-r{background:#ff5f56;}.dot-y{background:#ffbd2e;}.dot-g{background:#27c93f;}
+.term-title{margin-left:auto;font-family:'Space Mono',monospace;font-size:.72rem;color:var(--muted);}
+.term-body{padding:1.2rem;font-family:'Space Mono',monospace;font-size:.8rem;line-height:1.9;}
+.t-p{color:var(--accent3);}.t-c{color:var(--accent2);font-weight:700;}
+.t-o{color:var(--muted);padding-left:1rem;}.t-s{color:var(--green);}
+.t-cur{display:inline-block;width:7px;height:.9rem;background:var(--accent);vertical-align:middle;animation:blink 1s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 
-  /* HERO */
-  .hero {
-    min-height: 100vh;
-    display:flex; align-items:center;
-    padding: 120px 5% 80px;
-    position:relative; z-index:1;
-  }
-  .hero-content { max-width:620px; }
-  .hero-badge {
-    display:inline-flex; align-items:center; gap:.5rem;
-    background: rgba(99,102,241,0.1);
-    border: 1px solid rgba(99,102,241,0.3);
-    padding:.4rem 1rem; border-radius:100px;
-    font-size:.8rem; font-weight:700; color: var(--accent3);
-    margin-bottom:2rem; letter-spacing:.5px;
-  }
-  .hero h1 {
-    font-size: clamp(2.8rem, 5vw, 4.5rem);
-    font-weight:800; line-height:1.1;
-    letter-spacing:-2px; margin-bottom:1.5rem;
-  }
-  .hero h1 .highlight {
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-    background-clip:text;
-  }
-  .hero p {
-    font-size:1.05rem; color:var(--muted); line-height:1.7;
-    margin-bottom:2.5rem; max-width:500px;
-    font-family:'Space Mono', monospace; font-size:.9rem;
-  }
-  .hero-cta { display:flex; gap:1rem; flex-wrap:wrap; }
+section{position:relative;z-index:2;}
+.sh{text-align:center;margin-bottom:4rem;}
+.stag{display:inline-block;background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.25);color:var(--accent);font-size:.73rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:.3rem .85rem;border-radius:100px;margin-bottom:.9rem;}
+.sh h2{font-size:clamp(1.7rem,3vw,2.6rem);font-weight:800;letter-spacing:-1px;}
+.sh p{color:var(--muted);margin-top:.6rem;font-family:'Space Mono',monospace;font-size:.82rem;}
 
-  /* TERMINAL */
-  .hero-terminal {
-    position:absolute; right:5%; top:50%; transform:translateY(-50%);
-    width:420px;
-    background: #0d1017;
-    border:1px solid var(--border);
-    border-radius:14px;
-    overflow:hidden;
-    box-shadow: 0 40px 80px rgba(0,0,0,.6), 0 0 60px rgba(99,102,241,0.1);
-  }
-  .terminal-header {
-    background: #161b27;
-    padding:.8rem 1rem;
-    display:flex; align-items:center; gap:.6rem;
-    border-bottom:1px solid var(--border);
-  }
-  .dot { width:12px; height:12px; border-radius:50%; }
-  .dot-r { background:#ff5f56; }
-  .dot-y { background:#ffbd2e; }
-  .dot-g { background:#27c93f; }
-  .terminal-title {
-    margin-left:auto; font-family:'Space Mono',monospace;
-    font-size:.75rem; color:var(--muted);
-  }
-  .terminal-body {
-    padding:1.2rem 1.2rem;
-    font-family:'Space Mono',monospace; font-size:.82rem;
-    line-height:1.8;
-  }
-  .t-prompt { color: var(--accent3); }
-  .t-cmd { color: var(--accent2); font-weight:700; }
-  .t-out { color: var(--muted); padding-left:1.2rem; }
-  .t-success { color: var(--green); }
-  .t-cursor {
-    display:inline-block; width:8px; height:1rem;
-    background: var(--accent); vertical-align:middle;
-    animation: blink 1s infinite;
-  }
-  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+/* PRICING */
+.pricing-cats{display:flex;flex-direction:column;gap:5rem;}
+.cat-title{display:flex;align-items:center;gap:1rem;font-size:1.1rem;font-weight:800;margin-bottom:2rem;color:var(--muted);}
+.cat-title::before,.cat-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);}
+.pg{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:1.5rem;}
+.pc{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;position:relative;transition:all .3s;overflow:hidden;}
+.pc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:0;transition:.3s;}
+.pc:hover{border-color:rgba(99,102,241,0.35);transform:translateY(-4px);}
+.pc:hover::before{opacity:1;}
+.pc.pop{border-color:rgba(168,85,247,.35);box-shadow:0 0 40px rgba(168,85,247,0.06);}
+.pc.pop::before{opacity:1;background:linear-gradient(90deg,transparent,var(--accent2),transparent);}
+.pop-badge{position:absolute;top:1rem;right:1rem;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:.68rem;font-weight:700;padding:.22rem .65rem;border-radius:100px;letter-spacing:.4px;}
+.pc-icon{margin-bottom:1rem;}.pc-name{font-size:1.25rem;font-weight:800;margin-bottom:.25rem;}
+.pc-req{font-size:.78rem;color:var(--muted);font-family:'Space Mono',monospace;margin-bottom:.4rem;}
+.pc-price{font-size:1rem;font-weight:700;color:var(--accent3);margin-bottom:1.4rem;font-family:'Space Mono',monospace;}
+.pc-features{list-style:none;margin-bottom:1.8rem;display:flex;flex-direction:column;gap:.55rem;}
+.pc-features li{display:flex;align-items:center;gap:.55rem;font-size:.86rem;color:var(--muted);}
 
-  /* SECTIONS */
-  section { position:relative; z-index:1; }
-  .section-header {
-    text-align:center; margin-bottom:4rem;
-  }
-  .section-tag {
-    display:inline-block;
-    background:rgba(99,102,241,0.1);
-    border:1px solid rgba(99,102,241,0.3);
-    color:var(--accent); font-size:.75rem; font-weight:700;
-    letter-spacing:2px; text-transform:uppercase;
-    padding:.35rem .9rem; border-radius:100px; margin-bottom:1rem;
-  }
-  .section-header h2 {
-    font-size:clamp(1.8rem,3vw,2.8rem);
-    font-weight:800; letter-spacing:-1px;
-  }
-  .section-header p {
-    color:var(--muted); margin-top:.8rem;
-    font-family:'Space Mono',monospace; font-size:.85rem;
-  }
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;}
+.about-content h2{font-size:clamp(1.7rem,3vw,2.6rem);font-weight:800;letter-spacing:-1px;margin-bottom:1.5rem;line-height:1.2;}
+.about-content p{color:var(--muted);line-height:1.8;margin-bottom:1.1rem;font-size:.93rem;}
+.about-stats{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-top:2.5rem;}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.4rem;text-align:center;}
+.stat-num{font-size:1.9rem;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.stat-label{font-size:.76rem;color:var(--muted);margin-top:.25rem;}
+.about-cards{display:flex;flex-direction:column;gap:.9rem;}
+.afc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.4rem;display:flex;gap:.9rem;align-items:flex-start;transition:.3s;}
+.afc:hover{border-color:rgba(99,102,241,.35);}
+.afc-icon{background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,.18);border-radius:9px;padding:.65rem;color:var(--accent);flex-shrink:0;}
+.afc h4{font-size:.95rem;font-weight:700;margin-bottom:.25rem;}
+.afc p{font-size:.82rem;color:var(--muted);line-height:1.6;}
 
-  /* PRICING */
-  #fonctionnalites {
-    padding: 100px 5%;
-    background: linear-gradient(180deg, var(--bg) 0%, var(--bg2) 50%, var(--bg) 100%);
-  }
-  .pricing-categories { display:flex; flex-direction:column; gap:5rem; }
-  .pricing-category-title {
-    display:flex; align-items:center; gap:1rem;
-    font-size:1.2rem; font-weight:800; margin-bottom:2rem;
-    color: var(--muted);
-  }
-  .pricing-category-title::before, .pricing-category-title::after {
-    content:''; flex:1; height:1px;
-    background: linear-gradient(90deg, transparent, var(--border), transparent);
-  }
-  .pricing-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
-  }
-  .pricing-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius:16px; padding:2rem;
-    position:relative; transition: all .3s;
-    overflow:hidden;
-  }
-  .pricing-card::before {
-    content:''; position:absolute;
-    top:0; left:0; right:0; height:2px;
-    background: linear-gradient(90deg, transparent, var(--accent), transparent);
-    opacity:0; transition:.3s;
-  }
-  .pricing-card:hover { border-color: rgba(99,102,241,0.4); transform:translateY(-4px); }
-  .pricing-card:hover::before { opacity:1; }
-  .pricing-card.popular {
-    border-color: rgba(168,85,247,.4);
-    box-shadow: 0 0 40px rgba(168,85,247,0.08);
-  }
-  .pricing-card.popular::before { opacity:1; background: linear-gradient(90deg, transparent, var(--accent2), transparent); }
-  .popular-badge {
-    position:absolute; top:1rem; right:1rem;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    color:#fff; font-size:.7rem; font-weight:700;
-    padding:.25rem .7rem; border-radius:100px;
-    letter-spacing:.5px;
-  }
-  .plan-icon { font-size:1.5rem; margin-bottom:1rem; }
-  .plan-name { font-size:1.3rem; font-weight:800; margin-bottom:.3rem; }
-  .plan-req {
-    font-size:.8rem; color:var(--muted);
-    font-family:'Space Mono',monospace; margin-bottom:.5rem;
-  }
-  .plan-price {
-    font-size:1.1rem; font-weight:700;
-    color:var(--accent3); margin-bottom:1.5rem;
-    font-family:'Space Mono',monospace;
-  }
-  .plan-features { list-style:none; margin-bottom:2rem; display:flex; flex-direction:column; gap:.6rem; }
-  .plan-features li {
-    display:flex; align-items:center; gap:.6rem;
-    font-size:.88rem; color:var(--muted);
-  }
-  .check-icon { color:var(--green); flex-shrink:0; }
+/* REVIEWS */
+.rg{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:1.5rem;}
+.rc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.7rem;transition:.3s;}
+.rc:hover{border-color:rgba(99,102,241,.35);transform:translateY(-3px);}
+.rev-stars{display:flex;gap:.2rem;margin-bottom:.9rem;}
+.rev-text{color:var(--muted);font-size:.88rem;line-height:1.7;margin-bottom:1.4rem;}
+.rev-author{display:flex;align-items:center;gap:.75rem;}
+.rev-av{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.88rem;overflow:hidden;}
+.rev-av img{width:100%;height:100%;object-fit:cover;}
+.rev-name{font-weight:700;font-size:.88rem;}.rev-role{font-size:.75rem;color:var(--muted);}
+.rfwrap{margin-top:4rem;max-width:580px;margin-left:auto;margin-right:auto;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2.5rem;}
+.rfwrap h3{font-size:1.25rem;font-weight:800;margin-bottom:.4rem;}
+.rfwrap .sub{color:var(--muted);font-size:.82rem;margin-bottom:2rem;font-family:'Space Mono',monospace;}
+.fg{margin-bottom:1.1rem;}
+.fg label{display:block;font-size:.82rem;font-weight:600;margin-bottom:.45rem;color:var(--muted);}
+.fg input,.fg textarea,.fg select{width:100%;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:8px;padding:.7rem 1rem;color:var(--text);font-family:'Syne',sans-serif;font-size:.88rem;transition:.2s;outline:none;}
+.fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(99,102,241,.1);}
+.fg textarea{resize:vertical;min-height:110px;}
+.star-row{display:flex;gap:.4rem;margin-bottom:1.1rem;}
+.s-btn{background:none;border:none;cursor:pointer;color:var(--border);font-size:1.4rem;transition:.2s;}
+.s-btn.on,.s-btn:hover{color:var(--gold);}
+.login-req{text-align:center;padding:1.4rem;background:rgba(99,102,241,0.04);border:1px dashed rgba(99,102,241,.25);border-radius:10px;margin-bottom:1.4rem;font-size:.86rem;color:var(--muted);}
 
-  /* SVG ICONS */
-  .icon-check { width:16px; height:16px; }
-  .icon-discord { width:18px; height:18px; }
-  .icon-star { width:16px; height:16px; color:var(--gold); }
-  .icon-code { width:28px; height:28px; }
-  .icon-server { width:28px; height:28px; }
-  .icon-web { width:28px; height:28px; }
-  .icon-zap { width:14px; height:14px; }
+/* DASHBOARD */
+#page-dashboard{display:none;min-height:100vh;padding-top:68px;}
+#page-dashboard.active{display:flex;}
+.dash-sidebar{width:var(--sidebar-w);flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);padding:1.5rem 0;position:fixed;top:68px;bottom:0;left:0;overflow-y:auto;z-index:10;}
+.dash-logo{padding:.5rem 1.5rem 1.5rem;font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;}
+.dash-nav{list-style:none;}
+.dash-nav li a{display:flex;align-items:center;gap:.75rem;padding:.7rem 1.5rem;color:var(--muted);text-decoration:none;font-size:.88rem;font-weight:600;transition:all .2s;border-left:2px solid transparent;cursor:pointer;}
+.dash-nav li a:hover{color:var(--text);background:rgba(255,255,255,0.03);}
+.dash-nav li a.act{color:#fff;background:rgba(99,102,241,0.08);border-left-color:var(--accent);}
+.dbadge{margin-left:auto;background:var(--accent);color:#fff;font-size:.65rem;font-weight:700;padding:.15rem .5rem;border-radius:100px;}
+.dash-main{margin-left:var(--sidebar-w);flex:1;padding:2rem 2.5rem;min-height:calc(100vh - 68px);}
+.dp{display:none;}.dp.act{display:block;}
+.dash-title{font-size:1.5rem;font-weight:800;letter-spacing:-0.5px;margin-bottom:.4rem;}
+.dash-sub{color:var(--muted);font-size:.85rem;margin-bottom:2rem;font-family:'Space Mono',monospace;}
+.dc-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.2rem;margin-bottom:2.5rem;}
+.dc-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;}
+.dc-val{font-size:2rem;font-weight:800;margin-bottom:.3rem;}
+.dc-label{font-size:.78rem;color:var(--muted);}
+.dcv-a{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 
-  /* ABOUT */
-  #qui-sommes-nous { padding: 100px 5%; }
-  .about-grid {
-    display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:center;
-  }
-  .about-content h2 {
-    font-size:clamp(1.8rem,3vw,2.8rem); font-weight:800;
-    letter-spacing:-1px; margin-bottom:1.5rem; line-height:1.2;
-  }
-  .about-content p {
-    color:var(--muted); line-height:1.8; margin-bottom:1.2rem;
-    font-size:.95rem;
-  }
-  .about-stats {
-    display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;
-    margin-top:2.5rem;
-  }
-  .stat-card {
-    background:var(--card); border:1px solid var(--border);
-    border-radius:12px; padding:1.5rem;
-    text-align:center;
-  }
-  .stat-num {
-    font-size:2rem; font-weight:800;
-    background:linear-gradient(135deg, var(--accent), var(--accent2));
-    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-  }
-  .stat-label { font-size:.8rem; color:var(--muted); margin-top:.3rem; }
-  .about-cards { display:flex; flex-direction:column; gap:1rem; }
-  .about-feature-card {
-    background:var(--card); border:1px solid var(--border);
-    border-radius:12px; padding:1.5rem;
-    display:flex; gap:1rem; align-items:flex-start;
-    transition:.3s;
-  }
-  .about-feature-card:hover { border-color:rgba(99,102,241,.4); }
-  .about-icon {
-    background:rgba(99,102,241,0.1); border:1px solid rgba(99,102,241,.2);
-    border-radius:10px; padding:.7rem;
-    color:var(--accent); flex-shrink:0;
-  }
-  .about-feature-card h4 { font-size:1rem; font-weight:700; margin-bottom:.3rem; }
-  .about-feature-card p { font-size:.85rem; color:var(--muted); line-height:1.6; }
+/* TICKETS */
+.tk-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;}
+.tk-filters{display:flex;gap:.6rem;flex-wrap:wrap;}
+.fb{background:var(--card);border:1px solid var(--border);color:var(--muted);padding:.35rem .85rem;border-radius:100px;font-size:.78rem;font-weight:600;cursor:pointer;transition:.2s;font-family:'Syne',sans-serif;}
+.fb:hover,.fb.act{border-color:var(--accent);color:#fff;background:rgba(99,102,241,0.08);}
+.tk-list{display:flex;flex-direction:column;gap:.9rem;}
+.ti{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.2rem 1.5rem;display:flex;align-items:center;gap:1rem;cursor:pointer;transition:.2s;}
+.ti:hover{border-color:rgba(99,102,241,.3);background:var(--card2);}
+.ts{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.ts-o{background:var(--green);box-shadow:0 0 8px var(--green);}
+.ts-p{background:var(--gold);box-shadow:0 0 8px var(--gold);}
+.ts-c{background:var(--muted);}
+.ti-info{flex:1;}
+.ti-id{font-size:.72rem;color:var(--muted);font-family:'Space Mono',monospace;margin-bottom:.2rem;}
+.ti-title{font-size:.92rem;font-weight:700;margin-bottom:.2rem;}
+.ti-prev{font-size:.8rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:400px;}
+.ti-meta{text-align:right;flex-shrink:0;}
+.tcat{font-size:.7rem;font-weight:700;padding:.2rem .6rem;border-radius:100px;margin-bottom:.4rem;display:inline-block;}
+.tc-s{background:rgba(99,102,241,0.15);color:var(--accent);}
+.tc-c{background:rgba(168,85,247,0.15);color:var(--accent2);}
+.tc-b{background:rgba(248,113,113,0.15);color:var(--red);}
+.tc-a{background:rgba(34,211,238,0.15);color:var(--accent3);}
+.ti-time{font-size:.72rem;color:var(--muted);font-family:'Space Mono',monospace;}
+.ta-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;overflow:hidden;flex-shrink:0;}
+.ta-av img{width:100%;height:100%;object-fit:cover;}
+.ctf{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;max-width:600px;}
+.ctf-title{font-size:1.1rem;font-weight:800;margin-bottom:1.5rem;display:flex;align-items:center;gap:.6rem;}
 
-  /* AVIS / REVIEWS */
-  #avis { padding:100px 5%; background:var(--bg2); }
-  .reviews-grid {
-    display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-    gap:1.5rem;
-  }
-  .review-card {
-    background:var(--card); border:1px solid var(--border);
-    border-radius:14px; padding:1.8rem;
-    transition:.3s;
-  }
-  .review-card:hover { border-color:rgba(99,102,241,.4); transform:translateY(-3px); }
-  .review-stars { display:flex; gap:.2rem; margin-bottom:1rem; }
-  .review-text { color:var(--muted); font-size:.9rem; line-height:1.7; margin-bottom:1.5rem; }
-  .review-author { display:flex; align-items:center; gap:.8rem; }
-  .review-avatar {
-    width:40px; height:40px; border-radius:50%;
-    background:linear-gradient(135deg, var(--accent), var(--accent2));
-    display:flex; align-items:center; justify-content:center;
-    font-weight:800; font-size:.9rem;
-  }
-  .review-name { font-weight:700; font-size:.9rem; }
-  .review-role { font-size:.78rem; color:var(--muted); }
+/* MODALS */
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(12px);z-index:1000;display:none;align-items:center;justify-content:center;}
+.mo.act{display:flex;animation:mfade .2s ease;}
+@keyframes mfade{from{opacity:0}to{opacity:1}}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:2.5rem;max-width:500px;width:90%;text-align:center;position:relative;box-shadow:0 40px 80px rgba(0,0,0,.6);animation:mslide .3s cubic-bezier(.34,1.56,.64,1);}
+@keyframes mslide{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
+.mc{position:absolute;top:1rem;right:1rem;background:none;border:none;cursor:pointer;color:var(--muted);font-size:1.2rem;transition:.2s;}
+.mc:hover{color:#fff;}
+.modal h3{font-size:1.35rem;font-weight:800;margin-bottom:.5rem;}
+.modal p{color:var(--muted);font-size:.88rem;margin-bottom:2rem;line-height:1.6;}
 
-  /* REVIEW FORM */
-  .review-form-section {
-    margin-top:4rem; max-width:600px; margin-left:auto; margin-right:auto;
-    background:var(--card); border:1px solid var(--border);
-    border-radius:16px; padding:2.5rem;
-  }
-  .review-form-section h3 { font-size:1.3rem; font-weight:800; margin-bottom:.5rem; }
-  .review-form-section .subtitle { color:var(--muted); font-size:.85rem; margin-bottom:2rem; font-family:'Space Mono',monospace; }
-  .form-group { margin-bottom:1.2rem; }
-  .form-group label { display:block; font-size:.85rem; font-weight:600; margin-bottom:.5rem; color:var(--muted); }
-  .form-group input, .form-group textarea, .form-group select {
-    width:100%; background:rgba(255,255,255,.04);
-    border:1px solid var(--border); border-radius:8px;
-    padding:.75rem 1rem; color:var(--text);
-    font-family:'Syne',sans-serif; font-size:.9rem;
-    transition:.2s; outline:none;
-  }
-  .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
-    border-color:var(--accent); box-shadow:0 0 0 3px rgba(99,102,241,.1);
-  }
-  .form-group textarea { resize:vertical; min-height:120px; }
-  .star-select { display:flex; gap:.5rem; margin-bottom:1.2rem; }
-  .star-btn {
-    background:none; border:none; cursor:pointer;
-    color:var(--border); font-size:1.5rem; transition:.2s;
-  }
-  .star-btn.active, .star-btn:hover { color:var(--gold); }
-  .form-note { font-size:.78rem; color:var(--muted); margin-bottom:1.2rem; font-style:italic; }
-  .login-required {
-    text-align:center; padding:1.5rem;
-    background:rgba(99,102,241,0.05);
-    border:1px dashed rgba(99,102,241,.3);
-    border-radius:10px; margin-bottom:1.5rem;
-    font-size:.88rem; color:var(--muted);
-  }
+/* TICKET CHAT */
+.tcm{background:var(--bg2);border:1px solid var(--border);border-radius:20px;max-width:720px;width:96%;height:88vh;position:relative;box-shadow:0 40px 80px rgba(0,0,0,.6);animation:mslide .3s ease;display:flex;flex-direction:column;overflow:hidden;}
+.tcm-head{padding:1.2rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:1rem;flex-shrink:0;}
+.tcm-head h4{font-size:1rem;font-weight:700;flex:1;}
+.tcm-msgs{flex:1;overflow-y:auto;padding:1.5rem;display:flex;flex-direction:column;gap:1rem;}
+.msg{display:flex;gap:.75rem;align-items:flex-start;}
+.msg-av{width:34px;height:34px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;overflow:hidden;}
+.msg-av img{width:100%;height:100%;object-fit:cover;}
+.msg-cont{flex:1;}
+.msg-name{font-size:.8rem;font-weight:700;margin-bottom:.25rem;}
+.msg-text{background:var(--card);border:1px solid var(--border);border-radius:0 10px 10px 10px;padding:.7rem 1rem;font-size:.86rem;line-height:1.6;color:var(--text);}
+.msg-time{font-size:.7rem;color:var(--muted);margin-top:.25rem;font-family:'Space Mono',monospace;}
+.msg.me{flex-direction:row-reverse;}
+.msg.me .msg-text{background:rgba(99,102,241,0.15);border-color:rgba(99,102,241,.25);border-radius:10px 0 10px 10px;}
+.msg.me .msg-name{text-align:right;}
+.msg.sys .msg-text{background:rgba(255,255,255,0.03);color:var(--muted);text-align:center;border-style:dashed;font-size:.78rem;border-radius:8px;}
+.tcm-acts{padding:.75rem 1.5rem;border-top:1px solid var(--border);display:flex;gap:.6rem;flex-shrink:0;background:rgba(0,0,0,.2);}
+.tcm-inp{padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;gap:.8rem;flex-shrink:0;}
+.tcm-inp input{flex:1;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:.7rem 1rem;color:var(--text);font-family:'Syne',sans-serif;font-size:.88rem;outline:none;transition:.2s;}
+.tcm-inp input:focus{border-color:var(--accent);}
 
-  /* MODAL */
-  .modal-overlay {
-    position:fixed; inset:0; background:rgba(0,0,0,.7);
-    backdrop-filter:blur(8px); z-index:1000;
-    display:none; align-items:center; justify-content:center;
-  }
-  .modal-overlay.active { display:flex; }
-  .modal {
-    background:var(--card); border:1px solid var(--border);
-    border-radius:20px; padding:2.5rem;
-    max-width:460px; width:90%; text-align:center;
-    position:relative;
-    box-shadow:0 40px 80px rgba(0,0,0,.5);
-    animation:modalIn .3s ease;
-  }
-  @keyframes modalIn { from{transform:scale(.9);opacity:0} to{transform:scale(1);opacity:1} }
-  .modal-close {
-    position:absolute; top:1rem; right:1rem;
-    background:none; border:none; cursor:pointer;
-    color:var(--muted); font-size:1.3rem; transition:.2s;
-  }
-  .modal-close:hover { color:#fff; }
-  .modal-icon { margin-bottom:1.5rem; }
-  .modal h3 { font-size:1.4rem; font-weight:800; margin-bottom:.5rem; }
-  .modal p { color:var(--muted); font-size:.9rem; margin-bottom:2rem; line-height:1.6; }
-  .modal-features { display:flex; justify-content:center; gap:2rem; margin-bottom:2rem; }
-  .modal-feat { display:flex; flex-direction:column; align-items:center; gap:.3rem; }
-  .modal-feat-icon { font-size:1.5rem; }
-  .modal-feat-label { font-size:.75rem; color:var(--muted); }
+/* TOAST */
+.toast{position:fixed;bottom:2rem;right:2rem;z-index:3000;background:var(--card2);border:1px solid var(--green);border-radius:10px;padding:.9rem 1.4rem;display:flex;align-items:center;gap:.75rem;box-shadow:0 20px 40px rgba(0,0,0,.5);transform:translateY(100px);opacity:0;transition:.4s cubic-bezier(.34,1.56,.64,1);pointer-events:none;}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast-text{font-size:.88rem;font-weight:600;}
 
-  /* FOOTER */
-  footer {
-    padding:3rem 5% 2rem;
-    border-top:1px solid var(--border);
-    display:flex; align-items:center; justify-content:space-between;
-    flex-wrap:wrap; gap:1rem;
-  }
-  .footer-logo {
-    display:flex; align-items:center; gap:.6rem;
-    font-weight:800; font-size:1.1rem;
-  }
-  .footer-links { display:flex; gap:1.5rem; }
-  .footer-links a { color:var(--muted); text-decoration:none; font-size:.85rem; transition:.2s; }
-  .footer-links a:hover { color:#fff; }
-  .footer-copy { color:var(--muted); font-size:.8rem; font-family:'Space Mono',monospace; }
-
-  /* TOAST */
-  .toast {
-    position:fixed; bottom:2rem; right:2rem; z-index:2000;
-    background:var(--card); border:1px solid var(--green);
-    border-radius:10px; padding:1rem 1.5rem;
-    display:flex; align-items:center; gap:.8rem;
-    box-shadow:0 20px 40px rgba(0,0,0,.4);
-    transform:translateY(100px); opacity:0;
-    transition:.4s cubic-bezier(.34,1.56,.64,1);
-    pointer-events:none;
-  }
-  .toast.show { transform:translateY(0); opacity:1; }
-  .toast-text { font-size:.9rem; font-weight:600; }
-
-  @media(max-width:768px) {
-    .hero-terminal { display:none; }
-    .about-grid { grid-template-columns:1fr; }
-    .nav-links { display:none; }
-  }
+footer{padding:2.5rem 5% 2rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;position:relative;z-index:2;}
+.foot-logo{display:flex;align-items:center;gap:.6rem;font-weight:800;font-size:1rem;}
+.foot-links{display:flex;gap:1.5rem;}
+.foot-links a{color:var(--muted);text-decoration:none;font-size:.82rem;transition:.2s;cursor:pointer;}
+.foot-links a:hover{color:#fff;}
+.foot-copy{color:var(--muted);font-size:.76rem;font-family:'Space Mono',monospace;}
+@media(max-width:768px){.hero-terminal,.about-grid .about-cards{display:none;}.about-grid{grid-template-columns:1fr;}.nav-links{display:none;}.dash-sidebar{display:none;}.dash-main{margin-left:0;}}
 </style>
 </head>
 <body>
 
-<!-- GLOW ORBS -->
-<div class="orb orb1"></div>
-<div class="orb orb2"></div>
-<div class="orb orb3"></div>
+<canvas id="orb-canvas"></canvas>
 
 <!-- NAV -->
 <nav>
-  <a href="#" class="nav-logo">
-    <svg class="icon-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent)">
-      <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
-    </svg>
+  <div class="nav-logo" onclick="goHome()">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
     Dev Center
-  </a>
-  <ul class="nav-links">
-    <li><a href="#fonctionnalites">Fonctionnalités</a></li>
-    <li><a href="#qui-sommes-nous">Qui sommes-nous</a></li>
-    <li><a href="#avis">Avis</a></li>
+  </div>
+  <ul class="nav-links" id="navLinks">
+    <li><a onclick="showSection('features')">Fonctionnalités</a></li>
+    <li><a onclick="showSection('about')">Qui sommes-nous</a></li>
+    <li><a onclick="showSection('reviews')">Avis</a></li>
   </ul>
   <div class="nav-actions">
-    <button class="btn btn-discord" onclick="loginWithDiscord()">
-      <svg class="icon-discord" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/>
-      </svg>
+    <div id="nav-user" style="display:none">
+      <img id="nav-avatar" src="" alt="">
+      <span id="nav-user-name"></span>
+      <button class="btn btn-outline btn-sm" onclick="openDash()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </button>
+      <button class="btn btn-outline btn-sm btn-danger" onclick="logout()">Déco.</button>
+    </div>
+    <button class="btn btn-discord" id="nav-login-btn" onclick="loginWithDiscord()">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028 14.09 14.09 0 001.226-1.994.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03z"/></svg>
       Connexion
     </button>
   </div>
 </nav>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-content">
-    <div class="hero-badge">
-      <svg class="icon-zap" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-      100% Gratuit &bull; 24/7 &bull; Sans limite
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        100% Gratuit &bull; 24/7 &bull; Sans limite
+      </div>
+      <h1>Dev Center,<br>votre <span class="hl">hébergeur<br>communautaire</span></h1>
+      <p>Sites web, Serveurs Discord, Applications.<br>Une plateforme gratuite créée par et pour la communauté.<br>Déployez vos projets en quelques clics.</p>
+      <div class="hero-cta">
+        <button class="btn btn-primary" onclick="loginWithDiscord()">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028 14.09 14.09 0 001.226-1.994.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03z"/></svg>
+          Connexion Discord
+        </button>
+        <button class="btn btn-outline" onclick="showSection('features')">Voir les offres</button>
+      </div>
     </div>
-    <h1>Dev Center,<br>votre <span class="highlight">hébergeur<br>communautaire</span></h1>
-    <p>Sites web, Serveurs Discord, Applications. Une plateforme gratuite et simple créée par et pour la communauté. Déployez vos projets en quelques clics, sans configuration complexe.</p>
-    <div class="hero-cta">
-      <button class="btn btn-primary" onclick="loginWithDiscord()">
-        <svg class="icon-discord" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/>
-        </svg>
-        Se connecter avec Discord
-      </button>
-      <a href="#fonctionnalites" class="btn btn-outline">Voir les offres</a>
+    <div class="hero-terminal">
+      <div class="term-head"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><span class="term-title">dev@center:~</span></div>
+      <div class="term-body">
+        <div><span class="t-p">dev@center:~$</span> <span class="t-c">dc create site</span></div>
+        <div class="t-o">Initialisation...</div>
+        <div class="t-o t-s">Site créé avec succès ✓</div><br>
+        <div><span class="t-p">dev@center:~$</span> <span class="t-c">dc deploy --prod</span></div>
+        <div class="t-o">Build en cours...</div>
+        <div class="t-o t-s">Déploiement réussi ✓</div><br>
+        <div><span class="t-p">dev@center:~$</span> <span class="t-c">dc status</span><span class="t-cur"></span></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- FEATURES -->
+<div class="page" id="page-features">
+  <section style="padding:120px 5% 80px;">
+    <div class="sh"><div class="stag">Fonctionnalités</div><h2>Choisissez votre offre</h2><p>Des solutions adaptées à chaque besoin.</p></div>
+    <div class="pricing-cats">
+      <div>
+        <div class="cat-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028 14.09 14.09 0 001.226-1.994.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03z"/></svg>
+          Serveurs Discord
+        </div>
+        <div class="pg">
+          <div class="pc"><div class="pc-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--accent3)" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><div class="pc-name">Free</div><div class="pc-req">Gratuit</div><div class="pc-price">0 Boost requis</div><ul class="pc-features"><li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Salon personnalisé</li><li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Rôle personnalisé</li><li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Pas de permissions effectuées</li></ul><button class="btn btn-outline" style="width:100%;justify-content:center" onclick="openOrderModal('Free Discord')">Passer commande</button></div>
+          <div class="pc"><div class="pc-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div class="pc-name">Boss</div><div class="pc-req">1 Boost requis</div><div class="pc-price" style="color:var(--gold)">1 Boost Discord</div><ul class="pc-features"><li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Salon personnalisé</li><li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Rôle personnalisé</li><li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Permissions</li><li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Système de suggestions</li><li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Support prioritaire</li></ul><button class="btn btn-outline" style="width:100%;justify-content:center" onclick="openOrderModal('Boss Discord')">Passer commande</button></div>
+          <div class="pc pop"><div class="pop-badge">Plus populaire</div><div class="pc-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--accent2)" stroke-width="2"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6L12 2z"/></svg></div><div class="pc-name">Master</div><div class="pc-req">2 Boosts requis</div><div class="pc-price" style="color:var(--accent2)">2 Boosts Discord</div><ul class="pc-features"><li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Salon personnalisé</li><li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Rôle personnalisé</li><li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Permissions</li><li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Configuration bot</li><li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Suggestions</li><li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Badges personnalisés</li><li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Support prioritaire</li></ul><button class="btn btn-primary" style="width:100%;justify-content:center" onclick="openOrderModal('Master Discord')">Passer commande</button></div>
+        </div>
+      </div>
+      <div>
+        <div class="cat-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>Modules Sites Web</div>
+        <div class="pg">
+          <div class="pc"><div class="pc-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--accent3)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div><div class="pc-name">Starter</div><div class="pc-req">Pour : Particuliers / Petits projets</div><div class="pc-price">Selon votre développeur</div><ul class="pc-features"><li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Site vitrine</li><li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Template professionnel personnalisé</li><li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Hébergement standard</li><li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Sous-domaine inclus</li><li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Support par ticket (48h)</li><li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>1 modification mensuelle</li></ul><button class="btn btn-outline" style="width:100%;justify-content:center" onclick="openOrderModal('Starter Web')">Passer commande</button></div>
+          <div class="pc pop"><div class="pop-badge">Plus populaire</div><div class="pc-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--accent2)" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div><div class="pc-name">Pro</div><div class="pc-req">Pour : Projet structuré / Business</div><div class="pc-price" style="color:var(--accent2)">Selon votre développeur</div><ul class="pc-features"><li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Site vitrine avancé</li><li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Design 100% personnalisé</li><li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Blog intégré</li><li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Statistiques détaillées</li><li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Sauvegardes automatiques</li><li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Support prioritaire</li></ul><button class="btn btn-primary" style="width:100%;justify-content:center" onclick="openOrderModal('Pro Web')">Passer commande</button></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ABOUT -->
+<div class="page" id="page-about">
+  <section style="padding:120px 5% 80px;">
+    <div class="sh"><div class="stag">À propos</div><h2>Qui sommes-nous ?</h2><p>Une équipe de développeurs passionnés.</p></div>
+    <div class="about-grid">
+      <div class="about-content">
+        <h2>Développeurs,<br><span style="background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">créateurs</span> passionnés.</h2>
+        <p>Dev Center est né d'une idée simple : offrir aux développeurs et créateurs une plateforme communautaire accessible, puissante et gratuite pour héberger leurs projets numériques.</p>
+        <p>Notre équipe est composée de développeurs web full-stack, de designers UI/UX et d'experts Discord qui partagent une passion commune : simplifier la création et le déploiement de projets.</p>
+        <p>Que vous soyez un passionné qui débute ou un développeur confirmé, Dev Center vous accompagne à chaque étape avec des outils adaptés et un support réactif.</p>
+        <div class="about-stats">
+          <div class="stat-card"><div class="stat-num">500+</div><div class="stat-label">Projets déployés</div></div>
+          <div class="stat-card"><div class="stat-num">200+</div><div class="stat-label">Membres actifs</div></div>
+          <div class="stat-card"><div class="stat-num">99.9%</div><div class="stat-label">Uptime garanti</div></div>
+          <div class="stat-card"><div class="stat-num">24/7</div><div class="stat-label">Support disponible</div></div>
+        </div>
+      </div>
+      <div class="about-cards">
+        <div class="afc"><div class="afc-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div><div><h4>Expertise technique</h4><p>React, Node.js, Python, Discord.js. Nous maîtrisons les dernières technologies.</p></div></div>
+        <div class="afc"><div class="afc-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div><div><h4>Communauté active</h4><p>Des centaines de développeurs qui partagent leurs expériences quotidiennement.</p></div></div>
+        <div class="afc"><div class="afc-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div><h4>Fiabilité & sécurité</h4><p>Infrastructure robuste, sauvegardes automatiques et protection DDoS incluse.</p></div></div>
+        <div class="afc"><div class="afc-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></div><div><h4>Support humain</h4><p>Un support bienveillant et rapide, disponible via ticket ou Discord directement.</p></div></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- REVIEWS -->
+<div class="page" id="page-reviews">
+  <section style="padding:120px 5% 80px;">
+    <div class="sh"><div class="stag">Avis clients</div><h2>Ce que disent nos membres</h2><p>Retours authentiques de notre communauté.</p></div>
+    <div class="rg">
+      <div class="rc"><div class="rev-stars"><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><p class="rev-text">Impressionné par la qualité du service. Mon serveur Discord configuré en quelques heures. Support ultra réactif !</p><div class="rev-author"><div class="rev-av">A</div><div><div class="rev-name">AlphaCode</div><div class="rev-role">Développeur Web</div></div></div></div>
+      <div class="rc"><div class="rev-stars"><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--border)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><p class="rev-text">L'offre Pro pour les sites web est vraiment complète. Prix raisonnable, résultat pro. Je recommande !</p><div class="rev-author"><div class="rev-av" style="background:linear-gradient(135deg,#22d3ee,#6366f1)">N</div><div><div class="rev-name">NovaDev</div><div class="rev-role">Créateur de contenu</div></div></div></div>
+      <div class="rc"><div class="rev-stars"><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><p class="rev-text">Site vitrine livré en 48h, design parfait. L'équipe est vraiment à l'écoute. Je reviendrai !</p><div class="rev-author"><div class="rev-av" style="background:linear-gradient(135deg,#4ade80,#22d3ee)">S</div><div><div class="rev-name">SkyBuilder</div><div class="rev-role">Entrepreneur</div></div></div></div>
+    </div>
+    <div class="rfwrap">
+      <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" style="vertical-align:middle;margin-right:6px"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Laisser un avis</h3>
+      <p class="sub">// Connexion Discord requise</p>
+      <div id="loginReqRev" class="login-req">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="color:var(--accent);vertical-align:middle;margin-right:6px"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028 14.09 14.09 0 001.226-1.994.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03z"/></svg>
+        Connectez-vous avec Discord pour laisser un avis<br><br>
+        <button class="btn btn-discord" onclick="loginWithDiscord()"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028 14.09 14.09 0 001.226-1.994.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03z"/></svg>Se connecter</button>
+      </div>
+      <div id="revFormInner" style="display:none">
+        <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:1.5rem;padding:.7rem 1rem;background:rgba(74,222,128,0.06);border:1px solid rgba(74,222,128,.2);border-radius:8px;font-size:.85rem;font-weight:600;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span id="revUser"></span></div>
+        <div style="margin-bottom:1.1rem;"><label style="display:block;font-size:.82rem;font-weight:600;margin-bottom:.45rem;color:var(--muted);">Note</label><div class="star-row"><button class="s-btn" onclick="setStars(1)">★</button><button class="s-btn" onclick="setStars(2)">★</button><button class="s-btn" onclick="setStars(3)">★</button><button class="s-btn" onclick="setStars(4)">★</button><button class="s-btn" onclick="setStars(5)">★</button></div></div>
+        <div class="fg"><label>Votre avis</label><textarea id="revText" placeholder="Partagez votre expérience..."></textarea></div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="submitReview()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Envoyer l'avis</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- DASHBOARD -->
+<div class="page" id="page-dashboard">
+  <div class="dash-sidebar">
+    <div class="dash-logo">Navigation</div>
+    <ul class="dash-nav">
+      <li><a class="act" onclick="showPanel('overview',this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Aperçu</a></li>
+      <li><a onclick="showPanel('my-tickets',this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Mes tickets<span class="dbadge" id="myBadge">0</span></a></li>
+      <li><a onclick="showPanel('create-ticket',this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>Créer un ticket</a></li>
+      <li id="staff-li" style="display:none"><a onclick="showPanel('all-tickets',this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>Tous les tickets<span class="dbadge" id="allBadge" style="background:var(--gold)">0</span></a></li>
+      <li><a onclick="goHome()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Accueil</a></li>
+    </ul>
+  </div>
+  <div class="dash-main">
+    <!-- OVERVIEW -->
+    <div class="dp act" id="dp-overview">
+      <div class="dash-title">Bonjour, <span id="dashUN"></span> 👋</div>
+      <div class="dash-sub">// Bienvenue sur votre dashboard Dev Center</div>
+      <div class="dc-cards">
+        <div class="dc-card"><div class="dc-val dcv-a" id="ov-tot">0</div><div class="dc-label">Mes tickets</div></div>
+        <div class="dc-card"><div class="dc-val" style="color:var(--green)" id="ov-open">0</div><div class="dc-label">Ouverts</div></div>
+        <div class="dc-card"><div class="dc-val" style="color:var(--muted)" id="ov-closed">0</div><div class="dc-label">Fermés</div></div>
+        <div class="dc-card" id="ov-staff-c" style="display:none"><div class="dc-val" style="color:var(--gold)" id="ov-all">0</div><div class="dc-label">Total (staff)</div></div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;">
+        <h4 style="font-size:1rem;font-weight:700;margin-bottom:1rem;">Actions rapides</h4>
+        <div style="display:flex;gap:.8rem;flex-wrap:wrap;">
+          <button class="btn btn-primary btn-sm" onclick="showPanel('create-ticket',null)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>Nouveau ticket</button>
+          <button class="btn btn-outline btn-sm" onclick="showPanel('my-tickets',null)">Voir mes tickets</button>
+        </div>
+      </div>
+    </div>
+    <!-- MY TICKETS -->
+    <div class="dp" id="dp-my-tickets">
+      <div class="dash-title">Mes tickets</div>
+      <div class="dash-sub">// Vos demandes de support et commandes</div>
+      <div class="tk-header"><div class="tk-filters"><button class="fb act" onclick="filterT('all',this,'my')">Tous</button><button class="fb" onclick="filterT('open',this,'my')">Ouverts</button><button class="fb" onclick="filterT('pending',this,'my')">En cours</button><button class="fb" onclick="filterT('closed',this,'my')">Fermés</button></div></div>
+      <div class="tk-list" id="myTkList"></div>
+    </div>
+    <!-- CREATE TICKET -->
+    <div class="dp" id="dp-create-ticket">
+      <div class="dash-title">Créer un ticket</div>
+      <div class="dash-sub">// Ouvrez une demande de support ou commande</div>
+      <div class="ctf">
+        <div class="ctf-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Nouveau ticket</div>
+        <div class="fg"><label>Catégorie</label><select id="tkCat"><option value="support">Support technique</option><option value="commande">Commande</option><option value="bug">Signaler un bug</option><option value="autre">Autre</option></select></div>
+        <div class="fg"><label>Sujet</label><input type="text" id="tkSubj" placeholder="Décrivez brièvement votre demande..."></div>
+        <div class="fg"><label>Description</label><textarea id="tkDesc" placeholder="Expliquez votre problème en détail..." style="min-height:140px;"></textarea></div>
+        <button class="btn btn-primary" onclick="createTicket()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>Ouvrir le ticket</button>
+      </div>
+    </div>
+    <!-- ALL TICKETS -->
+    <div class="dp" id="dp-all-tickets">
+      <div class="dash-title">Gestion des tickets</div>
+      <div class="dash-sub">// Vue staff — tous les tickets</div>
+      <div class="tk-header"><div class="tk-filters"><button class="fb act" onclick="filterT('all',this,'all')">Tous</button><button class="fb" onclick="filterT('open',this,'all')">Ouverts</button><button class="fb" onclick="filterT('pending',this,'all')">En cours</button><button class="fb" onclick="filterT('closed',this,'all')">Fermés</button></div></div>
+      <div class="tk-list" id="allTkList"></div>
     </div>
   </div>
-
-  <!-- TERMINAL -->
-  <div class="hero-terminal">
-    <div class="terminal-header">
-      <div class="dot dot-r"></div>
-      <div class="dot dot-y"></div>
-      <div class="dot dot-g"></div>
-      <span class="terminal-title">dev@center:~</span>
-    </div>
-    <div class="terminal-body">
-      <div><span class="t-prompt">dev@center:~$</span> <span class="t-cmd">dc create site</span></div>
-      <div class="t-out">Création du site...</div>
-      <div class="t-out t-success">Site créé avec succès ✓</div>
-      <br>
-      <div><span class="t-prompt">dev@center:~$</span> <span class="t-cmd">dc deploy</span></div>
-      <div class="t-out">Déploiement en cours...</div>
-      <div class="t-out t-success">Déploiement réussi ✓</div>
-      <br>
-      <div><span class="t-prompt">dev@center:~$</span> <span class="t-cmd">dc status</span><span class="t-cursor"></span></div>
-    </div>
-  </div>
-</section>
-
-<!-- FONCTIONNALITES -->
-<section id="fonctionnalites">
-  <div class="section-header">
-    <div class="section-tag">Fonctionnalités</div>
-    <h2>Choisissez votre offre</h2>
-    <p>Des solutions adaptées à chaque besoin, de l'entrée de gamme au professionnel.</p>
-  </div>
-
-  <div class="pricing-categories">
-    <!-- SERVEURS DISCORD -->
-    <div>
-      <div class="pricing-category-title">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
-        Serveurs Discord
-      </div>
-      <div class="pricing-grid">
-        <!-- FREE -->
-        <div class="pricing-card">
-          <div class="plan-icon">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent3)" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          </div>
-          <div class="plan-name">Free</div>
-          <div class="plan-req">Gratuit</div>
-          <div class="plan-price">0 Boost requis</div>
-          <ul class="plan-features">
-            <li><svg class="icon-check check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Salon personnalisé</li>
-            <li><svg class="icon-check check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Rôle personnalisé</li>
-            <li><svg class="icon-check check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Pas de permissions effectuées</li>
-          </ul>
-          <button class="btn btn-outline" style="width:100%;justify-content:center" onclick="openOrderModal('Free Discord')">Passer commande</button>
-        </div>
-        <!-- BOSS -->
-        <div class="pricing-card">
-          <div class="plan-icon">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          </div>
-          <div class="plan-name">Boss</div>
-          <div class="plan-req">1 Boost requis</div>
-          <div class="plan-price" style="color:var(--gold)">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)" style="vertical-align:middle;margin-right:4px"><path d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
-            1 Boost Discord
-          </div>
-          <ul class="plan-features">
-            <li><svg class="icon-check check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Salon personnalisé</li>
-            <li><svg class="icon-check check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Rôle personnalisé</li>
-            <li><svg class="icon-check check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Permissions</li>
-            <li><svg class="icon-check check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Système de suggestions</li>
-            <li><svg class="icon-check check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Support prioritaire</li>
-          </ul>
-          <button class="btn btn-outline" style="width:100%;justify-content:center" onclick="openOrderModal('Boss Discord')">Passer commande</button>
-        </div>
-        <!-- MASTER -->
-        <div class="pricing-card popular">
-          <div class="popular-badge">Plus populaire</div>
-          <div class="plan-icon">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent2)" stroke-width="2"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6L12 2z"/></svg>
-          </div>
-          <div class="plan-name">Master</div>
-          <div class="plan-req">2 Boosts requis</div>
-          <div class="plan-price" style="color:var(--accent2)">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--accent2)" style="vertical-align:middle;margin-right:4px"><path d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
-            2 Boosts Discord
-          </div>
-          <ul class="plan-features">
-            <li><svg class="icon-check check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Salon personnalisé</li>
-            <li><svg class="icon-check check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Rôle personnalisé</li>
-            <li><svg class="icon-check check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Permissions</li>
-            <li><svg class="icon-check check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Configuration bot</li>
-            <li><svg class="icon-check check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Suggestions</li>
-            <li><svg class="icon-check check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Badges personnalisés sur le site web</li>
-            <li><svg class="icon-check check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Support prioritaire</li>
-          </ul>
-          <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="openOrderModal('Master Discord')">Passer commande</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- SITES WEB -->
-    <div>
-      <div class="pricing-category-title">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-        Modules Sites Web
-      </div>
-      <div class="pricing-grid">
-        <!-- STARTER -->
-        <div class="pricing-card">
-          <div class="plan-icon">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent3)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-          </div>
-          <div class="plan-name">Starter</div>
-          <div class="plan-req">Pour : Particuliers / Petits projets</div>
-          <div class="plan-price">Selon votre développeur</div>
-          <ul class="plan-features">
-            <li><svg class="icon-check check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Site vitrine</li>
-            <li><svg class="icon-check check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Template professionnel personnalisé</li>
-            <li><svg class="icon-check check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Hébergement standard</li>
-            <li><svg class="icon-check check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Sous-domaine inclus</li>
-            <li><svg class="icon-check check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Support par ticket (48h)</li>
-            <li><svg class="icon-check check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>1 modification mensuelle incluse</li>
-          </ul>
-          <button class="btn btn-outline" style="width:100%;justify-content:center" onclick="openOrderModal('Starter Web')">Passer commande</button>
-        </div>
-        <!-- PRO -->
-        <div class="pricing-card popular">
-          <div class="popular-badge">Plus populaire</div>
-          <div class="plan-icon">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent2)" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-          </div>
-          <div class="plan-name">Pro</div>
-          <div class="plan-req">Pour : Projet structuré / Business</div>
-          <div class="plan-price" style="color:var(--accent2)">Selon votre développeur</div>
-          <ul class="plan-features">
-            <li><svg class="icon-check check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Site vitrine avancé</li>
-            <li><svg class="icon-check check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Design 100% personnalisé</li>
-            <li><svg class="icon-check check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Blog intégré</li>
-            <li><svg class="icon-check check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Statistiques détaillées</li>
-            <li><svg class="icon-check check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Sauvegardes automatiques</li>
-            <li><svg class="icon-check check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Support prioritaire</li>
-          </ul>
-          <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="openOrderModal('Pro Web')">Passer commande</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- QUI SOMMES-NOUS -->
-<section id="qui-sommes-nous">
-  <div class="section-header">
-    <div class="section-tag">À propos</div>
-    <h2>Qui sommes-nous ?</h2>
-    <p>Une équipe de développeurs passionnés au service de la communauté.</p>
-  </div>
-  <div class="about-grid">
-    <div class="about-content">
-      <h2>Développeurs,<br><span style="background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">créateurs</span> de projets.</h2>
-      <p>Dev Center est né d'une idée simple : offrir aux développeurs et créateurs une plateforme communautaire accessible, puissante et gratuite pour héberger leurs projets numériques.</p>
-      <p>Notre équipe est composée de développeurs web, de designers et d'experts Discord qui partagent une passion commune : simplifier la création et le déploiement de projets, quelle que soit leur taille.</p>
-      <p>Que vous soyez un passionné qui débute ou un développeur confirmé, Dev Center vous accompagne à chaque étape avec des outils adaptés et un support réactif.</p>
-      <div class="about-stats">
-        <div class="stat-card">
-          <div class="stat-num">500+</div>
-          <div class="stat-label">Projets déployés</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-num">200+</div>
-          <div class="stat-label">Membres actifs</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-num">99.9%</div>
-          <div class="stat-label">Uptime garanti</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-num">24/7</div>
-          <div class="stat-label">Support disponible</div>
-        </div>
-      </div>
-    </div>
-    <div class="about-cards">
-      <div class="about-feature-card">
-        <div class="about-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-        </div>
-        <div>
-          <h4>Expertise technique</h4>
-          <p>Notre équipe maîtrise les dernières technologies web : React, Node.js, Python, Discord.js et bien plus encore.</p>
-        </div>
-      </div>
-      <div class="about-feature-card">
-        <div class="about-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        </div>
-        <div>
-          <h4>Communauté active</h4>
-          <p>Rejoignez des centaines de développeurs et créateurs qui partagent leurs expériences et s'entraident quotidiennement.</p>
-        </div>
-      </div>
-      <div class="about-feature-card">
-        <div class="about-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        </div>
-        <div>
-          <h4>Fiabilité & sécurité</h4>
-          <p>Infrastructure robuste avec sauvegardes automatiques, monitoring 24/7 et protection contre les attaques.</p>
-        </div>
-      </div>
-      <div class="about-feature-card">
-        <div class="about-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
-        </div>
-        <div>
-          <h4>Expérience client</h4>
-          <p>Un support humain, rapide et bienveillant. Nous sommes là pour répondre à vos questions et résoudre vos problèmes.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- AVIS -->
-<section id="avis">
-  <div class="section-header">
-    <div class="section-tag">Avis clients</div>
-    <h2>Ce que disent nos membres</h2>
-    <p>Des retours d'expériences authentiques de notre communauté.</p>
-  </div>
-
-  <div class="reviews-grid" id="reviewsGrid">
-    <!-- Reviews loaded dynamically -->
-    <div class="review-card">
-      <div class="review-stars">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--gold)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--gold)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--gold)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--gold)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--gold)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-      </div>
-      <p class="review-text">Franchement impressionné par la qualité du service. Mon serveur Discord a été configuré en quelques heures seulement, et le support est ultra réactif.</p>
-      <div class="review-author">
-        <div class="review-avatar">A</div>
-        <div>
-          <div class="review-name">AlphaCode</div>
-          <div class="review-role">Développeur Web</div>
-        </div>
-      </div>
-    </div>
-    <div class="review-card">
-      <div class="review-stars">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--gold)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--gold)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--gold)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--gold)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--border)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-      </div>
-      <p class="review-text">Plateforme top pour héberger mes projets ! L'offre Pro pour les sites web est vraiment complète et le prix est plus que raisonnable.</p>
-      <div class="review-author">
-        <div class="review-avatar" style="background:linear-gradient(135deg,#22d3ee,#6366f1)">N</div>
-        <div>
-          <div class="review-name">NovaDev</div>
-          <div class="review-role">Créateur de contenu</div>
-        </div>
-      </div>
-    </div>
-    <div class="review-card">
-      <div class="review-stars">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--gold)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--gold)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--gold)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--gold)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--gold)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-      </div>
-      <p class="review-text">J'ai fait appel à Dev Center pour la création de mon site vitrine. Le résultat dépasse mes attentes, design professionnel et livraison rapide !</p>
-      <div class="review-author">
-        <div class="review-avatar" style="background:linear-gradient(135deg,#4ade80,#22d3ee)">S</div>
-        <div>
-          <div class="review-name">SkyBuilder</div>
-          <div class="review-role">Entrepreneur</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- REVIEW FORM -->
-  <div class="review-form-section" id="reviewFormSection">
-    <h3>
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" style="vertical-align:middle;margin-right:8px"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-      Laisser un avis
-    </h3>
-    <p class="subtitle">// Connexion Discord requise pour soumettre un avis</p>
-
-    <div id="loginRequired" class="login-required">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="color:var(--accent);vertical-align:middle;margin-right:8px"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
-      Connectez-vous avec Discord pour laisser un avis
-      <br><br>
-      <button class="btn btn-discord" onclick="loginWithDiscord()">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
-        Se connecter
-      </button>
-    </div>
-
-    <div id="reviewForm" style="display:none">
-      <div style="display:flex;align-items:center;gap:.8rem;margin-bottom:1.5rem;padding:.8rem 1rem;background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,.2);border-radius:8px;">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="color:var(--green);flex-shrink:0"><path d="M20 6L9 17l-5-5"/></svg>
-        <span id="loggedUserName" style="font-size:.88rem;font-weight:600;"></span>
-      </div>
-
-      <div style="margin-bottom:1.2rem;">
-        <label style="display:block;font-size:.85rem;font-weight:600;margin-bottom:.5rem;color:var(--muted);">Note</label>
-        <div class="star-select" id="starSelect">
-          <button class="star-btn" data-val="1" onclick="setStars(1)">★</button>
-          <button class="star-btn" data-val="2" onclick="setStars(2)">★</button>
-          <button class="star-btn" data-val="3" onclick="setStars(3)">★</button>
-          <button class="star-btn" data-val="4" onclick="setStars(4)">★</button>
-          <button class="star-btn" data-val="5" onclick="setStars(5)">★</button>
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Votre avis</label>
-        <textarea id="reviewText" placeholder="Partagez votre expérience avec Dev Center..."></textarea>
-      </div>
-      <p class="form-note">* Votre avis sera envoyé à notre équipe via Discord pour validation.</p>
-      <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="submitReview()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-        Envoyer l'avis
-      </button>
-    </div>
-  </div>
-</section>
+</div>
 
 <!-- FOOTER -->
-<footer>
-  <div class="footer-logo">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-    Dev Center
-  </div>
-  <div class="footer-links">
-    <a href="#fonctionnalites">Fonctionnalités</a>
-    <a href="#qui-sommes-nous">À propos</a>
-    <a href="#avis">Avis</a>
-  </div>
-  <div class="footer-copy">© 2024 Dev Center — Tous droits réservés</div>
+<footer id="main-footer">
+  <div class="foot-logo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>Dev Center</div>
+  <div class="foot-links"><a onclick="showSection('features')">Fonctionnalités</a><a onclick="showSection('about')">À propos</a><a onclick="showSection('reviews')">Avis</a></div>
+  <div class="foot-copy">© 2024 Dev Center — Tous droits réservés</div>
 </footer>
 
-<!-- MODAL COMMANDE -->
-<div class="modal-overlay" id="orderModal">
+<!-- ORDER MODAL -->
+<div class="mo" id="moOrder">
   <div class="modal">
-    <button class="modal-close" onclick="closeModal('orderModal')">✕</button>
-    <div class="modal-icon">
-      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+    <button class="mc" onclick="closeMo('moOrder')">✕</button>
+    <div style="margin-bottom:1.2rem"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></div>
+    <h3 id="moOrderTitle">Passer commande</h3>
+    <p id="moOrderDesc">Connectez-vous avec Discord pour passer commande.</p>
+    <button class="btn btn-discord" style="width:100%;justify-content:center;padding:.8rem" id="moOrderBtn" onclick="loginWithDiscord()"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028 14.09 14.09 0 001.226-1.994.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03z"/></svg>Se connecter avec Discord</button>
+  </div>
+</div>
+
+<!-- TICKET MODAL -->
+<div class="mo" id="moTicket" style="align-items:center">
+  <div class="tcm">
+    <div class="tcm-head">
+      <div><div class="ti-id" id="tcmId" style="font-size:.72rem;color:var(--muted);font-family:'Space Mono',monospace;margin-bottom:.2rem;"></div><h4 id="tcmTitle"></h4></div>
+      <span class="tcat" id="tcmCat"></span>
+      <div style="display:flex;gap:.5rem;margin-left:auto" id="tcmStaffActs"></div>
+      <button class="mc" style="position:relative;top:0;right:0;margin-left:.5rem" onclick="closeMo('moTicket')">✕</button>
     </div>
-    <h3 id="modalTitle">Passer commande</h3>
-    <p id="modalDesc">Pour passer commande, vous devez être connecté avec Discord. Rejoignez notre serveur Discord pour finaliser votre demande.</p>
-    <div class="modal-features">
-      <div class="modal-feat">
-        <div class="modal-feat-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        </div>
-        <div class="modal-feat-label">Rapide</div>
-      </div>
-      <div class="modal-feat">
-        <div class="modal-feat-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        </div>
-        <div class="modal-feat-label">Sécurisé</div>
-      </div>
-      <div class="modal-feat">
-        <div class="modal-feat-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent2)" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-        </div>
-        <div class="modal-feat-label">Humain</div>
-      </div>
+    <div class="tcm-msgs" id="tcmMsgs"></div>
+    <div class="tcm-acts" id="tcmActsBar"></div>
+    <div class="tcm-inp" id="tcmInpArea">
+      <input type="text" id="tcmInput" placeholder="Votre message..." onkeydown="if(event.key==='Enter')sendMsg()">
+      <button class="btn btn-primary btn-sm" onclick="sendMsg()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Envoyer</button>
     </div>
-    <button class="btn btn-discord" style="width:100%;justify-content:center;padding:.8rem" onclick="loginWithDiscord()">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
-      Se connecter avec Discord
-    </button>
   </div>
 </div>
 
 <!-- TOAST -->
-<div class="toast" id="toast">
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-  <span class="toast-text" id="toastText">Succès !</span>
-</div>
+<div class="toast" id="toast"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span class="toast-text" id="toastTxt"></span></div>
 
 <script>
-  // Discord OAuth config
-  const CLIENT_ID = '1477279042230157404';
-  const REDIRECT_URI = 'https://jojolm24.github.io/beta-dev/';
-  const WEBHOOK_URL = 'https://discord.com/api/webhooks/1470398339437690883/BO4-s1zgnlGdszcdhp_GHGlGB7-oeWElx1OluZyA6SepV_Dl-ftXiljqXWKAboC35hTY';
+// CONFIG
+const CLIENT_ID='1477279042230157404';
+const REDIRECT_URI='https://jojolm24.github.io/beta-dev/';
+const WEBHOOK='https://discord.com/api/webhooks/1470398339437690883/BO4-s1zgnlGdszcdhp_GHGlGB7-oeWElx1OluZyA6SepV_Dl-ftXiljqXWKAboC35hTY';
+const STAFF_ROLE='1469655288213930045';
 
-  let currentUser = null;
-  let selectedStars = 0;
-  let pendingOrder = null;
+// MOUSE ORB CANVAS
+(function(){
+  const c=document.getElementById('orb-canvas');
+  const x=c.getContext('2d');
+  let W=c.width=window.innerWidth,H=c.height=window.innerHeight;
+  let mx=W/2,my=H/2;
+  const orbs=Array.from({length:22},()=>({
+    x:Math.random()*W,y:Math.random()*H,
+    vx:(Math.random()-.5)*.5,vy:(Math.random()-.5)*.5,
+    r:Math.random()*5+2,a:Math.random()*.6+.15
+  }));
+  window.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+  window.addEventListener('resize',()=>{W=c.width=window.innerWidth;H=c.height=window.innerHeight;});
+  function draw(){
+    x.clearRect(0,0,W,H);
+    orbs.forEach(o=>{
+      const dx=mx-o.x,dy=my-o.y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<300){o.vx+=dx/d*.05;o.vy+=dy/d*.05;}
+      o.vx*=.96;o.vy*=.96;
+      o.x+=o.vx;o.y+=o.vy;
+      if(o.x<0||o.x>W)o.vx*=-1;
+      if(o.y<0||o.y>H)o.vy*=-1;
+      const g=x.createRadialGradient(o.x,o.y,0,o.x,o.y,o.r*10);
+      g.addColorStop(0,`rgba(255,255,255,${o.a})`);
+      g.addColorStop(.3,`rgba(180,190,255,${o.a*.3})`);
+      g.addColorStop(1,'rgba(99,102,241,0)');
+      x.beginPath();x.arc(o.x,o.y,o.r*10,0,Math.PI*2);x.fillStyle=g;x.fill();
+      x.beginPath();x.arc(o.x,o.y,o.r,0,Math.PI*2);x.fillStyle=`rgba(255,255,255,${o.a})`;x.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
 
-  // Check for Discord OAuth callback
-  window.addEventListener('load', () => {
-    const hash = window.location.hash;
-    const params = new URLSearchParams(hash.replace('#', ''));
-    const token = params.get('access_token');
-    if (token) {
-      fetchDiscordUser(token);
-      // Clean URL
-      history.replaceState(null, '', window.location.pathname);
-    }
-    // Restore from sessionStorage
-    const saved = sessionStorage.getItem('dc_user');
-    if (saved) {
-      currentUser = JSON.parse(saved);
-      updateUIForLoggedIn();
-    }
+// STATE
+let CU=null,isStaff=false,selStars=0,curTkId=null,pendPlan=null;
+let tickets=JSON.parse(localStorage.getItem('dctk')||'[]');
+function saveTk(){localStorage.setItem('dctk',JSON.stringify(tickets));}
+
+// PAGE ROUTER
+const allPages=['page-home','page-features','page-about','page-reviews','page-dashboard'];
+function showPage(id){
+  allPages.forEach(p=>{
+    const el=document.getElementById(p);
+    if(!el)return;
+    el.style.display='none';el.classList.remove('active');
   });
+  const t=document.getElementById(id);
+  if(t){t.style.display=(id==='page-dashboard'?'flex':'block');t.classList.add('active');}
+  const ft=document.getElementById('main-footer');
+  if(ft)ft.style.display=id==='page-dashboard'?'none':'';
+  const nl=document.getElementById('navLinks');
+  if(nl)nl.style.display=id==='page-dashboard'?'none':'';
+  window.scrollTo(0,0);
+}
+function goHome(){showPage('page-home');}
+function showSection(s){showPage({'features':'page-features','about':'page-about','reviews':'page-reviews'}[s]||'page-home');}
+function openDash(){if(!CU){loginWithDiscord();return;}showPage('page-dashboard');refreshDash();}
 
-  function loginWithDiscord() {
-    const scope = 'identify';
-    const url = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=${scope}`;
-    window.location.href = url;
+// DISCORD AUTH
+window.addEventListener('load',async()=>{
+  const h=window.location.hash;
+  const p=new URLSearchParams(h.startsWith('#')?h.slice(1):'');
+  const tk=p.get('access_token');
+  if(tk){
+    sessionStorage.setItem('dct',tk);
+    history.replaceState(null,'',window.location.pathname);
+    await fetchUser(tk);
+    openDash();return;
   }
-
-  async function fetchDiscordUser(token) {
-    try {
-      const res = await fetch('https://discord.com/api/users/@me', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      const user = await res.json();
-      currentUser = user;
-      sessionStorage.setItem('dc_user', JSON.stringify(user));
-      updateUIForLoggedIn();
-      showToast(`Bienvenue ${user.username} !`);
-
-      // Send webhook notification
-      await sendWebhook({
-        embeds: [{
-          title: '🔔 Nouvelle connexion',
-          description: `**${user.username}** s'est connecté sur Dev Center`,
-          color: 0x6366f1,
-          thumbnail: { url: user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png` : 'https://cdn.discordapp.com/embed/avatars/0.png' },
-          timestamp: new Date().toISOString()
-        }]
-      });
-    } catch(e) {
-      console.error('Discord auth error', e);
-    }
+  const sv=sessionStorage.getItem('dcu');
+  if(sv){
+    CU=JSON.parse(sv);
+    isStaff=sessionStorage.getItem('dcs')==='true';
+    updateNav();
   }
+});
 
-  function updateUIForLoggedIn() {
-    if (!currentUser) return;
-    // Update nav
-    document.querySelector('.btn-discord').innerHTML = `
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
-      ${currentUser.username}
-    `;
-    // Show review form
-    document.getElementById('loginRequired').style.display = 'none';
-    document.getElementById('reviewForm').style.display = 'block';
-    document.getElementById('loggedUserName').textContent = `Connecté en tant que ${currentUser.username}`;
+function loginWithDiscord(){
+  window.location.href=`https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify%20guilds.members.read`;
+}
+
+async function fetchUser(token){
+  try{
+    const r=await fetch('https://discord.com/api/users/@me',{headers:{Authorization:`Bearer ${token}`}});
+    CU=await r.json();
+    sessionStorage.setItem('dcu',JSON.stringify(CU));
+    // Check staff role
+    try{
+      const gr=await fetch('https://discord.com/api/users/@me/guilds',{headers:{Authorization:`Bearer ${token}`}});
+      const guilds=await gr.json();
+      for(const g of (guilds||[])){
+        try{
+          const mr=await fetch(`https://discord.com/api/users/@me/guilds/${g.id}/member`,{headers:{Authorization:`Bearer ${token}`}});
+          const m=await mr.json();
+          if(m&&m.roles&&m.roles.includes(STAFF_ROLE)){isStaff=true;break;}
+        }catch(e){}
+      }
+    }catch(e){}
+    sessionStorage.setItem('dcs',isStaff?'true':'false');
+    updateNav();
+    toast(`Bienvenue ${CU.username} !`);
+    hook({embeds:[{title:'🔔 Connexion',description:`**${CU.username}** s'est connecté`,color:0x6366f1,thumbnail:{url:av(CU)},timestamp:new Date().toISOString()}]});
+  }catch(e){console.error(e);}
+}
+
+function av(u){return u&&u.avatar?`https://cdn.discordapp.com/avatars/${u.id}/${u.avatar}.png`:'https://cdn.discordapp.com/embed/avatars/0.png';}
+
+function updateNav(){
+  if(!CU)return;
+  document.getElementById('nav-login-btn').style.display='none';
+  const nu=document.getElementById('nav-user');nu.style.display='flex';
+  document.getElementById('nav-avatar').src=av(CU);
+  document.getElementById('nav-user-name').textContent=CU.username;
+  document.getElementById('loginReqRev').style.display='none';
+  document.getElementById('revFormInner').style.display='block';
+  document.getElementById('revUser').textContent=`Connecté : ${CU.username}`;
+}
+
+function logout(){
+  sessionStorage.clear();CU=null;isStaff=false;
+  document.getElementById('nav-login-btn').style.display='';
+  document.getElementById('nav-user').style.display='none';
+  document.getElementById('loginReqRev').style.display='';
+  document.getElementById('revFormInner').style.display='none';
+  goHome();toast('Déconnecté.');
+}
+
+// DASHBOARD
+function showPanel(id,el){
+  document.querySelectorAll('.dp').forEach(p=>p.classList.remove('act'));
+  const dp=document.getElementById(`dp-${id}`);if(dp)dp.classList.add('act');
+  document.querySelectorAll('.dash-nav a').forEach(a=>a.classList.remove('act'));
+  if(el)el.classList.add('act');
+  if(id==='my-tickets')renderMyTk();
+  if(id==='all-tickets')renderAllTk();
+}
+
+function refreshDash(){
+  if(!CU)return;
+  document.getElementById('dashUN').textContent=CU.username;
+  const my=tickets.filter(t=>t.uid===CU.id);
+  const open=my.filter(t=>t.st!=='closed');
+  const closed=my.filter(t=>t.st==='closed');
+  document.getElementById('ov-tot').textContent=my.length;
+  document.getElementById('ov-open').textContent=open.length;
+  document.getElementById('ov-closed').textContent=closed.length;
+  document.getElementById('myBadge').textContent=open.length;
+  document.getElementById('allBadge').textContent=tickets.filter(t=>t.st!=='closed').length;
+  if(isStaff){
+    document.getElementById('staff-li').style.display='';
+    document.getElementById('ov-staff-c').style.display='';
+    document.getElementById('ov-all').textContent=tickets.length;
   }
+}
 
-  function openOrderModal(plan) {
-    pendingOrder = plan;
-    document.getElementById('modalTitle').textContent = `Commande : ${plan}`;
-    if (currentUser) {
-      document.getElementById('modalDesc').textContent = `Votre demande pour l'offre "${plan}" va être envoyée à notre équipe Discord. Nous vous contacterons très prochainement.`;
-      // Change button to confirm
-      const btn = document.querySelector('#orderModal .btn-discord');
-      btn.textContent = 'Confirmer la commande';
-      btn.onclick = () => confirmOrder(plan);
+const catC={support:'tc-s',commande:'tc-c',bug:'tc-b',autre:'tc-a'};
+const catL={support:'Support',commande:'Commande',bug:'Bug',autre:'Autre'};
+const stC={open:'ts-o',pending:'ts-p',closed:'ts-c'};
+const stL={open:'Ouvert',pending:'En cours',closed:'Fermé'};
+
+function tkHTML(t,showU=false){
+  const time=new Date(t.ca).toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+  const last=t.msgs[t.msgs.length-1];
+  const prev=(last?last.txt:t.desc).substring(0,55)+'...';
+  return `<div class="ti" onclick="openTk('${t.id}')">
+    <div class="ts ${stC[t.st]||'ts-o'}" title="${stL[t.st]}"></div>
+    <div class="ti-info">
+      <div class="ti-id">#${t.id.slice(-6).toUpperCase()} — ${stL[t.st]||'Ouvert'}</div>
+      <div class="ti-title">${t.subj}</div>
+      <div class="ti-prev">${prev}</div>
+    </div>
+    ${showU?`<div class="ta-av" title="${t.uname||'?'}">${t.uname?t.uname[0].toUpperCase():'?'}</div>`:''}
+    <div class="ti-meta">
+      <div class="tcat ${catC[t.cat]||'tc-a'}">${catL[t.cat]||'Autre'}</div>
+      <div class="ti-time">${time}</div>
+    </div>
+  </div>`;
+}
+
+function emptyTk(){return `<div style="text-align:center;padding:3rem;color:var(--muted);"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" style="opacity:.3;display:block;margin:0 auto 1rem"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Aucun ticket</div>`;}
+
+function renderMyTk(f='all'){
+  const l=document.getElementById('myTkList');if(!CU){l.innerHTML=emptyTk();return;}
+  let d=tickets.filter(t=>t.uid===CU.id);
+  if(f!=='all')d=d.filter(t=>t.st===f);
+  d.sort((a,b)=>b.ca-a.ca);
+  l.innerHTML=d.length?d.map(t=>tkHTML(t)).join(''):emptyTk();
+}
+function renderAllTk(f='all'){
+  const l=document.getElementById('allTkList');
+  let d=[...tickets];
+  if(f!=='all')d=d.filter(t=>t.st===f);
+  d.sort((a,b)=>b.ca-a.ca);
+  l.innerHTML=d.length?d.map(t=>tkHTML(t,true)).join(''):emptyTk();
+}
+function filterT(f,btn,scope){
+  if(btn){const g=btn.closest('.tk-filters');if(g){g.querySelectorAll('.fb').forEach(b=>b.classList.remove('act'));btn.classList.add('act');}}
+  scope==='my'?renderMyTk(f):renderAllTk(f);
+}
+
+async function createTicket(){
+  if(!CU){toast('Connectez-vous d\'abord !');return;}
+  const cat=document.getElementById('tkCat').value;
+  const subj=document.getElementById('tkSubj').value.trim();
+  const desc=document.getElementById('tkDesc').value.trim();
+  if(!subj||!desc){toast('Remplissez tous les champs.');return;}
+  const t={
+    id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),
+    uid:CU.id,uname:CU.username,uav:av(CU),
+    cat,subj,desc,st:'open',ca:Date.now(),
+    msgs:[{from:'user',uid:CU.id,uname:CU.username,uav:av(CU),txt:desc,t:Date.now()}]
+  };
+  tickets.push(t);saveTk();
+  document.getElementById('tkSubj').value='';document.getElementById('tkDesc').value='';
+  refreshDash();toast('Ticket créé !');
+  await hook({embeds:[{title:`🎫 Nouveau ticket — ${catL[cat]}`,description:`**${subj}**\n\n${desc}`,color:0x6366f1,fields:[{name:'Utilisateur',value:`${CU.username} (${CU.id})`,inline:true},{name:'Catégorie',value:catL[cat],inline:true},{name:'ID',value:`#${t.id.slice(-6).toUpperCase()}`,inline:true}],thumbnail:{url:av(CU)},timestamp:new Date().toISOString()}]});
+  showPanel('my-tickets',document.querySelector('.dash-nav li:nth-child(2) a'));
+}
+
+function openTk(id){
+  const t=tickets.find(x=>x.id===id);if(!t)return;
+  curTkId=id;
+  document.getElementById('tcmId').textContent=`#${t.id.slice(-6).toUpperCase()} — ${stL[t.st]}`;
+  document.getElementById('tcmTitle').textContent=t.subj;
+  const c=document.getElementById('tcmCat');c.textContent=catL[t.cat]||'Autre';c.className=`tcat ${catC[t.cat]||'tc-a'}`;
+  // Staff actions
+  const sa=document.getElementById('tcmStaffActs');sa.innerHTML='';
+  if(isStaff){
+    if(t.st!=='closed'){
+      sa.innerHTML=`<button class="btn btn-warning btn-sm" onclick="setTkSt('${id}','pending')">En cours</button><button class="btn btn-danger btn-sm" onclick="setTkSt('${id}','closed')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Fermer</button>`;
     } else {
-      document.getElementById('modalDesc').textContent = `Pour passer commande de l'offre "${plan}", connectez-vous d'abord avec Discord.`;
-    }
-    document.getElementById('orderModal').classList.add('active');
-  }
-
-  async function confirmOrder(plan) {
-    if (!currentUser) return;
-    try {
-      await sendWebhook({
-        embeds: [{
-          title: '🛒 Nouvelle commande',
-          description: `**${currentUser.username}** (ID: ${currentUser.id}) souhaite commander l'offre **${plan}**`,
-          color: 0xa855f7,
-          fields: [
-            { name: 'Offre', value: plan, inline: true },
-            { name: 'Utilisateur Discord', value: currentUser.username, inline: true },
-            { name: 'ID Discord', value: currentUser.id, inline: true }
-          ],
-          thumbnail: { url: currentUser.avatar ? `https://cdn.discordapp.com/avatars/${currentUser.id}/${currentUser.avatar}.png` : 'https://cdn.discordapp.com/embed/avatars/0.png' },
-          timestamp: new Date().toISOString()
-        }]
-      });
-      closeModal('orderModal');
-      showToast('Commande envoyée ! Notre équipe vous contactera bientôt.');
-    } catch(e) {
-      showToast('Erreur lors de l\'envoi. Réessayez.');
+      sa.innerHTML=`<button class="btn btn-success btn-sm" onclick="setTkSt('${id}','open')">Réouvrir</button>`;
     }
   }
-
-  function closeModal(id) {
-    document.getElementById(id).classList.remove('active');
+  renderMsgs(t);
+  // Input
+  const ia=document.getElementById('tcmInpArea');
+  if(t.st==='closed'){
+    ia.innerHTML=`<div style="text-align:center;padding:.8rem;color:var(--muted);font-size:.82rem;font-family:'Space Mono',monospace;flex:1">Ce ticket est fermé.</div>`;
+  } else {
+    ia.innerHTML=`<input type="text" id="tcmInput" placeholder="Votre message..." onkeydown="if(event.key==='Enter')sendMsg()"><button class="btn btn-primary btn-sm" onclick="sendMsg()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Envoyer</button>`;
   }
+  document.getElementById('moTicket').classList.add('act');
+  setTimeout(()=>{const m=document.getElementById('tcmMsgs');m.scrollTop=m.scrollHeight;},100);
+}
 
-  function setStars(n) {
-    selectedStars = n;
-    document.querySelectorAll('.star-btn').forEach((btn, i) => {
-      btn.classList.toggle('active', i < n);
-    });
+function renderMsgs(t){
+  const m=document.getElementById('tcmMsgs');
+  m.innerHTML=t.msgs.map(msg=>{
+    const isMe=msg.uid===CU?.id;
+    const time=new Date(msg.t).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+    if(msg.sys)return `<div class="msg sys"><div class="msg-cont"><div class="msg-text">${msg.txt}</div></div></div>`;
+    return `<div class="msg${isMe?' me':''}">
+      <div class="msg-av">${msg.uav?`<img src="${msg.uav}">`:(msg.uname?msg.uname[0].toUpperCase():'?')}</div>
+      <div class="msg-cont">
+        <div class="msg-name">${msg.uname||'Utilisateur'}${msg.staff?' <span style="font-size:.67rem;background:rgba(99,102,241,.18);color:var(--accent);padding:.1rem .4rem;border-radius:4px;margin-left:.3rem">Staff</span>':''}</div>
+        <div class="msg-text">${msg.txt}</div>
+        <div class="msg-time">${time}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function sendMsg(){
+  if(!CU)return;
+  const inp=document.getElementById('tcmInput');
+  const txt=inp?.value.trim();if(!txt)return;
+  const t=tickets.find(x=>x.id===curTkId);if(!t||t.st==='closed')return;
+  const staff=(isStaff&&t.uid!==CU.id);
+  t.msgs.push({uid:CU.id,uname:CU.username,uav:av(CU),txt,t:Date.now(),staff});
+  if(staff)t.st='pending';
+  saveTk();renderMsgs(t);inp.value='';
+  const m=document.getElementById('tcmMsgs');m.scrollTop=m.scrollHeight;
+  await hook({embeds:[{title:`💬 Réponse #${t.id.slice(-6).toUpperCase()}`,description:txt,color:staff?0xa855f7:0x22d3ee,fields:[{name:'De',value:`${CU.username}${staff?' (Staff)':''}`,inline:true}],timestamp:new Date().toISOString()}]});
+}
+
+function setTkSt(id,st){
+  const t=tickets.find(x=>x.id===id);if(!t)return;
+  t.st=st;
+  t.msgs.push({sys:true,txt:`Ticket ${st==='closed'?'fermé':st==='pending'?'mis en cours':'réouvert'} par ${CU.username}`,t:Date.now()});
+  saveTk();renderMsgs(t);refreshDash();
+  toast(`Ticket ${st==='closed'?'fermé':st==='pending'?'mis en cours':'réouvert'}.`);
+  openTk(id);
+}
+
+// ORDERS
+function openOrderModal(plan){
+  pendPlan=plan;
+  document.getElementById('moOrderTitle').textContent=`Commande : ${plan}`;
+  if(CU){
+    document.getElementById('moOrderDesc').textContent=`Votre demande pour "${plan}" sera envoyée à notre équipe Discord.`;
+    const b=document.getElementById('moOrderBtn');
+    b.innerHTML=`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Confirmer`;
+    b.onclick=confirmOrder;b.className='btn btn-primary';b.style='width:100%;justify-content:center;padding:.8rem';
+  } else {
+    document.getElementById('moOrderDesc').textContent=`Connectez-vous pour commander "${plan}".`;
+    const b=document.getElementById('moOrderBtn');
+    b.onclick=loginWithDiscord;b.className='btn btn-discord';b.style='width:100%;justify-content:center;padding:.8rem';
+    b.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028 14.09 14.09 0 001.226-1.994.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03z"/></svg>Se connecter';
   }
+  document.getElementById('moOrder').classList.add('act');
+}
+async function confirmOrder(){
+  if(!CU||!pendPlan)return;
+  await hook({embeds:[{title:`🛒 Commande — ${pendPlan}`,description:`**${CU.username}** veut commander **${pendPlan}**`,color:0xa855f7,fields:[{name:'Utilisateur',value:`${CU.username} (${CU.id})`,inline:true},{name:'Offre',value:pendPlan,inline:true}],thumbnail:{url:av(CU)},timestamp:new Date().toISOString()}]});
+  closeMo('moOrder');toast('Commande envoyée ! Notre équipe vous contactera bientôt.');
+}
 
-  async function submitReview() {
-    if (!currentUser) return;
-    const text = document.getElementById('reviewText').value.trim();
-    if (!text) { showToast('Veuillez écrire un avis.'); return; }
-    if (!selectedStars) { showToast('Veuillez sélectionner une note.'); return; }
+// REVIEWS
+function setStars(n){selStars=n;document.querySelectorAll('.s-btn').forEach((b,i)=>b.classList.toggle('on',i<n));}
+async function submitReview(){
+  if(!CU){toast('Connectez-vous d\'abord.');return;}
+  const t=document.getElementById('revText').value.trim();
+  if(!t){toast('Écrivez un avis.');return;}
+  if(!selStars){toast('Sélectionnez une note.');return;}
+  await hook({embeds:[{title:'⭐ Nouvel avis',description:t,color:0xfbbf24,fields:[{name:'Note',value:'⭐'.repeat(selStars),inline:true},{name:'Auteur',value:CU.username,inline:true}],thumbnail:{url:av(CU)},timestamp:new Date().toISOString()}]});
+  document.getElementById('revText').value='';setStars(0);toast('Avis envoyé ! Merci.');
+}
 
-    const stars = '⭐'.repeat(selectedStars);
-    try {
-      await sendWebhook({
-        embeds: [{
-          title: '💬 Nouvel avis',
-          description: `**${text}**`,
-          color: 0xfbbf24,
-          fields: [
-            { name: 'Note', value: stars, inline: true },
-            { name: 'Auteur', value: currentUser.username, inline: true },
-            { name: 'ID', value: currentUser.id, inline: true }
-          ],
-          thumbnail: { url: currentUser.avatar ? `https://cdn.discordapp.com/avatars/${currentUser.id}/${currentUser.avatar}.png` : 'https://cdn.discordapp.com/embed/avatars/0.png' },
-          timestamp: new Date().toISOString()
-        }]
-      });
-      document.getElementById('reviewText').value = '';
-      setStars(0);
-      showToast('Avis envoyé ! Merci pour votre retour.');
-    } catch(e) {
-      showToast('Erreur lors de l\'envoi.');
-    }
-  }
+// UTILS
+function closeMo(id){document.getElementById(id).classList.remove('act');}
+function toast(msg){const t=document.getElementById('toast');document.getElementById('toastTxt').textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),4000);}
+async function hook(p){try{await fetch(WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(p)});}catch(e){}}
 
-  async function sendWebhook(payload) {
-    await fetch(WEBHOOK_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-  }
-
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    document.getElementById('toastText').textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 4000);
-  }
-
-  // Close modal on overlay click
-  document.getElementById('orderModal').addEventListener('click', function(e) {
-    if (e.target === this) closeModal('orderModal');
-  });
+['moOrder','moTicket'].forEach(id=>{
+  document.getElementById(id).addEventListener('click',function(e){if(e.target===this)closeMo(id);});
+});
 </script>
 </body>
 </html>
