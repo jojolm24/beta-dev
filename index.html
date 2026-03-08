@@ -62,6 +62,7 @@
 
     .view { display: none; position: relative; z-index: 1; }
     .view.active { display: block; }
+    #app-view.active { display: flex !important; flex-direction: column; min-height: 100vh; }
 
     /* ===== LOGIN ===== */
     #login-view {
@@ -1109,8 +1110,17 @@ async function init() {
     document.getElementById('staff-controls').style.display = 'flex';
   }
 
+  console.log('🚀 showView app...');
   showView('app');
-  loadMyTickets();
+  console.log('✅ app visible, chargement tickets...');
+
+  try {
+    await loadMyTickets();
+  } catch(e) {
+    console.error('❌ loadMyTickets:', e);
+    document.getElementById('list-my').innerHTML =
+      `<div class="empty-state"><div class="empty-state-icon">⚠️</div><h3>Erreur Supabase</h3><p>${e.message}</p><p style="margin-top:8px;font-size:11px;font-family:var(--font-mono);color:var(--text-muted)">Vérifie que les tables existent dans Supabase</p></div>`;
+  }
 }
 
 // ---- TABS ----
@@ -1126,7 +1136,10 @@ function switchTab(tab) {
 
 // ---- LOAD TICKETS ----
 async function loadMyTickets() {
-  const { data } = await db.from('tickets').select('*').eq('discord_user_id', me.id).order('created_at', { ascending: false });
+  const el = document.getElementById('list-my');
+  el.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-muted);font-family:var(--font-mono);font-size:13px;">Chargement...</div>`;
+  const { data, error } = await db.from('tickets').select('*').eq('discord_user_id', me.id).order('created_at', { ascending: false });
+  if (error) throw new Error(error.message);
   renderList('list-my', data || [], false);
 }
 
