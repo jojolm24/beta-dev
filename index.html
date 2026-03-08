@@ -1064,13 +1064,15 @@ async function handleOAuthCallback(token) {
     sessionStorage.setItem('dc_expiry', String(Date.now() + 8 * 3600 * 1000));
 
     console.log('✅ Connecté:', me.username, '| Staff:', isStaff);
+
+    // Redirect propre sans le hash — évite tout bug GitHub Pages avec le #
+    window.location.replace(REDIRECT_URI);
     return true;
 
   } catch(err) {
     console.error('❌ handleOAuthCallback:', err);
-    // Affiche l'erreur à l'écran pour le debug
     setLoading('❌ Erreur : ' + err.message);
-    setTimeout(() => showView('login'), 3000);
+    setTimeout(() => { window.location.replace(REDIRECT_URI); }, 3000);
     return false;
   }
 }
