@@ -973,9 +973,22 @@ let currentTab = 'my';
 
 // ---- VIEWS ----
 function showView(id) {
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.view').forEach(v => {
+    v.classList.remove('active');
+    v.style.display = 'none';
+  });
   const el = document.getElementById(id + '-view');
   el.classList.add('active');
+  if (id === 'app') {
+    el.style.display = 'flex';
+    el.style.flexDirection = 'column';
+    el.style.minHeight = '100vh';
+  } else if (id === 'loading') {
+    el.style.display = 'block';
+  } else {
+    el.style.display = 'block';
+  }
+  console.log('showView:', id, '→ display:', el.style.display);
 }
 
 function setLoading(msg) {
@@ -1110,16 +1123,28 @@ async function init() {
     document.getElementById('staff-controls').style.display = 'flex';
   }
 
-  console.log('🚀 showView app...');
-  showView('app');
-  console.log('✅ app visible, chargement tickets...');
+  console.log('🚀 Avant showView app — me=', me, 'isStaff=', isStaff);
+
+  // Force l'affichage de l'app directement
+  document.querySelectorAll('.view').forEach(v => {
+    v.classList.remove('active');
+    v.style.display = 'none';
+  });
+  const appEl = document.getElementById('app-view');
+  appEl.classList.add('active');
+  appEl.style.display = 'flex';
+  appEl.style.flexDirection = 'column';
+  appEl.style.minHeight = '100vh';
+
+  console.log('✅ app-view display:', appEl.style.display, 'classList:', appEl.className);
 
   try {
     await loadMyTickets();
+    console.log('✅ tickets chargés');
   } catch(e) {
     console.error('❌ loadMyTickets:', e);
     document.getElementById('list-my').innerHTML =
-      `<div class="empty-state"><div class="empty-state-icon">⚠️</div><h3>Erreur Supabase</h3><p>${e.message}</p><p style="margin-top:8px;font-size:11px;font-family:var(--font-mono);color:var(--text-muted)">Vérifie que les tables existent dans Supabase</p></div>`;
+      `<div class="empty-state"><div class="empty-state-icon">⚠️</div><h3>Erreur Supabase</h3><p>${e.message}</p></div>`;
   }
 }
 
