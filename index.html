@@ -995,47 +995,68 @@ function loginWithDiscord() {
 }
 
 async function handleOAuthCallback(token) {
-  // Nettoie immédiatement le hash pour éviter toute boucle de redirection
+  // Nettoie le hash tout de suite
   history.replaceState(null, '', window.location.pathname);
-  setLoading('Récupération du profil Discord...');
+  setLoading('Connexion à Discord...');
 
   try {
-    const uRes = await fetch('https://discord.com/api/users/@me', {
+    // ---- 1. Profil utilisateur ----
+    setLoading('Récupération du profil...');
+    const uRes = await fetch('https://discord.com/api/v10/users/@me', {
       headers: { Authorization: `Bearer ${token}` }
     });
-    if (!uRes.ok) throw new Error(`Erreur Discord API (${uRes.status})`);
-    const user = await uRes.json();
-    if (!user.id) throw new Error('Profil Discord invalide');
 
-    setLoading('Vérification des rôles...');
+    const uText = await uRes.text();
+    let user;
+    try { user = JSON.parse(uText); } catch(e) {
+      throw new Error('Réponse Discord invalide: ' + uText.substring(0, 100));
+    }
 
+    if (!uRes.ok) {
+      throw new Error(`Discord refusé (${uRes.status}): ${user.message || uText}`);
+    }
+    if (!user.id) throw new Error("Pas d'ID utilisateur dans la reponse Discord");
+
+    // ---- 2. Rôles sur le serveur ----
+    setLoading('Vérification des accès...');
     let roles = [];
     try {
-      const mRes = await fetch(`https://discord.com/api/users/@me/guilds/${GUILD_ID}/member`, {
+      const mRes = await fetch(`https://discord.com/api/v10/users/@me/guilds/${GUILD_ID}/member`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      if (mRes.ok) { const m = await mRes.json(); roles = m.roles || []; }
-    } catch (_) { console.warn('Vérification rôles impossible — staff désactivé.'); }
+      if (mRes.ok) {
+        const m = await mRes.json();
+        roles = m.roles || [];
+      } else {
+        console.warn('Rôles non récupérables (' + mRes.status + ') — pas de staff');
+      }
+    } catch (e) {
+      console.warn('Fetch rôles échoué:', e.message);
+    }
 
+    // ---- 3. Sauvegarde session ----
     me = {
       id:       user.id,
       username: user.global_name || user.username,
       avatar:   user.avatar
         ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=64`
-        : `https://cdn.discordapp.com/embed/avatars/${parseInt(user.discriminator || '0') % 5}.png`
+        : `https://cdn.discordapp.com/embed/avatars/0.png`
     };
 
     isStaff = roles.includes(STAFF_ROLE_ID);
 
-    // Session avec expiry 8h
     sessionStorage.setItem('dc_user',   JSON.stringify(me));
     sessionStorage.setItem('dc_staff',  String(isStaff));
     sessionStorage.setItem('dc_expiry', String(Date.now() + 8 * 3600 * 1000));
+
+    console.log('✅ Connecté:', me.username, '| Staff:', isStaff);
     return true;
 
   } catch(err) {
-    console.error('OAuth error:', err);
-    showToast('Erreur : ' + err.message, 'error');
+    console.error('❌ handleOAuthCallback:', err);
+    // Affiche l'erreur à l'écran pour le debug
+    setLoading('❌ Erreur : ' + err.message);
+    setTimeout(() => showView('login'), 3000);
     return false;
   }
 }
