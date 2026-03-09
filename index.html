@@ -3,395 +3,338 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Dev Center — Construisez, déployez</title>
+<title>Dev Center</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #f5f7ff;
-  --bg2: #ffffff;
-  --border: #e8eaf2;
-  --primary: #4f6ef7;
-  --primary-dark: #3a57e8;
-  --primary-light: #eef1fe;
-  --text: #0f1117;
-  --text2: #444860;
-  --text3: #8b8fa8;
-  --green: #22c55e;
-  --yellow: #f59e0b;
-  --red: #ef4444;
-  --radius: 14px;
-  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.06);
-  --shadow-lg: 0 8px 32px rgba(79,110,247,0.12);
+:root{
+  --bg:#0a0a12;--bg2:#111120;--bg3:#16162a;--border:rgba(255,255,255,.07);
+  --primary:#4f6ef7;--primary-d:#3a57e8;--primary-l:rgba(79,110,247,.12);
+  --text:#eeeeff;--text2:#9898b8;--text3:#5c5c7a;
+  --green:#22c55e;--yellow:#f59e0b;--red:#ef4444;--cyan:#06b6d4;
+  --r:12px;--shadow:0 4px 24px rgba(0,0,0,.4);--shadow-lg:0 8px 40px rgba(79,110,247,.25);
 }
-[data-theme="dark"] {
-  --bg: #09090f;
-  --bg2: #111118;
-  --border: #1e1e2e;
-  --primary-light: #1a1f3a;
-  --text: #f0f0f8;
-  --text2: #9898b8;
-  --text3: #5c5c7a;
-  --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 4px 16px rgba(0,0,0,0.2);
+[data-theme="light"]{
+  --bg:#f4f6ff;--bg2:#fff;--bg3:#f0f2fe;--border:rgba(0,0,0,.07);
+  --text:#0f1020;--text2:#444860;--text3:#8b8fa8;
+  --shadow:0 2px 12px rgba(0,0,0,.08);--shadow-lg:0 8px 32px rgba(79,110,247,.15);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
-body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .3s,color .3s;}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s;}
 
-/* ── PAGE SYSTEM ── */
-.page{display:none;}
+/* STARS CANVAS */
+#stars-canvas{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.6;}
+[data-theme="light"] #stars-canvas{opacity:.3;}
+
+/* PAGES */
+.page{display:none;position:relative;z-index:1;}
 .page.active{display:block;}
-#app-page.active{display:flex;}
+#app-page.active{display:flex;flex-direction:column;min-height:100vh;}
 
-/* ── SVG ICONS ── */
-.icon{display:inline-block;vertical-align:middle;flex-shrink:0;}
-
-/* ══════════════════════════════════
-   LANDING
-══════════════════════════════════ */
-/* NAVBAR */
+/* ═══ NAVBAR ═══ */
 .navbar{
-  position:sticky;top:0;z-index:100;
-  background:rgba(245,247,255,.85);
-  backdrop-filter:blur(20px);
+  position:sticky;top:0;z-index:200;height:60px;
+  background:rgba(10,10,18,.8);backdrop-filter:blur(24px);
   border-bottom:1px solid var(--border);
-  padding:0 40px;height:64px;
-  display:flex;align-items:center;justify-content:space-between;
+  display:flex;align-items:center;justify-content:space-between;padding:0 40px;
   transition:background .3s;
 }
-[data-theme="dark"] .navbar{background:rgba(9,9,15,.85);}
-.nav-logo{display:flex;align-items:center;gap:10px;font-family:'Syne',sans-serif;font-weight:800;font-size:18px;color:var(--text);text-decoration:none;}
-.nav-logo-box{width:34px;height:34px;background:var(--primary);border-radius:9px;display:flex;align-items:center;justify-content:center;}
+[data-theme="light"] .navbar{background:rgba(244,246,255,.85);}
+.nav-logo{display:flex;align-items:center;gap:10px;font-family:'Syne',sans-serif;font-weight:800;font-size:17px;color:var(--text);text-decoration:none;}
+.nav-logo-box{width:32px;height:32px;background:var(--primary);border-radius:9px;display:flex;align-items:center;justify-content:center;}
 .nav-links{display:flex;gap:28px;list-style:none;}
-.nav-links a{font-size:14px;font-weight:500;color:var(--text2);text-decoration:none;transition:color .2s;}
+.nav-links a{font-size:13px;font-weight:500;color:var(--text2);text-decoration:none;transition:color .2s;}
 .nav-links a:hover{color:var(--primary);}
-.nav-right{display:flex;align-items:center;gap:10px;}
+.nav-right{display:flex;align-items:center;gap:8px;}
 .btn-icon{width:36px;height:36px;border-radius:9px;border:1px solid var(--border);background:var(--bg2);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text2);transition:all .2s;}
 .btn-icon:hover{border-color:var(--primary);color:var(--primary);}
-.btn-discord-nav{display:inline-flex;align-items:center;gap:8px;background:var(--primary);color:#fff;border:none;padding:9px 18px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s;}
-.btn-discord-nav:hover{background:var(--primary-dark);box-shadow:var(--shadow-lg);}
+.btn-connect{display:inline-flex;align-items:center;gap:8px;background:var(--primary);color:#fff;border:none;padding:9px 18px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s;letter-spacing:.01em;}
+.btn-connect:hover{background:var(--primary-d);box-shadow:var(--shadow-lg);transform:translateY(-1px);}
 
-/* HERO */
-.hero{
-  max-width:1200px;margin:0 auto;
-  padding:80px 40px 60px;
-  display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;
-}
-.hero-badge{display:inline-flex;align-items:center;gap:6px;background:var(--primary-light);color:var(--primary);border:1px solid rgba(79,110,247,.2);padding:5px 14px;border-radius:100px;font-size:12px;font-weight:600;margin-bottom:22px;}
-.hero-title{font-family:'Syne',sans-serif;font-size:58px;font-weight:800;line-height:1.05;letter-spacing:-.02em;margin-bottom:20px;}
+/* ═══ HERO ═══ */
+.hero{max-width:1200px;margin:0 auto;padding:80px 40px 60px;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
+.hero-badge{display:inline-flex;align-items:center;gap:7px;background:var(--primary-l);color:var(--primary);border:1px solid rgba(79,110,247,.2);padding:5px 14px;border-radius:100px;font-size:12px;font-weight:600;margin-bottom:24px;animation:fadeUp .5s ease;}
+.hero-title{font-family:'Syne',sans-serif;font-size:62px;font-weight:800;line-height:1.02;letter-spacing:-.03em;margin-bottom:22px;animation:fadeUp .5s .1s ease both;}
 .hero-title span{color:var(--primary);}
-.hero-desc{font-size:15px;color:var(--text2);line-height:1.8;margin-bottom:32px;max-width:440px;}
-.hero-btns{display:flex;gap:12px;flex-wrap:wrap;}
+.hero-desc{font-size:15px;color:var(--text2);line-height:1.85;margin-bottom:32px;animation:fadeUp .5s .2s ease both;}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;animation:fadeUp .5s .3s ease both;}
 .btn-primary{display:inline-flex;align-items:center;gap:8px;background:var(--primary);color:#fff;border:none;padding:12px 22px;border-radius:11px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s;text-decoration:none;}
-.btn-primary:hover{background:var(--primary-dark);transform:translateY(-1px);box-shadow:var(--shadow-lg);}
+.btn-primary:hover{background:var(--primary-d);transform:translateY(-2px);box-shadow:var(--shadow-lg);}
 .btn-secondary{display:inline-flex;align-items:center;gap:8px;background:var(--bg2);color:var(--text);border:1px solid var(--border);padding:12px 22px;border-radius:11px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s;text-decoration:none;}
 .btn-secondary:hover{border-color:var(--primary);color:var(--primary);}
 
 /* TERMINAL */
-.terminal{background:#1a1a2e;border-radius:16px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.18);}
-.terminal-bar{background:#252540;padding:12px 16px;display:flex;align-items:center;gap:8px;}
+.terminal{background:#13131f;border-radius:16px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.05);animation:fadeUp .5s .15s ease both;}
+.t-bar{background:#1c1c30;padding:12px 16px;display:flex;align-items:center;gap:7px;}
 .t-dot{width:12px;height:12px;border-radius:50%;}
-.t-title{font-size:12px;color:#666;font-family:'Outfit',sans-serif;margin-left:6px;}
-.terminal-body{padding:20px 20px 8px;font-family:'Outfit',monospace;font-size:13px;line-height:1.9;}
-.t-user{color:#7c88ff;}
-.t-cmd{color:#fff;font-weight:600;}
-.t-dim{color:#555;}
-.t-ok{color:#22c55e;font-weight:600;}
-.terminal-status{background:#252540;margin:12px;border-radius:10px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;}
-.t-status-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e;animation:blink 2s infinite;}
-@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
-.t-status-label{font-size:12px;color:#22c55e;font-weight:600;}
-.t-status-badge{font-size:11px;color:#888;background:#333;padding:3px 10px;border-radius:6px;}
-.terminal-bar-bottom{margin:0 12px 12px;background:#252540;border-radius:10px;overflow:hidden;}
-.terminal-progress{height:4px;background:linear-gradient(90deg,#4f6ef7,#a78bfa,#f472b6);width:75%;}
+.t-title{font-size:11px;color:#555;font-family:'Outfit',monospace;margin-left:6px;}
+.t-body{padding:20px 20px 8px;font-family:'Outfit',monospace;font-size:13px;line-height:1.95;}
+.t-user{color:#6c7af5;}.t-cmd{color:#eeeeff;font-weight:600;}.t-dim{color:#444}.t-ok{color:#22c55e;font-weight:600;}
+.t-status{background:#1c1c30;margin:12px;border-radius:10px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;}
+.t-pulse{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e;animation:pulse 2s infinite;}
+.t-progress-wrap{margin:0 12px 12px;background:#1c1c30;border-radius:10px;overflow:hidden;}
+.t-progress{height:4px;background:linear-gradient(90deg,#4f6ef7,#a78bfa,#f472b6);width:75%;animation:progressGrow 2s ease;}
+@keyframes progressGrow{from{width:0}to{width:75%}}
 
-/* SECTIONS */
+/* ═══ SECTIONS ═══ */
 .section{padding:80px 40px;max-width:1200px;margin:0 auto;}
-.section-tag{display:inline-flex;align-items:center;border:1px solid var(--border);padding:4px 14px;border-radius:100px;font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:16px;}
-.section-title{font-family:'Syne',sans-serif;font-size:42px;font-weight:800;letter-spacing:-.02em;margin-bottom:10px;}
-.section-sub{font-size:14px;color:var(--text3);margin-bottom:48px;font-family:'Outfit',monospace;}
+.section-full{padding:80px 0;}
+.section-inner{max-width:1200px;margin:0 auto;padding:0 40px;}
+.s-tag{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);padding:4px 12px;border-radius:100px;font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px;}
+.s-title{font-family:'Syne',sans-serif;font-size:42px;font-weight:800;letter-spacing:-.02em;margin-bottom:10px;}
+.s-sub{font-size:13px;color:var(--text3);margin-bottom:44px;font-family:'Outfit',monospace;}
+.center{text-align:center;}
 
 /* PRICING */
-.pricing-tabs{display:flex;gap:6px;background:var(--bg2);border:1px solid var(--border);padding:4px;border-radius:12px;width:fit-content;margin-bottom:36px;}
-.pricing-tab{padding:8px 20px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--text3);font-family:'Outfit',sans-serif;transition:all .2s;display:flex;align-items:center;gap:7px;}
-.pricing-tab.active{background:var(--primary);color:#fff;}
-.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
-.pricing-grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;max-width:760px;}
-.plan-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:28px;position:relative;transition:all .2s;}
-.plan-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-3px);}
-.plan-card.popular{border-color:var(--primary);border-width:2px;}
-.plan-badge{position:absolute;top:16px;right:16px;background:var(--primary);color:#fff;font-size:10px;font-weight:700;padding:3px 10px;border-radius:6px;letter-spacing:.06em;}
-.plan-icon{width:40px;height:40px;border-radius:10px;background:var(--primary-light);display:flex;align-items:center;justify-content:center;margin-bottom:14px;color:var(--primary);}
-.plan-name{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:3px;}
-.plan-desc{font-size:12px;color:var(--text3);margin-bottom:8px;}
-.plan-price{font-size:13px;font-weight:700;color:var(--primary);margin-bottom:16px;}
-.plan-features{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:22px;}
-.plan-features li{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text2);}
-.plan-features li svg{color:var(--primary);flex-shrink:0;}
-.btn-plan{width:100%;padding:11px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s;border:1px solid var(--border);background:transparent;color:var(--text);}
-.btn-plan:hover,.plan-card.popular .btn-plan{background:var(--primary);color:#fff;border-color:var(--primary);}
+.ptabs{display:flex;gap:4px;background:var(--bg2);border:1px solid var(--border);padding:4px;border-radius:12px;width:fit-content;margin-bottom:36px;}
+.ptab{padding:8px 18px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--text3);font-family:'Outfit',sans-serif;transition:all .2s;display:flex;align-items:center;gap:7px;}
+.ptab.active{background:var(--primary);color:#fff;}
+.pgrid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+.pgrid2{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;max-width:720px;}
+.pcard{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:26px;position:relative;transition:all .3s;cursor:pointer;}
+.pcard:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:rgba(79,110,247,.3);}
+.pcard.pop{border-color:var(--primary);border-width:2px;}
+.pop-badge{position:absolute;top:14px;right:14px;background:var(--primary);color:#fff;font-size:9px;font-weight:700;padding:2px 9px;border-radius:5px;letter-spacing:.06em;}
+.picon{width:40px;height:40px;border-radius:10px;background:var(--primary-l);display:flex;align-items:center;justify-content:center;margin-bottom:14px;color:var(--primary);}
+.pname{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:2px;}
+.pdesc{font-size:12px;color:var(--text3);margin-bottom:7px;}
+.pprice{font-size:13px;font-weight:700;color:var(--primary);margin-bottom:16px;}
+.pfeats{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.pfeats li{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text2);}
+.pfeats svg{color:var(--primary);flex-shrink:0;}
+.btn-plan{width:100%;padding:10px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s;border:1px solid var(--border);background:transparent;color:var(--text);}
+.btn-plan:hover,.pcard.pop .btn-plan{background:var(--primary);color:#fff;border-color:var(--primary);}
 
-/* BOT MODULE */
-.bot-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:28px;max-width:480px;margin:0 auto;}
-.bot-header{display:flex;align-items:center;gap:14px;margin-bottom:16px;}
-.bot-icon{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#7c3aed,#a78bfa);display:flex;align-items:center;justify-content:center;}
-.bot-available{display:inline-flex;align-items:center;gap:5px;background:#dcfce7;color:#16a34a;font-size:10px;font-weight:700;padding:3px 10px;border-radius:6px;}
-[data-theme="dark"] .bot-available{background:rgba(34,197,94,.1);color:#22c55e;}
-.bot-desc{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:16px;}
+/* BOT CARD */
+.bot-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:28px;max-width:460px;margin:0 auto;}
+.bot-avail{display:inline-flex;align-items:center;gap:5px;background:rgba(34,197,94,.1);color:var(--green);font-size:10px;font-weight:700;padding:3px 9px;border-radius:5px;}
 
 /* ABOUT */
 .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;}
-.about-title{font-family:'Syne',sans-serif;font-size:36px;font-weight:800;line-height:1.2;margin-bottom:20px;}
-.about-title span{color:var(--primary);}
-.about-text{font-size:14px;color:var(--text2);line-height:1.8;margin-bottom:14px;}
-.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px;}
-.stat-box{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px 20px;}
+.a-title{font-family:'Syne',sans-serif;font-size:36px;font-weight:800;line-height:1.2;margin-bottom:20px;}
+.a-title span{color:var(--primary);}
+.a-text{font-size:14px;color:var(--text2);line-height:1.85;margin-bottom:14px;}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:24px;}
+.stat-box{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:16px 18px;transition:all .2s;}
+.stat-box:hover{border-color:rgba(79,110,247,.3);transform:translateY(-2px);}
 .stat-num{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--primary);}
-.stat-label{font-size:12px;color:var(--text3);}
-.about-features{display:flex;flex-direction:column;gap:10px;}
-.about-feat{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px 18px;display:flex;align-items:flex-start;gap:14px;}
-.about-feat-icon{width:36px;height:36px;border-radius:9px;background:var(--primary-light);display:flex;align-items:center;justify-content:center;color:var(--primary);flex-shrink:0;}
-.about-feat-title{font-size:14px;font-weight:600;margin-bottom:3px;}
-.about-feat-desc{font-size:12px;color:var(--text3);}
+.stat-lbl{font-size:12px;color:var(--text3);}
+.afeat{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px 18px;display:flex;align-items:flex-start;gap:14px;transition:all .2s;margin-bottom:10px;}
+.afeat:hover{border-color:rgba(79,110,247,.2);transform:translateX(4px);}
+.afeat-icon{width:34px;height:34px;border-radius:9px;background:var(--primary-l);display:flex;align-items:center;justify-content:center;color:var(--primary);flex-shrink:0;}
+.afeat-title{font-size:13px;font-weight:600;margin-bottom:2px;}
+.afeat-desc{font-size:12px;color:var(--text3);}
 
 /* WHY */
-.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
-.why-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:22px;}
-.why-icon{width:40px;height:40px;border-radius:10px;background:var(--primary-light);display:flex;align-items:center;justify-content:center;color:var(--primary);margin-bottom:14px;}
+.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.why-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:22px;transition:all .3s;}
+.why-card:hover{border-color:rgba(79,110,247,.3);transform:translateY(-3px);box-shadow:var(--shadow);}
+.why-icon{width:40px;height:40px;border-radius:10px;background:var(--primary-l);display:flex;align-items:center;justify-content:center;color:var(--primary);margin-bottom:14px;}
 .why-title{font-size:14px;font-weight:700;margin-bottom:6px;font-family:'Syne',sans-serif;}
 .why-desc{font-size:12px;color:var(--text3);line-height:1.7;}
 
 /* TEAM */
 .team-grid{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;}
-.team-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:24px;text-align:center;width:200px;}
-.team-avatar{width:64px;height:64px;border-radius:50%;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#fff;}
+.team-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:24px;text-align:center;width:190px;transition:all .3s;}
+.team-card:hover{border-color:rgba(79,110,247,.3);transform:translateY(-4px);box-shadow:var(--shadow-lg);}
+.team-av{width:64px;height:64px;border-radius:50%;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#fff;}
 .team-name{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;margin-bottom:4px;}
 .team-role{font-size:12px;color:var(--primary);font-weight:600;margin-bottom:6px;}
 .team-id{font-size:10px;color:var(--text3);font-family:'Outfit',monospace;}
-
-/* FOOTER */
-.footer{border-top:1px solid var(--border);padding:32px 40px;display:flex;align-items:center;justify-content:space-between;max-width:1200px;margin:0 auto;}
+.footer-strip{border-top:1px solid var(--border);padding:28px 40px;display:flex;align-items:center;justify-content:space-between;max-width:1200px;margin:0 auto;}
 .footer-copy{font-size:12px;color:var(--text3);}
 
-/* ══════════════════════════════════
-   DASHBOARD
-══════════════════════════════════ */
-#app-page{min-height:100vh;flex-direction:column;}
-.app-topbar{
-  height:58px;background:var(--bg2);border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 24px;position:sticky;top:0;z-index:100;
-}
-.topbar-logo{display:flex;align-items:center;gap:9px;font-family:'Syne',sans-serif;font-weight:800;font-size:16px;color:var(--text);}
+/* ═══════════════════════════════
+   APP
+═══════════════════════════════ */
+.topbar{height:56px;background:rgba(10,10,18,.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:200;}
+[data-theme="light"] .topbar{background:rgba(244,246,255,.9);}
+.topbar-logo{display:flex;align-items:center;gap:8px;font-family:'Syne',sans-serif;font-weight:800;font-size:16px;}
 .topbar-logo-box{width:28px;height:28px;background:var(--primary);border-radius:7px;display:flex;align-items:center;justify-content:center;}
-.topbar-right{display:flex;align-items:center;gap:10px;}
-.user-pill{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--border);padding:5px 12px 5px 5px;border-radius:100px;font-size:13px;font-weight:500;}
+.topbar-r{display:flex;align-items:center;gap:8px;}
+.user-pill{display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--border);padding:4px 12px 4px 4px;border-radius:100px;font-size:13px;font-weight:500;}
 .user-pill img{width:26px;height:26px;border-radius:50%;}
 .badge-staff{background:linear-gradient(135deg,var(--primary),#818cf8);color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px;letter-spacing:.06em;}
-.btn-logout{background:transparent;border:1px solid var(--border);color:var(--text2);padding:6px 12px;border-radius:8px;font-size:13px;cursor:pointer;transition:all .2s;font-family:'Outfit',sans-serif;display:flex;align-items:center;gap:6px;}
+.btn-logout{background:transparent;border:1px solid var(--border);color:var(--text2);padding:6px 12px;border-radius:8px;font-size:13px;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s;display:flex;align-items:center;gap:6px;}
 .btn-logout:hover{border-color:var(--red);color:var(--red);}
-
-.app-body{display:flex;flex:1;}
+.app-body{display:flex;flex:1;min-height:0;}
 
 /* SIDEBAR */
-.sidebar{
-  width:220px;flex-shrink:0;
-  background:var(--bg2);border-right:1px solid var(--border);
-  padding:20px 12px;
-  display:flex;flex-direction:column;gap:4px;
-  position:sticky;top:58px;height:calc(100vh - 58px);overflow-y:auto;
-}
-.sidebar-label{font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;padding:0 8px;margin:12px 0 6px;}
-.sidebar-link{
-  display:flex;align-items:center;gap:10px;
-  padding:9px 12px;border-radius:10px;
-  font-size:13px;font-weight:500;color:var(--text2);
-  cursor:pointer;transition:all .2s;border:none;background:transparent;
-  width:100%;text-align:left;font-family:'Outfit',sans-serif;
-}
-.sidebar-link:hover{background:var(--bg);color:var(--text);}
-.sidebar-link.active{background:var(--primary-light);color:var(--primary);font-weight:600;}
-.sidebar-link .sidebar-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:var(--bg);flex-shrink:0;transition:background .2s;}
-.sidebar-link.active .sidebar-icon{background:rgba(79,110,247,.15);}
-.sidebar-count{margin-left:auto;background:var(--primary);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:100px;}
+.sidebar{width:220px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);padding:18px 10px;display:flex;flex-direction:column;gap:2px;position:sticky;top:56px;height:calc(100vh - 56px);overflow-y:auto;}
+.sb-lbl{font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;padding:0 8px;margin:14px 0 6px;}
+.sb-link{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;transition:all .2s;border:none;background:transparent;width:100%;font-family:'Outfit',sans-serif;}
+.sb-link:hover{background:var(--bg3);color:var(--text);}
+.sb-link.active{background:var(--primary-l);color:var(--primary);font-weight:600;}
+.sb-icon{width:30px;height:30px;border-radius:8px;background:var(--bg3);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .2s;}
+.sb-link.active .sb-icon{background:rgba(79,110,247,.15);}
+.sb-count{margin-left:auto;background:var(--primary);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:100px;}
 
-/* MAIN CONTENT */
-.app-main{flex:1;padding:28px;overflow-y:auto;}
-.dash-panel{display:none;}
-.dash-panel.active{display:block;}
+/* MAIN */
+.app-main{flex:1;padding:28px;overflow-y:auto;display:flex;flex-direction:column;}
+.dash-panel{display:none;flex-direction:column;flex:1;}
+.dash-panel.active{display:flex;}
+.ph{margin-bottom:22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.ph-left h2{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-bottom:3px;}
+.ph-left p{font-size:13px;color:var(--text3);}
 
-/* PANEL HEADER */
-.panel-header{margin-bottom:24px;}
-.panel-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-bottom:4px;}
-.panel-sub{font-size:13px;color:var(--text3);}
+/* TICKET LIST */
+.t-list{display:flex;flex-direction:column;gap:7px;flex:1;}
+.t-row{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all .25s;}
+.t-row:hover{border-color:rgba(79,110,247,.3);transform:translateX(4px);box-shadow:var(--shadow);}
+.t-num{font-family:'Outfit',monospace;font-size:11px;color:var(--text3);background:var(--bg3);padding:3px 8px;border-radius:6px;min-width:68px;text-align:center;}
+.t-info{flex:1;min-width:0;}
+.t-tit{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px;}
+.t-meta{font-size:12px;color:var(--text3);}
+.spill{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;white-space:nowrap;font-family:'Outfit',monospace;}
+.sdot{width:5px;height:5px;border-radius:50%;}
+.s-open{background:rgba(34,197,94,.08);color:#22c55e;border:1px solid rgba(34,197,94,.18);}
+.s-open .sdot{background:#22c55e;box-shadow:0 0 5px #22c55e;}
+.s-prog{background:rgba(245,158,11,.08);color:#f59e0b;border:1px solid rgba(245,158,11,.18);}
+.s-prog .sdot{background:#f59e0b;}
+.s-closed{background:rgba(100,100,140,.08);color:var(--text3);border:1px solid var(--border);}
+.s-closed .sdot{background:var(--text3);}
 
-/* TICKETS / COMMANDES */
-.list-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
-.ticket-list{display:flex;flex-direction:column;gap:8px;}
-.ticket-row{
-  background:var(--bg2);border:1px solid var(--border);
-  border-radius:12px;padding:15px 18px;
-  display:flex;align-items:center;gap:14px;
-  cursor:pointer;transition:all .2s;
-}
-.ticket-row:hover{border-color:rgba(79,110,247,.3);transform:translateX(3px);}
-.ticket-num{font-family:'Outfit',monospace;font-size:11px;color:var(--text3);background:var(--bg);padding:3px 8px;border-radius:6px;min-width:68px;}
-.ticket-info{flex:1;min-width:0;}
-.ticket-title-text{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px;}
-.ticket-meta-text{font-size:12px;color:var(--text3);}
-.status-pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;white-space:nowrap;font-family:'Outfit',monospace;}
-.status-dot{width:5px;height:5px;border-radius:50%;}
-.s-open{background:rgba(34,197,94,.08);color:#16a34a;border:1px solid rgba(34,197,94,.2);}
-.s-open .status-dot{background:#22c55e;}
-.s-progress{background:rgba(245,158,11,.08);color:#b45309;border:1px solid rgba(245,158,11,.2);}
-.s-progress .status-dot{background:#f59e0b;}
-.s-closed{background:rgba(100,100,120,.08);color:var(--text3);border:1px solid var(--border);}
-.s-closed .status-dot{background:var(--text3);}
-[data-theme="dark"] .s-open{background:rgba(34,197,94,.08);color:#22c55e;}
-[data-theme="dark"] .s-progress{background:rgba(245,158,11,.08);color:#f59e0b;}
+/* EMPTY */
+.empty{text-align:center;padding:70px 20px;color:var(--text3);flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.empty-box{width:52px;height:52px;border-radius:14px;background:var(--primary-l);display:flex;align-items:center;justify-content:center;color:var(--primary);margin:0 auto 16px;}
+.empty h3{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--text2);margin-bottom:6px;}
+.empty p{font-size:13px;}
 
-/* TICKET DETAIL */
-.detail-back{display:inline-flex;align-items:center;gap:7px;background:transparent;border:none;color:var(--text3);font-size:13px;cursor:pointer;margin-bottom:18px;padding:0;font-family:'Outfit',sans-serif;transition:color .2s;}
-.detail-back:hover{color:var(--primary);}
-.detail-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:14px;position:relative;overflow:hidden;}
-.detail-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--primary),#a78bfa);}
-.detail-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;gap:16px;}
-.detail-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;}
-.detail-body-text{font-size:14px;color:var(--text2);line-height:1.8;white-space:pre-wrap;}
-.detail-meta{display:flex;flex-wrap:wrap;gap:18px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border);font-size:12px;color:var(--text3);}
-.detail-meta-item{display:flex;align-items:center;gap:6px;}
-.staff-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border);}
-.staff-actions-label{font-size:11px;color:var(--text3);font-weight:700;align-self:center;margin-right:4px;font-family:'Outfit',monospace;text-transform:uppercase;}
-.btn-sm{padding:6px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid;font-family:'Outfit',sans-serif;transition:all .2s;}
-.btn-sm-green{background:rgba(34,197,94,.08);color:#16a34a;border-color:rgba(34,197,94,.2);}
-.btn-sm-green:hover{background:rgba(34,197,94,.15);}
-.btn-sm-yellow{background:rgba(245,158,11,.08);color:#b45309;border-color:rgba(245,158,11,.2);}
-.btn-sm-yellow:hover{background:rgba(245,158,11,.15);}
-.btn-sm-red{background:rgba(239,68,68,.08);color:var(--red);border-color:rgba(239,68,68,.2);}
-.btn-sm-red:hover{background:rgba(239,68,68,.15);}
-[data-theme="dark"] .btn-sm-green{color:#22c55e;}
-[data-theme="dark"] .btn-sm-yellow{color:#f59e0b;}
+/* DETAIL */
+.det-back{display:inline-flex;align-items:center;gap:7px;background:transparent;border:none;color:var(--text3);font-size:13px;cursor:pointer;margin-bottom:18px;padding:0;font-family:'Outfit',sans-serif;transition:color .2s;}
+.det-back:hover{color:var(--primary);}
+.det-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:24px;margin-bottom:14px;position:relative;overflow:hidden;}
+.det-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--primary),#a78bfa,#f472b6);}
+.det-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;gap:16px;}
+.det-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;}
+.det-body{font-size:14px;color:var(--text2);line-height:1.8;white-space:pre-wrap;}
+.det-meta{display:flex;flex-wrap:wrap;gap:16px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border);font-size:12px;color:var(--text3);}
+.det-meta-item{display:flex;align-items:center;gap:6px;}
+.staff-acts{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border);}
+.acts-lbl{font-size:10px;color:var(--text3);font-weight:700;align-self:center;font-family:'Outfit',monospace;text-transform:uppercase;}
+.btn-sm{padding:6px 13px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid;font-family:'Outfit',sans-serif;transition:all .2s;}
+.sm-green{background:rgba(34,197,94,.08);color:#22c55e;border-color:rgba(34,197,94,.2);}
+.sm-green:hover{background:rgba(34,197,94,.18);}
+.sm-yellow{background:rgba(245,158,11,.08);color:#f59e0b;border-color:rgba(245,158,11,.2);}
+.sm-yellow:hover{background:rgba(245,158,11,.18);}
+.sm-red{background:rgba(239,68,68,.08);color:var(--red);border-color:rgba(239,68,68,.2);}
+.sm-red:hover{background:rgba(239,68,68,.18);}
+.sm-dark{background:rgba(100,100,140,.08);color:var(--text3);border-color:var(--border);}
+.sm-dark:hover{background:rgba(100,100,140,.15);}
+
+/* USER INFO CARD */
+.user-info-card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.uic-av{width:42px;height:42px;border-radius:50%;border:2px solid rgba(79,110,247,.3);}
+.uic-name{font-size:14px;font-weight:600;margin-bottom:2px;}
+.uic-id{font-size:11px;color:var(--text3);font-family:'Outfit',monospace;}
 
 /* MESSAGES */
-.msg-section{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
-.msg-header{padding:12px 18px;border-bottom:1px solid var(--border);font-size:12px;font-weight:700;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;gap:8px;}
-.msg-list{padding:16px;display:flex;flex-direction:column;gap:16px;max-height:360px;overflow-y:auto;}
-.msg-item{display:flex;gap:11px;}
-.msg-avatar{width:32px;height:32px;border-radius:50%;flex-shrink:0;border:1px solid var(--border);}
-.msg-content{flex:1;}
-.msg-author-row{display:flex;align-items:center;gap:7px;margin-bottom:4px;}
-.msg-author-name{font-size:13px;font-weight:600;}
+.msg-sec{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;}
+.msg-hdr{padding:12px 18px;border-bottom:1px solid var(--border);font-size:12px;font-weight:700;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;gap:8px;}
+.msg-list{padding:16px;display:flex;flex-direction:column;gap:14px;max-height:340px;overflow-y:auto;flex:1;}
+.msg-item{display:flex;gap:11px;animation:fadeUp .25s ease;}
+.msg-av{width:32px;height:32px;border-radius:50%;flex-shrink:0;border:1px solid var(--border);}
+.msg-c{flex:1;}
+.msg-ar{display:flex;align-items:center;gap:7px;margin-bottom:4px;}
+.msg-name{font-size:13px;font-weight:600;}
 .msg-time{font-size:11px;color:var(--text3);font-family:'Outfit',monospace;}
-.msg-text{font-size:13px;color:var(--text2);line-height:1.6;white-space:pre-wrap;}
-.msg-input-wrap{padding:14px 16px;border-top:1px solid var(--border);}
-.msg-textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 13px;color:var(--text);font-size:13px;font-family:'Outfit',sans-serif;resize:none;outline:none;min-height:68px;transition:border-color .2s;}
-.msg-textarea:focus{border-color:rgba(79,110,247,.4);}
-.msg-textarea::placeholder{color:var(--text3);}
+.msg-txt{font-size:13px;color:var(--text2);line-height:1.65;white-space:pre-wrap;}
+.msg-inp-wrap{padding:14px 16px;border-top:1px solid var(--border);}
+.msg-ta{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:10px 13px;color:var(--text);font-size:13px;font-family:'Outfit',sans-serif;resize:none;outline:none;min-height:66px;transition:border-color .2s;}
+.msg-ta:focus{border-color:rgba(79,110,247,.4);box-shadow:0 0 0 3px rgba(79,110,247,.06);}
+.msg-ta::placeholder{color:var(--text3);}
 .msg-send-row{display:flex;justify-content:flex-end;margin-top:8px;}
-.empty-state{text-align:center;padding:60px 20px;color:var(--text3);}
-.empty-icon{width:48px;height:48px;border-radius:12px;background:var(--primary-light);display:flex;align-items:center;justify-content:center;color:var(--primary);margin:0 auto 14px;}
-.empty-state h3{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--text2);margin-bottom:6px;}
-.empty-state p{font-size:13px;}
 
 /* COMPTE */
-.compte-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:28px;max-width:560px;}
-.compte-avatar-row{display:flex;align-items:center;gap:18px;margin-bottom:28px;}
-.compte-avatar{width:72px;height:72px;border-radius:50%;border:3px solid var(--primary);}
-.compte-username{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;}
-.compte-id{font-size:12px;color:var(--text3);font-family:'Outfit',monospace;margin-top:3px;}
-.form-group{margin-bottom:18px;}
-.form-label{display:block;font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:7px;font-family:'Outfit',monospace;}
-.form-input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-size:14px;font-family:'Outfit',sans-serif;outline:none;transition:border-color .2s;}
-.form-input:focus{border-color:rgba(79,110,247,.4);}
-.form-input::placeholder{color:var(--text3);}
-.form-input:disabled{opacity:.5;cursor:not-allowed;}
+.compte-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;width:100%;}
+.compte-col{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:20px;display:flex;flex-direction:column;gap:16px;}
+.compte-col-title{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;padding-bottom:12px;border-bottom:1px solid var(--border);}
+.compte-row{display:flex;flex-direction:column;gap:4px;}
+.c-lbl{font-size:11px;color:var(--text3);font-weight:600;letter-spacing:.04em;}
+.c-val{font-size:13px;font-weight:500;display:flex;align-items:center;gap:6px;}
+.c-val img{width:32px;height:32px;border-radius:50%;}
+.c-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px;}
+.c-green{background:rgba(34,197,94,.1);color:#22c55e;}
+.c-blue{background:rgba(79,110,247,.12);color:var(--primary);}
+.c-gray{background:var(--bg3);color:var(--text2);}
+.c-input{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 10px;color:var(--text);font-size:13px;font-family:'Outfit',sans-serif;outline:none;width:100%;transition:border-color .2s;}
+.c-input:focus{border-color:rgba(79,110,247,.4);}
+.c-input::placeholder{color:var(--text3);}
+.btn-save{background:var(--primary);color:#fff;border:none;padding:8px 16px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s;width:100%;}
+.btn-save:hover{background:var(--primary-d);}
 
 /* AVIS */
-.avis-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:28px;max-width:560px;}
-.stars{display:flex;gap:6px;margin-bottom:18px;}
-.star{cursor:pointer;color:var(--border);transition:color .15s;}
-.star.active,.star:hover{color:#f59e0b;}
-.form-textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text);font-size:14px;font-family:'Outfit',sans-serif;resize:vertical;min-height:110px;outline:none;transition:border-color .2s;}
-.form-textarea:focus{border-color:rgba(79,110,247,.4);}
-.form-textarea::placeholder{color:var(--text3);}
-.form-select{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-size:14px;font-family:'Outfit',sans-serif;outline:none;appearance:none;cursor:pointer;transition:border-color .2s;}
-.form-select:focus{border-color:rgba(79,110,247,.4);}
-.avis-success{text-align:center;padding:40px 20px;display:none;}
-.avis-success.show{display:block;}
-.avis-success-icon{width:64px;height:64px;border-radius:50%;background:#dcfce7;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;color:#16a34a;}
-[data-theme="dark"] .avis-success-icon{background:rgba(34,197,94,.1);color:#22c55e;}
+.avis-wrap{display:flex;flex-direction:column;gap:20px;flex:1;}
+.avis-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:28px;flex:1;display:flex;flex-direction:column;}
+.stars-row{display:flex;gap:7px;margin-bottom:18px;}
+.star{cursor:pointer;color:var(--border);transition:all .15s;}
+.star.on,.star:hover{color:#f59e0b;filter:drop-shadow(0 0 6px #f59e0b80);}
+.form-group{margin-bottom:16px;}
+.f-lbl{display:block;font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:7px;}
+.f-input,.f-textarea,.f-select{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:10px 13px;color:var(--text);font-size:13px;font-family:'Outfit',sans-serif;outline:none;transition:border-color .2s;}
+.f-input:focus,.f-textarea:focus,.f-select:focus{border-color:rgba(79,110,247,.4);box-shadow:0 0 0 3px rgba(79,110,247,.06);}
+.f-textarea{resize:vertical;min-height:110px;}
+.f-input::placeholder,.f-textarea::placeholder{color:var(--text3);}
+.f-select{appearance:none;cursor:pointer;}
+.avis-ok{text-align:center;padding:50px 20px;display:none;flex-direction:column;align-items:center;gap:14px;flex:1;justify-content:center;}
+.avis-ok.show{display:flex;}
+.avis-ok-ico{width:64px;height:64px;border-radius:50%;background:rgba(34,197,94,.1);display:flex;align-items:center;justify-content:center;color:var(--green);}
+.avis-ok h3{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;}
+.avis-ok p{font-size:14px;color:var(--text3);}
 
 /* MODAL */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);z-index:1000;align-items:center;justify-content:center;}
-.modal-overlay.open{display:flex;}
-.modal{background:var(--bg2);border:1px solid var(--border);border-radius:18px;padding:28px;width:90%;max-width:480px;position:relative;}
+.modal-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);z-index:1000;align-items:center;justify-content:center;}
+.modal-ov.open{display:flex;}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:18px;padding:28px;width:90%;max-width:480px;position:relative;animation:fadeUp .25s ease;}
 .modal::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:18px 18px 0 0;background:linear-gradient(90deg,var(--primary),#a78bfa);}
-.modal-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;margin-bottom:22px;}
-.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;}
-.btn-cancel{padding:10px 18px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;background:transparent;border:1px solid var(--border);color:var(--text3);font-family:'Outfit',sans-serif;transition:all .2s;}
-.btn-cancel:hover{border-color:var(--text3);color:var(--text);}
+.modal-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;margin-bottom:20px;}
+.modal-acts{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;}
+.btn-cancel{padding:9px 17px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;background:transparent;border:1px solid var(--border);color:var(--text3);font-family:'Outfit',sans-serif;transition:all .2s;}
+.btn-cancel:hover{border-color:var(--text3);}
 
 /* TOAST */
-#toast{position:fixed;bottom:22px;right:22px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 18px;font-size:13px;font-weight:500;z-index:9999;transform:translateY(80px);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);max-width:280px;box-shadow:var(--shadow);}
+#toast{position:fixed;bottom:20px;right:20px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:11px 17px;font-size:13px;font-weight:500;z-index:9999;transform:translateY(70px);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);max-width:280px;box-shadow:var(--shadow);}
 #toast.show{transform:translateY(0);opacity:1;}
-#toast.t-success{border-color:rgba(34,197,94,.3);color:#16a34a;}
-#toast.t-error{border-color:rgba(239,68,68,.3);color:var(--red);}
-#toast.t-info{border-color:rgba(79,110,247,.3);color:var(--primary);}
-[data-theme="dark"] #toast.t-success{color:#22c55e;}
+#toast.t-s{border-color:rgba(34,197,94,.3);color:#22c55e;}
+#toast.t-e{border-color:rgba(239,68,68,.3);color:var(--red);}
+#toast.t-i{border-color:rgba(79,110,247,.3);color:var(--primary);}
 
 /* LOADING */
 #loading-page{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;}
 .spinner{width:34px;height:34px;border:2px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .7s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg);}}
-.loading-txt{font-size:13px;color:var(--text3);font-family:'Outfit',monospace;}
-
-/* SCROLLBAR */
-::-webkit-scrollbar{width:5px;height:5px;}
-::-webkit-scrollbar-track{background:transparent;}
-::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
 
 /* ANIMATIONS */
+@keyframes spin{to{transform:rotate(360deg);}}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
-.fade-up{animation:fadeUp .35s ease both;}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+.fade-up{animation:fadeUp .4s ease both;}
 
-/* RESPONSIVE */
-@media(max-width:900px){
-  .hero{grid-template-columns:1fr;padding:48px 24px;}
-  .terminal{display:none;}
-  .pricing-grid{grid-template-columns:1fr;}
-  .about-grid{grid-template-columns:1fr;}
-  .why-grid{grid-template-columns:1fr 1fr;}
-  .section{padding:56px 24px;}
-  .navbar{padding:0 20px;}
-  .nav-links{display:none;}
-}
-@media(max-width:640px){
-  .sidebar{width:64px;}
-  .sidebar-link span,.sidebar-label,.sidebar-count{display:none;}
-  .sidebar-link{justify-content:center;padding:10px;}
-  .sidebar-link .sidebar-icon{margin:0;}
-  .why-grid{grid-template-columns:1fr;}
-  .app-main{padding:16px;}
-}
+/* SCROLL */
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--bg3);border-radius:3px;}
+
+@media(max-width:1100px){.compte-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:900px){.hero{grid-template-columns:1fr;padding:48px 24px;}.terminal{display:none;}.pgrid3{grid-template-columns:1fr;}.about-grid{grid-template-columns:1fr;}.why-grid{grid-template-columns:1fr 1fr;}.section{padding:56px 24px;}.navbar{padding:0 20px;}.nav-links{display:none;}}
+@media(max-width:700px){.sidebar{width:58px;}.sb-link span,.sb-lbl,.sb-count{display:none;}.sb-link{justify-content:center;}.sb-link .sb-icon{margin:0;}.app-main{padding:16px;}.compte-grid{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
+<canvas id="stars-canvas"></canvas>
 
-<!-- ══ LOADING ══ -->
+<!-- LOADING -->
 <div id="loading-page" class="page">
   <div class="spinner"></div>
-  <div class="loading-txt" id="loading-txt">Chargement...</div>
+  <div id="loading-txt" style="font-size:13px;color:var(--text3);font-family:'Outfit',monospace;">Chargement...</div>
 </div>
 
-<!-- ══ LANDING ══ -->
+<!-- LANDING -->
 <div id="landing-page" class="page">
-
-  <!-- NAVBAR -->
   <nav class="navbar">
     <a href="#" class="nav-logo">
-      <div class="nav-logo-box">
-        <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-      </div>
+      <div class="nav-logo-box"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
       Dev Center
     </a>
     <ul class="nav-links">
@@ -401,234 +344,102 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
       <li><a href="#team">Équipe</a></li>
     </ul>
     <div class="nav-right">
-      <button class="btn-icon" onclick="toggleTheme()" title="Thème">
-        <svg id="theme-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-      </button>
-      <button class="btn-discord-nav" onclick="loginWithDiscord()">
-        <svg width="16" height="12" viewBox="0 0 71 55" fill="currentColor"><path d="M60.1 4.9C55.6 2.8 50.7 1.3 45.7.4c-.7 1.2-1.4 2.6-1.9 3.8C38.2 3.4 32.7 3.4 27.4 4.2c-.5-1.2-1.2-2.6-1.9-3.8C20.3 1.3 15.4 2.8 10.9 4.9 1.6 18.7-.9 32.1.3 45.4c7 5.1 13.8 8.4 20.6 10.6.5-.7 1-1.4 1.4-2.2-.8-.3-1.5-.6-2.3-1 .1-.1.3-.2.4-.3 11.8 5.3 24.5 5.3 36.2 0l.4.3c-.7.4-1.5.7-2.3 1 .4.8.9 1.5 1.4 2.2 6.7-2.2 13.5-5.5 20.5-10.6 1.3-13.3-1.7-26.6-6.6-40.5zM23.7 37.3c-2.9 0-5.3-2.7-5.3-5.9s2.3-5.9 5.3-5.9 5.4 2.7 5.3 5.9c0 3.3-2.3 5.9-5.3 5.9zm23.6 0c-2.9 0-5.3-2.7-5.3-5.9s2.3-5.9 5.3-5.9 5.4 2.7 5.3 5.9c0 3.3-2.3 5.9-5.3 5.9z"/></svg>
+      <button class="btn-icon" onclick="toggleTheme()"><svg id="ti" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+      <button class="btn-connect" onclick="loginWithDiscord()">
+        <svg width="16" height="12" viewBox="0 0 71 55" fill="currentColor"><path d="M60.1 4.9C55.6 2.8 50.7 1.3 45.7.4c-.7 1.2-1.4 2.6-1.9 3.8C38.2 3.4 32.7 3.4 27.4 4.2c-.5-1.2-1.2-2.6-1.9-3.8C20.3 1.3 15.4 2.8 10.9 4.9 1.6 18.7-.9 32.1.3 45.4c7 5.1 13.8 8.4 20.6 10.6.5-.7 1-1.4 1.4-2.2-.8-.3-1.5-.6-2.3-1l.4-.3c11.8 5.3 24.5 5.3 36.2 0l.4.3c-.7.4-1.5.7-2.3 1 .4.8.9 1.5 1.4 2.2 6.7-2.2 13.5-5.5 20.5-10.6 1.3-13.3-1.7-26.6-6.6-40.5zM23.7 37.3c-2.9 0-5.3-2.7-5.3-5.9s2.3-5.9 5.3-5.9 5.4 2.7 5.3 5.9c0 3.3-2.3 5.9-5.3 5.9zm23.6 0c-2.9 0-5.3-2.7-5.3-5.9s2.3-5.9 5.3-5.9 5.4 2.7 5.3 5.9c0 3.3-2.3 5.9-5.3 5.9z"/></svg>
         Se connecter
       </button>
     </div>
   </nav>
 
-  <!-- HERO -->
   <div class="hero">
-    <div class="fade-up">
-      <div class="hero-badge">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-        100% Gratuit · 24/7 · Sans limite
-      </div>
+    <div>
+      <div class="hero-badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>100% Gratuit · 24/7 · Sans limite</div>
       <h1 class="hero-title">Construisez,<br>déployez<br>avec<br><span>Dev Center</span></h1>
-      <p class="hero-desc">Votre espace de développement tout-en-un.<br>Créez des serveurs Discord professionnels, lancez vos sites web sans effort.<br>La communauté qui code avec vous.</p>
+      <p class="hero-desc">Votre espace de développement tout-en-un.<br>Créez des serveurs Discord professionnels,<br>lancez vos sites web sans effort.<br>La communauté qui code avec vous.</p>
       <div class="hero-btns">
         <button class="btn-primary" onclick="loginWithDiscord()">
-          <svg width="16" height="12" viewBox="0 0 71 55" fill="currentColor"><path d="M60.1 4.9C55.6 2.8 50.7 1.3 45.7.4c-.7 1.2-1.4 2.6-1.9 3.8C38.2 3.4 32.7 3.4 27.4 4.2c-.5-1.2-1.2-2.6-1.9-3.8C20.3 1.3 15.4 2.8 10.9 4.9 1.6 18.7-.9 32.1.3 45.4c7 5.1 13.8 8.4 20.6 10.6.5-.7 1-1.4 1.4-2.2-.8-.3-1.5-.6-2.3-1 .1-.1.3-.2.4-.3 11.8 5.3 24.5 5.3 36.2 0l.4.3c-.7.4-1.5.7-2.3 1 .4.8.9 1.5 1.4 2.2 6.7-2.2 13.5-5.5 20.5-10.6 1.3-13.3-1.7-26.6-6.6-40.5zM23.7 37.3c-2.9 0-5.3-2.7-5.3-5.9s2.3-5.9 5.3-5.9 5.4 2.7 5.3 5.9c0 3.3-2.3 5.9-5.3 5.9zm23.6 0c-2.9 0-5.3-2.7-5.3-5.9s2.3-5.9 5.3-5.9 5.4 2.7 5.3 5.9c0 3.3-2.3 5.9-5.3 5.9z"/></svg>
+          <svg width="14" height="11" viewBox="0 0 71 55" fill="currentColor"><path d="M60.1 4.9C55.6 2.8 50.7 1.3 45.7.4c-.7 1.2-1.4 2.6-1.9 3.8C38.2 3.4 32.7 3.4 27.4 4.2c-.5-1.2-1.2-2.6-1.9-3.8C20.3 1.3 15.4 2.8 10.9 4.9 1.6 18.7-.9 32.1.3 45.4c7 5.1 13.8 8.4 20.6 10.6.5-.7 1-1.4 1.4-2.2-.8-.3-1.5-.6-2.3-1l.4-.3c11.8 5.3 24.5 5.3 36.2 0l.4.3c-.7.4-1.5.7-2.3 1 .4.8.9 1.5 1.4 2.2 6.7-2.2 13.5-5.5 20.5-10.6 1.3-13.3-1.7-26.6-6.6-40.5zM23.7 37.3c-2.9 0-5.3-2.7-5.3-5.9s2.3-5.9 5.3-5.9 5.4 2.7 5.3 5.9c0 3.3-2.3 5.9-5.3 5.9zm23.6 0c-2.9 0-5.3-2.7-5.3-5.9s2.3-5.9 5.3-5.9 5.4 2.7 5.3 5.9c0 3.3-2.3 5.9-5.3 5.9z"/></svg>
           Rejoindre — Discord
         </button>
         <a href="#features" class="btn-secondary">Explorer les offres</a>
       </div>
     </div>
-    <div class="fade-up" style="animation-delay:.1s">
-      <div class="terminal">
-        <div class="terminal-bar">
-          <div class="t-dot" style="background:#ff5f57"></div>
-          <div class="t-dot" style="background:#febc2e"></div>
-          <div class="t-dot" style="background:#28c840"></div>
-          <div class="t-title">terminal — dev-center</div>
-        </div>
-        <div class="terminal-body">
-          <div><span class="t-user">user@devcenter:~$</span></div>
-          <div><span class="t-user">user@devcenter:~$</span> <span class="t-cmd">npm install dev-center</span></div>
-          <div><span class="t-dim">Résolution des dépendances...</span></div>
-          <div><span class="t-dim">Téléchargement des packages</span></div>
-          <div><span class="t-dim">Compilation des modules</span></div>
-          <div><span class="t-ok">✓ Installation réussie</span></div>
-          <div>&nbsp;</div>
-          <div><span class="t-user">user@devcenter:~$</span> <span class="t-cmd">devcenter deploy --prod</span></div>
-          <div><span class="t-dim">Initialisation du déploiement...</span></div>
-          <div><span class="t-dim">Build optimisé · 2.4 MB</span></div>
-          <div><span class="t-dim">CDN · Cache invalidé</span></div>
-          <div><span class="t-ok">✓ Déploiement réussi — 3.2s</span></div>
-          <div><span class="t-user">user@devcenter:~$</span></div>
-        </div>
-        <div class="terminal-status">
-          <div style="display:flex;align-items:center;gap:8px;">
-            <div class="t-status-dot"></div>
-            <span class="t-status-label" style="font-family:'Outfit',monospace;font-size:12px;">Tableau de bord</span>
-          </div>
-          <div class="t-status-badge">En ligne</div>
-        </div>
-        <div class="terminal-bar-bottom"><div class="terminal-progress"></div></div>
+    <div class="terminal">
+      <div class="t-bar"><div class="t-dot" style="background:#ff5f57"></div><div class="t-dot" style="background:#febc2e"></div><div class="t-dot" style="background:#28c840"></div><div class="t-title">terminal — dev-center</div></div>
+      <div class="t-body">
+        <div><span class="t-user">user@devcenter:~$</span></div>
+        <div><span class="t-user">user@devcenter:~$</span> <span class="t-cmd">npm install dev-center</span></div>
+        <div><span class="t-dim">Résolution des dépendances...</span></div>
+        <div><span class="t-dim">Téléchargement des packages</span></div>
+        <div><span class="t-dim">Compilation des modules</span></div>
+        <div><span class="t-ok">✓ Installation réussie</span></div>
+        <div>&nbsp;</div>
+        <div><span class="t-user">user@devcenter:~$</span> <span class="t-cmd">devcenter deploy --prod</span></div>
+        <div><span class="t-dim">Initialisation du déploiement...</span></div>
+        <div><span class="t-dim">Build optimisé · 2.4 MB</span></div>
+        <div><span class="t-dim">CDN · Cache invalidé</span></div>
+        <div><span class="t-ok">✓ Déploiement réussi — 3.2s</span></div>
+        <div><span class="t-user">user@devcenter:~$</span></div>
       </div>
+      <div class="t-status">
+        <div style="display:flex;align-items:center;gap:8px;"><div class="t-pulse"></div><span style="font-size:12px;color:#22c55e;font-weight:600;font-family:'Outfit',monospace;">Tableau de bord</span></div>
+        <div style="font-size:11px;color:#888;background:#333;padding:3px 10px;border-radius:6px;">En ligne</div>
+      </div>
+      <div class="t-progress-wrap"><div class="t-progress"></div></div>
     </div>
   </div>
 
-  <!-- FEATURES / PRICING -->
+  <!-- FEATURES -->
   <div class="section" id="features">
-    <div class="section-tag">Fonctionnalités</div>
-    <h2 class="section-title">Choisissez votre offre</h2>
-    <div class="section-sub">Des solutions adaptées à chaque besoin.</div>
-
-    <div class="pricing-tabs">
-      <button class="pricing-tab active" onclick="switchPricing('discord',this)">
-        <svg width="14" height="11" viewBox="0 0 71 55" fill="currentColor"><path d="M60.1 4.9C55.6 2.8 50.7 1.3 45.7.4c-.7 1.2-1.4 2.6-1.9 3.8C38.2 3.4 32.7 3.4 27.4 4.2c-.5-1.2-1.2-2.6-1.9-3.8C20.3 1.3 15.4 2.8 10.9 4.9 1.6 18.7-.9 32.1.3 45.4c7 5.1 13.8 8.4 20.6 10.6.5-.7 1-1.4 1.4-2.2-.8-.3-1.5-.6-2.3-1 .1-.1.3-.2.4-.3 11.8 5.3 24.5 5.3 36.2 0l.4.3c-.7.4-1.5.7-2.3 1 .4.8.9 1.5 1.4 2.2 6.7-2.2 13.5-5.5 20.5-10.6 1.3-13.3-1.7-26.6-6.6-40.5zM23.7 37.3c-2.9 0-5.3-2.7-5.3-5.9s2.3-5.9 5.3-5.9 5.4 2.7 5.3 5.9c0 3.3-2.3 5.9-5.3 5.9zm23.6 0c-2.9 0-5.3-2.7-5.3-5.9s2.3-5.9 5.3-5.9 5.4 2.7 5.3 5.9c0 3.3-2.3 5.9-5.3 5.9z"/></svg>
-        Serveurs Discord
-      </button>
-      <button class="pricing-tab" onclick="switchPricing('web',this)">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-        Modules Sites Web
-      </button>
-      <button class="pricing-tab" onclick="switchPricing('bot',this)">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg>
-        Bot Discord
-      </button>
+    <div class="s-tag"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Fonctionnalités</div>
+    <h2 class="s-title">Choisissez votre offre</h2>
+    <div class="s-sub">Des solutions adaptées à chaque besoin.</div>
+    <div class="ptabs">
+      <button class="ptab active" onclick="switchPricing('discord',this)"><svg width="14" height="11" viewBox="0 0 71 55" fill="currentColor"><path d="M60.1 4.9C55.6 2.8 50.7 1.3 45.7.4c-.7 1.2-1.4 2.6-1.9 3.8C38.2 3.4 32.7 3.4 27.4 4.2c-.5-1.2-1.2-2.6-1.9-3.8C20.3 1.3 15.4 2.8 10.9 4.9 1.6 18.7-.9 32.1.3 45.4c7 5.1 13.8 8.4 20.6 10.6.5-.7 1-1.4 1.4-2.2-.8-.3-1.5-.6-2.3-1l.4-.3c11.8 5.3 24.5 5.3 36.2 0l.4.3c-.7.4-1.5.7-2.3 1 .4.8.9 1.5 1.4 2.2 6.7-2.2 13.5-5.5 20.5-10.6 1.3-13.3-1.7-26.6-6.6-40.5zM23.7 37.3c-2.9 0-5.3-2.7-5.3-5.9s2.3-5.9 5.3-5.9 5.4 2.7 5.3 5.9c0 3.3-2.3 5.9-5.3 5.9zm23.6 0c-2.9 0-5.3-2.7-5.3-5.9s2.3-5.9 5.3-5.9 5.4 2.7 5.3 5.9c0 3.3-2.3 5.9-5.3 5.9z"/></svg>Serveurs Discord</button>
+      <button class="ptab" onclick="switchPricing('web',this)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>Sites Web</button>
+      <button class="ptab" onclick="switchPricing('bot',this)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg>Bot Discord</button>
     </div>
-
-    <!-- DISCORD PLANS -->
-    <div id="pricing-discord">
-      <div class="pricing-grid">
-        <div class="plan-card">
-          <div class="plan-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
-          <div class="plan-name">Free</div>
-          <div class="plan-desc">Gratuit</div>
-          <div class="plan-price">0 Boost requis</div>
-          <ul class="plan-features">
-            <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Salon personnalisé</li>
-            <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Rôle personnalisé</li>
-            <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Pas de permissions effectuées</li>
-          </ul>
-          <button class="btn-plan">Passer commande</button>
-        </div>
-        <div class="plan-card">
-          <div class="plan-icon" style="color:#f59e0b;background:rgba(245,158,11,.1)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
-          <div class="plan-name">Boss</div>
-          <div class="plan-desc">1 Boost requis</div>
-          <div class="plan-price" style="color:#f59e0b">1 Boost Discord</div>
-          <ul class="plan-features">
-            <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Salon personnalisé</li>
-            <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Rôle personnalisé</li>
-            <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Permissions</li>
-            <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Système de suggestions</li>
-            <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Support prioritaire</li>
-          </ul>
-          <button class="btn-plan">Passer commande</button>
-        </div>
-        <div class="plan-card popular">
-          <div class="plan-badge">Plus populaire</div>
-          <div class="plan-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
-          <div class="plan-name">Master</div>
-          <div class="plan-desc">2 Boosts requis</div>
-          <div class="plan-price">2 Boosts Discord</div>
-          <ul class="plan-features">
-            <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Salon personnalisé</li>
-            <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Rôle personnalisé</li>
-            <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Permissions</li>
-            <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Configuration bot</li>
-            <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Suggestions + badges</li>
-            <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Support prioritaire</li>
-          </ul>
-          <button class="btn-plan">Passer commande</button>
-        </div>
+    <div id="p-discord">
+      <div class="pgrid3">
+        <div class="pcard"><div class="picon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div class="pname">Free</div><div class="pdesc">Gratuit</div><div class="pprice">0 Boost requis</div><ul class="pfeats"><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Salon personnalisé</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Rôle personnalisé</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Pas de permissions effectuées</li></ul><button class="btn-plan" onclick="goToOrder('Serveur Discord Free')">Passer commande</button></div>
+        <div class="pcard"><div class="picon" style="color:#f59e0b;background:rgba(245,158,11,.1)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div class="pname">Boss</div><div class="pdesc">1 Boost requis</div><div class="pprice" style="color:#f59e0b">1 Boost Discord</div><ul class="pfeats"><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Salon personnalisé</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Rôle personnalisé</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Permissions</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Système de suggestions</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Support prioritaire</li></ul><button class="btn-plan" onclick="goToOrder('Serveur Discord Boss')">Passer commande</button></div>
+        <div class="pcard pop"><div class="pop-badge">Plus populaire</div><div class="picon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div class="pname">Master</div><div class="pdesc">2 Boosts requis</div><div class="pprice">2 Boosts Discord</div><ul class="pfeats"><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Salon personnalisé</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Rôle personnalisé</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Permissions</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Configuration bot</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Suggestions + badges</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Support prioritaire</li></ul><button class="btn-plan" onclick="goToOrder('Serveur Discord Master')">Passer commande</button></div>
       </div>
     </div>
-
-    <!-- WEB PLANS -->
-    <div id="pricing-web" style="display:none">
-      <div class="pricing-grid-2">
-        <div class="plan-card">
-          <div class="plan-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
-          <div class="plan-name">Starter</div>
-          <div class="plan-desc">Particuliers / Petits projets</div>
-          <div class="plan-price">Selon votre développeur</div>
-          <ul class="plan-features">
-            <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Site vitrine</li>
-            <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Template personnalisé</li>
-            <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Hébergement + sous-domaine</li>
-            <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Support ticket 48h</li>
-            <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>1 modification mensuelle</li>
-          </ul>
-          <button class="btn-plan">Passer commande</button>
-        </div>
-        <div class="plan-card popular">
-          <div class="plan-badge">Plus populaire</div>
-          <div class="plan-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
-          <div class="plan-name">Pro</div>
-          <div class="plan-desc">Projet structure / Business</div>
-          <div class="plan-price">Selon votre développeur</div>
-          <ul class="plan-features">
-            <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Site vitrine avancé</li>
-            <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Design 100% personnalisé</li>
-            <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Blog + statistiques</li>
-            <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Sauvegardes automatiques</li>
-            <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Support prioritaire</li>
-          </ul>
-          <button class="btn-plan">Passer commande</button>
-        </div>
+    <div id="p-web" style="display:none">
+      <div class="pgrid2">
+        <div class="pcard"><div class="picon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div><div class="pname">Starter</div><div class="pdesc">Particuliers / Petits projets</div><div class="pprice">Selon votre développeur</div><ul class="pfeats"><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Site vitrine</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Template personnalisé</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Hébergement + sous-domaine</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Support ticket 48h</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>1 modification mensuelle</li></ul><button class="btn-plan" onclick="goToOrder('Site Web Starter')">Passer commande</button></div>
+        <div class="pcard pop"><div class="pop-badge">Plus populaire</div><div class="picon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><div class="pname">Pro</div><div class="pdesc">Projet structure / Business</div><div class="pprice">Selon votre développeur</div><ul class="pfeats"><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Site vitrine avancé</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Design 100% personnalisé</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Blog + statistiques</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Sauvegardes automatiques</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Support prioritaire</li></ul><button class="btn-plan" onclick="goToOrder('Site Web Pro')">Passer commande</button></div>
       </div>
     </div>
-
-    <!-- BOT -->
-    <div id="pricing-bot" style="display:none">
-      <div class="bot-card">
-        <div class="bot-header">
-          <div class="bot-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg></div>
-          <div>
-            <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;margin-bottom:4px;">Starter</div>
-            <div class="bot-available"><svg width="6" height="6" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="currentColor"/></svg>DISPONIBLE</div>
-          </div>
-        </div>
-        <p class="bot-desc">Parfait pour démarrer avec un bot Discord simple. Bot prêt à utiliser, configuré et livré rapidement.</p>
-        <ul class="plan-features" style="margin-bottom:22px">
-          <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>23 commandes personnalisées</li>
-          <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Commandes de modération</li>
-          <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Commandes fun</li>
-          <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Commandes utilitaires</li>
-          <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Configuration simple</li>
-          <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Bot prêt à utiliser</li>
-          <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Support ticket 48h</li>
-        </ul>
-        <button class="btn-primary" style="width:100%;justify-content:center">
-          <svg width="16" height="12" viewBox="0 0 71 55" fill="currentColor"><path d="M60.1 4.9C55.6 2.8 50.7 1.3 45.7.4c-.7 1.2-1.4 2.6-1.9 3.8C38.2 3.4 32.7 3.4 27.4 4.2c-.5-1.2-1.2-2.6-1.9-3.8C20.3 1.3 15.4 2.8 10.9 4.9 1.6 18.7-.9 32.1.3 45.4c7 5.1 13.8 8.4 20.6 10.6.5-.7 1-1.4 1.4-2.2-.8-.3-1.5-.6-2.3-1 .1-.1.3-.2.4-.3 11.8 5.3 24.5 5.3 36.2 0l.4.3c-.7.4-1.5.7-2.3 1 .4.8.9 1.5 1.4 2.2 6.7-2.2 13.5-5.5 20.5-10.6 1.3-13.3-1.7-26.6-6.6-40.5zM23.7 37.3c-2.9 0-5.3-2.7-5.3-5.9s2.3-5.9 5.3-5.9 5.4 2.7 5.3 5.9c0 3.3-2.3 5.9-5.3 5.9zm23.6 0c-2.9 0-5.3-2.7-5.3-5.9s2.3-5.9 5.3-5.9 5.4 2.7 5.3 5.9c0 3.3-2.3 5.9-5.3 5.9z"/></svg>
-          Commander
-        </button>
-      </div>
+    <div id="p-bot" style="display:none">
+      <div class="bot-card"><div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;"><div style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#7c3aed,#a78bfa);display:flex;align-items:center;justify-content:center;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg></div><div><div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;margin-bottom:5px;">Starter</div><div class="bot-avail"><svg width="6" height="6" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="currentColor"/></svg>DISPONIBLE</div></div></div><p style="font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:16px;">Parfait pour démarrer avec un bot Discord simple. Bot prêt à utiliser, configuré et livré rapidement.</p><ul class="pfeats" style="margin-bottom:20px;"><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>23 commandes personnalisées</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Commandes de modération</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Commandes fun</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Commandes utilitaires</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Configuration simple</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Bot prêt à utiliser</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Support ticket 48h</li></ul><button class="btn-primary" style="width:100%;justify-content:center" onclick="goToOrder('Bot Discord Starter')"><svg width="14" height="11" viewBox="0 0 71 55" fill="currentColor"><path d="M60.1 4.9C55.6 2.8 50.7 1.3 45.7.4c-.7 1.2-1.4 2.6-1.9 3.8C38.2 3.4 32.7 3.4 27.4 4.2c-.5-1.2-1.2-2.6-1.9-3.8C20.3 1.3 15.4 2.8 10.9 4.9 1.6 18.7-.9 32.1.3 45.4c7 5.1 13.8 8.4 20.6 10.6.5-.7 1-1.4 1.4-2.2-.8-.3-1.5-.6-2.3-1l.4-.3c11.8 5.3 24.5 5.3 36.2 0l.4.3c-.7.4-1.5.7-2.3 1 .4.8.9 1.5 1.4 2.2 6.7-2.2 13.5-5.5 20.5-10.6 1.3-13.3-1.7-26.6-6.6-40.5zM23.7 37.3c-2.9 0-5.3-2.7-5.3-5.9s2.3-5.9 5.3-5.9 5.4 2.7 5.3 5.9c0 3.3-2.3 5.9-5.3 5.9zm23.6 0c-2.9 0-5.3-2.7-5.3-5.9s2.3-5.9 5.3-5.9 5.4 2.7 5.3 5.9c0 3.3-2.3 5.9-5.3 5.9z"/></svg>Commander</button></div>
     </div>
   </div>
 
   <!-- ABOUT -->
-  <div class="section" id="about" style="background:var(--bg2);max-width:100%;padding:80px 0;">
-    <div style="max-width:1200px;margin:0 auto;padding:0 40px;">
+  <div class="section-full" id="about" style="background:var(--bg2);">
+    <div class="section-inner">
       <div class="about-grid">
         <div>
-          <div class="section-tag">À propos</div>
-          <h2 class="about-title">Des développeurs<br>qui <span>codent pour vous.</span></h2>
-          <p class="about-text">Dev Center est une plateforme née de l'envie de simplifier le quotidien des créateurs numériques. Pas besoin d'être expert pour déployer votre projet.</p>
-          <p class="about-text">Notre équipe maîtrise autant le développement web que l'administration de communautés Discord. Nous comprenons vos besoins parce que nous les vivons.</p>
-          <p class="about-text">Notre mission : vous offrir des outils pro, accessibles à tous, avec un support humain et disponible.</p>
+          <div class="s-tag">À propos</div>
+          <h2 class="a-title">Des développeurs<br>qui <span>codent pour vous.</span></h2>
+          <p class="a-text">Dev Center est une plateforme née de l'envie de simplifier le quotidien des créateurs numériques. Pas besoin d'être expert pour déployer votre projet.</p>
+          <p class="a-text">Notre équipe maîtrise autant le développement web que l'administration de communautés Discord. Nous comprenons vos besoins parce que nous les vivons.</p>
+          <p class="a-text">Notre mission : vous offrir des outils pro, accessibles à tous, avec un support humain et disponible.</p>
           <div class="stats-grid">
-            <div class="stat-box"><div class="stat-num">100+</div><div class="stat-label">Projets déployés</div></div>
-            <div class="stat-box"><div class="stat-num">200+</div><div class="stat-label">Membres actifs</div></div>
-            <div class="stat-box"><div class="stat-num">99.9%</div><div class="stat-label">Uptime garanti</div></div>
-            <div class="stat-box"><div class="stat-num">24/7</div><div class="stat-label">Support dispo</div></div>
+            <div class="stat-box"><div class="stat-num">100+</div><div class="stat-lbl">Projets déployés</div></div>
+            <div class="stat-box"><div class="stat-num">200+</div><div class="stat-lbl">Membres actifs</div></div>
+            <div class="stat-box"><div class="stat-num">99.9%</div><div class="stat-lbl">Uptime garanti</div></div>
+            <div class="stat-box"><div class="stat-num">24/7</div><div class="stat-lbl">Support dispo</div></div>
           </div>
         </div>
-        <div class="about-features">
-          <div class="about-feat">
-            <div class="about-feat-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
-            <div><div class="about-feat-title">Expertise technique</div><div class="about-feat-desc">React, Node.js, Python, Discord.js — on maîtrise la stack moderne.</div></div>
-          </div>
-          <div class="about-feat">
-            <div class="about-feat-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-            <div><div class="about-feat-title">Communauté active</div><div class="about-feat-desc">Des centaines de membres qui s'entraident et partagent leurs projets.</div></div>
-          </div>
-          <div class="about-feat">
-            <div class="about-feat-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-            <div><div class="about-feat-title">Fiabilité</div><div class="about-feat-desc">Infrastructure robuste avec sauvegardes auto et protection DDoS.</div></div>
-          </div>
-          <div class="about-feat">
-            <div class="about-feat-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
-            <div><div class="about-feat-title">Support humain</div><div class="about-feat-desc">Un vrai support, pas un bot. Disponible via Discord à tout moment.</div></div>
-          </div>
+        <div>
+          <div class="afeat"><div class="afeat-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div><div><div class="afeat-title">Expertise technique</div><div class="afeat-desc">React, Node.js, Python, Discord.js — on maîtrise la stack moderne.</div></div></div>
+          <div class="afeat"><div class="afeat-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div><div class="afeat-title">Communauté active</div><div class="afeat-desc">Des centaines de membres qui s'entraident et partagent leurs projets.</div></div></div>
+          <div class="afeat"><div class="afeat-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div><div class="afeat-title">Fiabilité</div><div class="afeat-desc">Infrastructure robuste avec sauvegardes auto et protection DDoS.</div></div></div>
+          <div class="afeat"><div class="afeat-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div><div class="afeat-title">Support humain</div><div class="afeat-desc">Un vrai support, pas un bot. Disponible via Discord à tout moment.</div></div></div>
         </div>
       </div>
     </div>
@@ -636,880 +447,540 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
 
   <!-- WHY -->
   <div class="section" id="why">
-    <div style="text-align:center;margin-bottom:48px;">
-      <div class="section-tag" style="margin:0 auto 16px">Pourquoi nous</div>
-      <h2 class="section-title">Pourquoi choisir Dev Center ?</h2>
-      <div class="section-sub" style="margin:0">Ce qui nous distingue des autres hébergeurs.</div>
-    </div>
+    <div class="center" style="margin-bottom:44px;"><div class="s-tag" style="margin:0 auto 14px">Pourquoi nous</div><h2 class="s-title">Pourquoi choisir Dev Center ?</h2><div class="s-sub" style="margin:0">Ce qui nous distingue des autres hébergeurs.</div></div>
     <div class="why-grid">
-      <div class="why-card"><div class="why-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><div class="why-title">100% Gratuit</div><div class="why-desc">Aucun frais caché, aucune limite. Nos outils sont gratuits et accessibles à tous, pour toujours.</div></div>
+      <div class="why-card"><div class="why-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><div class="why-title">100% Gratuit</div><div class="why-desc">Aucun frais caché, aucune limite. Nos outils sont gratuits et accessibles à tous.</div></div>
       <div class="why-card"><div class="why-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="why-title">Disponibilité 24/7</div><div class="why-desc">Notre infrastructure garantit une disponibilité maximale. Vos projets restent en ligne à tout moment.</div></div>
-      <div class="why-card"><div class="why-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="why-title">Sécurité renforcée</div><div class="why-desc">Protection anti-DDoS, sauvegardes automatiques, et chiffrement SSL inclus sur tous les hébergements.</div></div>
-      <div class="why-card"><div class="why-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div class="why-title">Communauté bienveillante</div><div class="why-desc">Rejoignez une communauté de 200+ développeurs et créateurs prêts à vous aider.</div></div>
-      <div class="why-card"><div class="why-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="why-title">Déploiement simple</div><div class="why-desc">Quelques clics suffisent. Aucune compétence serveur requise. Nous gérons la technique.</div></div>
-      <div class="why-card"><div class="why-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div class="why-title">Qualité premium</div><div class="why-desc">Chaque projet est livré avec soin. Résultats professionnels garantis, quel que soit votre niveau.</div></div>
+      <div class="why-card"><div class="why-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="why-title">Sécurité renforcée</div><div class="why-desc">Protection anti-DDoS, sauvegardes automatiques, et chiffrement SSL inclus.</div></div>
+      <div class="why-card"><div class="why-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div class="why-title">Communauté bienveillante</div><div class="why-desc">Rejoignez 200+ développeurs et créateurs prêts à vous aider.</div></div>
+      <div class="why-card"><div class="why-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="why-title">Déploiement simple</div><div class="why-desc">Quelques clics suffisent. Aucune compétence serveur requise.</div></div>
+      <div class="why-card"><div class="why-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div class="why-title">Qualité premium</div><div class="why-desc">Chaque projet est livré avec soin. Résultats professionnels garantis.</div></div>
     </div>
   </div>
 
   <!-- TEAM -->
-  <div class="section" id="team" style="text-align:center;">
-    <div class="section-tag" style="margin:0 auto 16px">Équipe</div>
-    <h2 class="section-title">Notre équipe</h2>
-    <div class="section-sub">Les personnes derrière Dev Center.</div>
+  <div class="section center" id="team">
+    <div class="s-tag" style="margin:0 auto 14px">Équipe</div>
+    <h2 class="s-title">Notre équipe</h2>
+    <div class="s-sub">Les personnes derrière Dev Center.</div>
     <div class="team-grid">
-      <div class="team-card">
-        <div class="team-avatar" style="background:linear-gradient(135deg,#f97316,#fb923c)">J</div>
-        <div class="team-name">Joan</div>
-        <div class="team-role">Responsable Infrastructures</div>
-        <div class="team-id">ID: 538812769207307300</div>
-      </div>
-      <div class="team-card">
-        <div class="team-avatar" style="background:linear-gradient(135deg,#4f6ef7,#818cf8)">P</div>
-        <div class="team-name">Pedro</div>
-        <div class="team-role">Responsable Discord</div>
-        <div class="team-id">ID: 536763113795977348</div>
-      </div>
+      <div class="team-card"><div class="team-av" style="background:linear-gradient(135deg,#f97316,#fb923c)">J</div><div class="team-name">Joan</div><div class="team-role">Responsable Infrastructures</div><div class="team-id">ID: 538812769207307300</div></div>
+      <div class="team-card"><div class="team-av" style="background:linear-gradient(135deg,#4f6ef7,#818cf8)">P</div><div class="team-name">Pedro</div><div class="team-role">Responsable Discord</div><div class="team-id">ID: 536763113795977348</div></div>
     </div>
   </div>
 
   <div style="border-top:1px solid var(--border);">
-    <div class="footer">
-      <div class="nav-logo">
-        <div class="nav-logo-box"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
-        Dev Center
-      </div>
+    <div class="footer-strip">
+      <div class="nav-logo"><div class="nav-logo-box"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>Dev Center</div>
       <div class="footer-copy">© 2025 Dev Center. Tous droits réservés.</div>
     </div>
   </div>
-</div><!-- /landing -->
+</div>
 
-<!-- ══ APP ══ -->
+<!-- APP -->
 <div id="app-page" class="page">
-  <div class="app-topbar">
-    <div class="topbar-logo">
-      <div class="topbar-logo-box"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
-      Dev Center
-    </div>
-    <div class="topbar-right">
-      <button class="btn-icon" onclick="toggleTheme()">
-        <svg id="theme-icon2" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-      </button>
-      <div class="user-pill">
-        <img id="user-avatar" src="" alt="">
-        <span id="user-name"></span>
-        <span id="staff-badge" class="badge-staff" style="display:none">STAFF</span>
-      </div>
-      <button class="btn-logout" onclick="logout()">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-        Déconnexion
-      </button>
+  <div class="topbar">
+    <div class="topbar-logo"><div class="topbar-logo-box"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>Dev Center</div>
+    <div class="topbar-r">
+      <button class="btn-icon" onclick="toggleTheme()"><svg id="ti2" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+      <div class="user-pill"><img id="user-av" src="" alt=""><span id="user-nm"></span><span id="staff-bdg" class="badge-staff" style="display:none">STAFF</span></div>
+      <button class="btn-logout" onclick="logout()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Déconnexion</button>
     </div>
   </div>
-
   <div class="app-body">
-    <!-- SIDEBAR -->
     <aside class="sidebar">
-      <div class="sidebar-label">Menu</div>
-      <button class="sidebar-link active" id="nav-tickets" onclick="switchPanel('tickets')">
-        <div class="sidebar-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/></svg></div>
-        <span>Tickets</span>
-        <span class="sidebar-count" id="ticket-count" style="display:none">0</span>
-      </button>
-      <button class="sidebar-link" id="nav-commandes" onclick="switchPanel('commandes')">
-        <div class="sidebar-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div>
-        <span>Commandes</span>
-      </button>
-      <button class="sidebar-link" id="nav-avis" onclick="switchPanel('avis')">
-        <div class="sidebar-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
-        <span>Avis</span>
-      </button>
-      <button class="sidebar-link" id="nav-compte" onclick="switchPanel('compte')">
-        <div class="sidebar-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-        <span>Mon compte</span>
-      </button>
-
-      <!-- STAFF ONLY -->
+      <div class="sb-lbl">Menu</div>
+      <button class="sb-link active" id="nav-tickets" onclick="goPanel('tickets')"><div class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/></svg></div><span>Tickets</span><span class="sb-count" id="tc" style="display:none">0</span></button>
+      <button class="sb-link" id="nav-commandes" onclick="goPanel('commandes')"><div class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div><span>Commandes</span></button>
+      <button class="sb-link" id="nav-avis" onclick="goPanel('avis')"><div class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><span>Avis</span></button>
+      <button class="sb-link" id="nav-compte" onclick="goPanel('compte')"><div class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><span>Mon compte</span></button>
       <div id="staff-nav" style="display:none">
-        <div class="sidebar-label">Staff</div>
-        <button class="sidebar-link" id="nav-all-tickets" onclick="switchPanel('all-tickets')">
-          <div class="sidebar-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></div>
-          <span>Tous les tickets</span>
-        </button>
-        <button class="sidebar-link" id="nav-all-commandes" onclick="switchPanel('all-commandes')">
-          <div class="sidebar-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></div>
-          <span>Toutes les commandes</span>
-        </button>
+        <div class="sb-lbl">Staff</div>
+        <button class="sb-link" id="nav-all-t" onclick="goPanel('all-t')"><div class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></div><span>Tous les tickets</span></button>
+        <button class="sb-link" id="nav-all-c" onclick="goPanel('all-c')"><div class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></div><span>Toutes les commandes</span></button>
       </div>
     </aside>
-
-    <!-- MAIN -->
     <main class="app-main">
-
       <!-- TICKETS -->
       <div class="dash-panel active" id="panel-tickets">
-        <div id="tickets-list-view">
-          <div class="panel-header">
-            <h2 class="panel-title">Mes Tickets</h2>
-            <div class="panel-sub">Suivez l'état de vos demandes de support.</div>
-          </div>
-          <div class="list-actions">
-            <div style="font-size:13px;color:var(--text3)" id="tickets-count-label">Chargement...</div>
-            <button class="btn-primary" onclick="openModal('ticket')">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-              Nouveau ticket
-            </button>
-          </div>
-          <div class="ticket-list" id="list-my-tickets"></div>
+        <div id="tv-list">
+          <div class="ph"><div class="ph-left"><h2>Mes Tickets</h2><p>Suivez vos demandes de support.</p></div><button class="btn-primary" onclick="openModal('ticket')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nouveau ticket</button></div>
+          <div class="t-list" id="list-t"></div>
         </div>
-        <div id="tickets-detail-view" style="display:none"></div>
+        <div id="tv-det" style="display:none;flex:1;flex-direction:column;"></div>
       </div>
-
       <!-- COMMANDES -->
       <div class="dash-panel" id="panel-commandes">
-        <div id="commandes-list-view">
-          <div class="panel-header">
-            <h2 class="panel-title">Mes Commandes</h2>
-            <div class="panel-sub">Suivez l'avancement de vos commandes.</div>
-          </div>
-          <div class="list-actions">
-            <div style="font-size:13px;color:var(--text3)" id="commandes-count-label">Chargement...</div>
-            <button class="btn-primary" onclick="openModal('commande')">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-              Nouvelle commande
-            </button>
-          </div>
-          <div class="ticket-list" id="list-my-commandes"></div>
+        <div id="cv-list">
+          <div class="ph"><div class="ph-left"><h2>Mes Commandes</h2><p>Suivez l'avancement de vos commandes.</p></div><button class="btn-primary" onclick="openModal('commande')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nouvelle commande</button></div>
+          <div class="t-list" id="list-c"></div>
         </div>
-        <div id="commandes-detail-view" style="display:none"></div>
+        <div id="cv-det" style="display:none;flex:1;flex-direction:column;"></div>
       </div>
-
       <!-- AVIS -->
       <div class="dash-panel" id="panel-avis">
-        <div class="panel-header">
-          <h2 class="panel-title">Laisser un avis</h2>
-          <div class="panel-sub">Partagez votre expérience avec Dev Center.</div>
-        </div>
-        <div class="avis-card">
-          <div id="avis-form">
-            <div class="form-group">
-              <div class="form-label">Note</div>
-              <div class="stars" id="stars">
-                <svg class="star" data-val="1" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                <svg class="star" data-val="2" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                <svg class="star" data-val="3" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                <svg class="star" data-val="4" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                <svg class="star" data-val="5" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Service concerné</label>
-              <select class="form-select" id="avis-service">
-                <option value="general">Général</option>
-                <option value="discord">Serveur Discord</option>
-                <option value="web">Site Web</option>
-                <option value="bot">Bot Discord</option>
-                <option value="support">Support</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Votre avis</label>
-              <textarea class="form-textarea" id="avis-text" placeholder="Partagez votre expérience..."></textarea>
-            </div>
-            <button class="btn-primary" onclick="submitAvis()" style="width:100%;justify-content:center">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-              Envoyer l'avis
-            </button>
+        <div class="ph"><div class="ph-left"><h2>Laisser un avis</h2><p>Partagez votre expérience avec Dev Center.</p></div></div>
+        <div class="avis-wrap">
+          <div class="avis-card" id="avis-form-wrap">
+            <div class="form-group"><div class="f-lbl">Note globale</div><div class="stars-row" id="stars"></div></div>
+            <div class="form-group"><label class="f-lbl">Service concerné</label><select class="f-select" id="avis-svc"><option value="general">Général</option><option value="discord">Serveur Discord</option><option value="web">Site Web</option><option value="bot">Bot Discord</option><option value="support">Support</option></select></div>
+            <div class="form-group" style="flex:1;display:flex;flex-direction:column;"><label class="f-lbl">Votre avis</label><textarea class="f-textarea" id="avis-txt" placeholder="Partagez votre expérience..." style="flex:1;min-height:160px;"></textarea></div>
+            <button class="btn-primary" onclick="submitAvis()" style="width:100%;justify-content:center;margin-top:16px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Envoyer l'avis</button>
           </div>
-          <div class="avis-success" id="avis-success">
-            <div class="avis-success-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:8px;">Merci pour votre avis !</div>
-            <div style="font-size:14px;color:var(--text3)">Votre retour a été envoyé à l'équipe Dev Center.</div>
+          <div class="avis-ok" id="avis-ok-msg">
+            <div class="avis-ok-ico"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <h3>Merci pour votre avis !</h3>
+            <p>Votre retour a été envoyé à l'équipe Dev Center.</p>
           </div>
         </div>
       </div>
-
       <!-- COMPTE -->
       <div class="dash-panel" id="panel-compte">
-        <div class="panel-header">
-          <h2 class="panel-title">Mon compte</h2>
-          <div class="panel-sub">Vos informations personnelles.</div>
-        </div>
-        <div class="compte-card">
-          <div class="compte-avatar-row">
-            <img class="compte-avatar" id="compte-avatar" src="" alt="">
-            <div>
-              <div class="compte-username" id="compte-username"></div>
-              <div class="compte-id" id="compte-id"></div>
-            </div>
+        <div class="ph"><div class="ph-left"><h2>Mon compte</h2><p>Vos informations et paramètres.</p></div></div>
+        <div class="compte-grid">
+          <div class="compte-col">
+            <div class="compte-col-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Identité</div>
+            <div class="compte-row"><div class="c-lbl">Avatar</div><div class="c-val"><img id="c-av" src="" alt=""></div></div>
+            <div class="compte-row"><div class="c-lbl">Nom affiché</div><div class="c-val" id="c-nm">—</div></div>
+            <div class="compte-row"><div class="c-lbl">Identifiant</div><div class="c-val" id="c-usr" style="font-family:'Outfit',monospace;font-size:12px;">—</div></div>
+            <div class="compte-row"><div class="c-lbl">ID Discord</div><div class="c-val" id="c-id" style="font-family:'Outfit',monospace;font-size:11px;color:var(--text3);">—</div></div>
           </div>
-          <div class="form-group">
-            <label class="form-label">Nom d'utilisateur Discord</label>
-            <input class="form-input" id="compte-name-input" disabled>
+          <div class="compte-col">
+            <div class="compte-col-title"><svg width="14" height="14" viewBox="0 0 71 55" fill="currentColor"><path d="M60.1 4.9C55.6 2.8 50.7 1.3 45.7.4c-.7 1.2-1.4 2.6-1.9 3.8C38.2 3.4 32.7 3.4 27.4 4.2c-.5-1.2-1.2-2.6-1.9-3.8C20.3 1.3 15.4 2.8 10.9 4.9 1.6 18.7-.9 32.1.3 45.4c7 5.1 13.8 8.4 20.6 10.6.5-.7 1-1.4 1.4-2.2-.8-.3-1.5-.6-2.3-1l.4-.3c11.8 5.3 24.5 5.3 36.2 0l.4.3c-.7.4-1.5.7-2.3 1 .4.8.9 1.5 1.4 2.2 6.7-2.2 13.5-5.5 20.5-10.6 1.3-13.3-1.7-26.6-6.6-40.5zM23.7 37.3c-2.9 0-5.3-2.7-5.3-5.9s2.3-5.9 5.3-5.9 5.4 2.7 5.3 5.9c0 3.3-2.3 5.9-5.3 5.9zm23.6 0c-2.9 0-5.3-2.7-5.3-5.9s2.3-5.9 5.3-5.9 5.4 2.7 5.3 5.9c0 3.3-2.3 5.9-5.3 5.9z"/></svg>Discord</div>
+            <div class="compte-row"><div class="c-lbl">E-mail (enregistré)</div><div class="c-val"><input class="c-input" id="c-email" placeholder="votre@email.com" type="email"><button class="btn-save" onclick="saveEmail()" style="margin-top:6px;">Sauvegarder</button></div></div>
+            <div class="compte-row"><div class="c-lbl">2FA</div><div class="c-val"><span class="c-badge c-green">Activé</span></div></div>
+            <div class="compte-row"><div class="c-lbl">Email vérifié</div><div class="c-val"><span class="c-badge c-green">Vérifié</span></div></div>
           </div>
-          <div class="form-group">
-            <label class="form-label">Adresse e-mail</label>
-            <input class="form-input" id="compte-email-input" placeholder="votre@email.com" type="email">
+          <div class="compte-col">
+            <div class="compte-col-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Sécurité & Session</div>
+            <div class="compte-row"><div class="c-lbl">Méthode</div><div class="c-val"><span class="c-badge c-blue">Discord OAuth2</span></div></div>
+            <div class="compte-row"><div class="c-lbl">Session</div><div class="c-val" id="c-session" style="font-family:'Outfit',monospace;font-size:11px;">—</div></div>
+            <div class="compte-row"><div class="c-lbl">Statut</div><div class="c-val"><span class="c-badge c-green">Connecté</span></div></div>
+            <div class="compte-row"><div class="c-lbl">Action</div><div class="c-val"><button class="btn-sm sm-red" onclick="logout()">Se déconnecter</button></div></div>
           </div>
-          <button class="btn-primary" onclick="saveEmail()" style="width:100%;justify-content:center">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-            Sauvegarder
-          </button>
+          <div class="compte-col">
+            <div class="compte-col-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>Dev Center</div>
+            <div class="compte-row"><div class="c-lbl">Visites</div><div class="c-val" id="c-visits">—</div></div>
+            <div class="compte-row"><div class="c-lbl">Serveur</div><div class="c-val"><span class="c-badge c-green">En ligne</span></div></div>
+            <div class="compte-row"><div class="c-lbl">Rôles</div><div class="c-val" id="c-roles">—</div></div>
+            <div class="compte-row"><div class="c-lbl">Membre depuis</div><div class="c-val" id="c-since">—</div></div>
+            <div class="compte-row"><div class="c-lbl">Staff</div><div class="c-val" id="c-staff-val">—</div></div>
+          </div>
         </div>
       </div>
-
       <!-- ALL TICKETS (STAFF) -->
-      <div class="dash-panel" id="panel-all-tickets">
-        <div id="all-tickets-list-view">
-          <div class="panel-header">
-            <h2 class="panel-title">Tous les tickets</h2>
-            <div class="panel-sub">Vue staff — tous les tickets du système.</div>
-          </div>
-          <div class="ticket-list" id="list-all-tickets"></div>
+      <div class="dash-panel" id="panel-all-t">
+        <div id="atv-list">
+          <div class="ph"><div class="ph-left"><h2>Tous les tickets</h2><p>Vue staff — gestion globale.</p></div></div>
+          <div class="t-list" id="list-at"></div>
         </div>
-        <div id="all-tickets-detail-view" style="display:none"></div>
+        <div id="atv-det" style="display:none;flex:1;flex-direction:column;"></div>
       </div>
-
       <!-- ALL COMMANDES (STAFF) -->
-      <div class="dash-panel" id="panel-all-commandes">
-        <div id="all-commandes-list-view">
-          <div class="panel-header">
-            <h2 class="panel-title">Toutes les commandes</h2>
-            <div class="panel-sub">Vue staff — toutes les commandes.</div>
-          </div>
-          <div class="ticket-list" id="list-all-commandes"></div>
+      <div class="dash-panel" id="panel-all-c">
+        <div id="acv-list">
+          <div class="ph"><div class="ph-left"><h2>Toutes les commandes</h2><p>Vue staff — gestion globale.</p></div></div>
+          <div class="t-list" id="list-ac"></div>
         </div>
-        <div id="all-commandes-detail-view" style="display:none"></div>
+        <div id="acv-det" style="display:none;flex:1;flex-direction:column;"></div>
       </div>
-
     </main>
   </div>
-</div><!-- /app -->
+</div>
 
-<!-- MODAL NEW TICKET / COMMANDE -->
-<div class="modal-overlay" id="modal-new">
+<!-- MODAL -->
+<div class="modal-ov" id="modal-new">
   <div class="modal">
-    <div class="modal-title" id="modal-title">Nouveau ticket</div>
-    <div class="form-group">
-      <label class="form-label">Titre</label>
-      <input class="form-input" id="new-title" placeholder="Résumé de votre demande...">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Description</label>
-      <textarea class="form-textarea" id="new-desc" placeholder="Décrivez votre demande en détail..."></textarea>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Priorité</label>
-      <select class="form-select" id="new-priority">
-        <option value="low">Faible</option>
-        <option value="medium" selected>Moyenne</option>
-        <option value="high">Haute</option>
-      </select>
-    </div>
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeModal()">Annuler</button>
-      <button class="btn-primary" onclick="submitNew()">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Créer
-      </button>
-    </div>
+    <div class="modal-title" id="modal-ttl">Nouveau ticket</div>
+    <div class="form-group"><label class="f-lbl">Titre</label><input class="f-input" id="new-title" placeholder="Résumé de votre demande..."></div>
+    <div class="form-group"><label class="f-lbl">Description</label><textarea class="f-textarea" id="new-desc" placeholder="Décrivez en détail..."></textarea></div>
+    <div class="form-group"><label class="f-lbl">Priorité</label><select class="f-select" id="new-prio"><option value="low">Faible</option><option value="medium" selected>Moyenne</option><option value="high">Haute</option></select></div>
+    <div class="form-group" id="new-type-wrap" style="display:none"><label class="f-lbl">Type de commande</label><select class="f-select" id="new-type"><option value="">Sélectionner...</option><option value="Serveur Discord Free">Serveur Discord — Free</option><option value="Serveur Discord Boss">Serveur Discord — Boss</option><option value="Serveur Discord Master">Serveur Discord — Master</option><option value="Site Web Starter">Site Web — Starter</option><option value="Site Web Pro">Site Web — Pro</option><option value="Bot Discord Starter">Bot Discord — Starter</option><option value="Autre">Autre</option></select></div>
+    <div class="modal-acts"><button class="btn-cancel" onclick="closeModal()">Annuler</button><button class="btn-primary" onclick="submitNew()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Créer</button></div>
   </div>
 </div>
 
 <div id="toast"></div>
 
 <script>
-// ══════════════════════
-// CONFIG
-// ══════════════════════
-const SUPABASE_URL   = 'https://llheudregeksbyjuscrw.supabase.co';
-const SUPABASE_ANON  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxsaGV1ZHJlZ2Vrc2J5anVzY3J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5ODg1NzUsImV4cCI6MjA4ODU2NDU3NX0.oglo1qODsVra6EdJcrwZ9p2P_SR73R_XfH736V1Giuk';
-const CLIENT_ID      = '1480269493447168102';
-const REDIRECT_URI   = 'https://jojolm24.github.io/beta-dev/';
-const GUILD_ID       = '1452963098284785765';
-const STAFF_ROLE_ID  = '1480159806903029822';
-const AVIS_WEBHOOK   = 'https://discord.com/api/webhooks/1480282950145933402/4nLdey7KVqr9q3Ws8T8nH7p4_WZEU22C7C5-q5DShPpQw2QdiOm7QRREVtrgivfh8eov';
+const SUPABASE_URL  = 'https://llheudregeksbyjuscrw.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxsaGV1ZHJlZ2Vrc2J5anVzY3J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5ODg1NzUsImV4cCI6MjA4ODU2NDU3NX0.oglo1qODsVra6EdJcrwZ9p2P_SR73R_XfH736V1Giuk';
+const CLIENT_ID     = '1480269493447168102';
+const REDIRECT_URI  = 'https://jojolm24.github.io/beta-dev/';
+const GUILD_ID      = '1452963098284785765';
+const STAFF_ROLE    = '1480159806903029822';
+const WEBHOOK       = 'https://discord.com/api/webhooks/1480282950145933402/4nLdey7KVqr9q3Ws8T8nH7p4_WZEU22C7C5-q5DShPpQw2QdiOm7QRREVtrgivfh8eov';
 
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_ANON);
 
-let me = null, isStaff = false;
-let currentModalType = 'ticket';
-let avisRating = 0;
-let currentTicketId = null, currentCommandeId = null;
-let currentDetailPanel = null;
+let me = null, isStaff = false, modalType = 'ticket', presetOrder = '', avisRating = 0;
 
-// ══════════════════════
-// THEME
-// ══════════════════════
-function toggleTheme() {
-  const dark = document.documentElement.dataset.theme === 'dark';
-  document.documentElement.dataset.theme = dark ? '' : 'dark';
-  localStorage.setItem('theme', dark ? 'light' : 'dark');
-  updateThemeIcon();
-}
-function updateThemeIcon() {
-  const dark = document.documentElement.dataset.theme === 'dark';
-  const moon = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
-  const sun  = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>`;
-  const ti = document.getElementById('theme-icon');
-  const ti2 = document.getElementById('theme-icon2');
-  if (ti) ti.outerHTML = `<span id="theme-icon">${dark ? sun : moon}</span>`;
-  if (ti2) ti2.outerHTML = `<span id="theme-icon2">${dark ? sun : moon}</span>`;
-}
-if (localStorage.getItem('theme') === 'dark') {
-  document.documentElement.dataset.theme = 'dark';
-}
-
-// ══════════════════════
-// PAGES
-// ══════════════════════
-function showPage(id) {
-  document.querySelectorAll('.page').forEach(p => { p.classList.remove('active'); p.style.display = 'none'; });
-  const el = document.getElementById(id);
-  if (id === 'app-page') { el.style.display = 'flex'; el.style.flexDirection = 'column'; }
-  else { el.style.display = 'block'; }
-  el.classList.add('active');
-}
-
-function setLoading(msg) {
-  showPage('loading-page');
-  document.getElementById('loading-txt').textContent = msg;
-}
-
-// ══════════════════════
-// DISCORD AUTH
-// ══════════════════════
-function loginWithDiscord() {
-  const url = new URL('https://discord.com/api/oauth2/authorize');
-  url.searchParams.set('client_id',     CLIENT_ID);
-  url.searchParams.set('redirect_uri',  REDIRECT_URI);
-  url.searchParams.set('response_type', 'token');
-  url.searchParams.set('scope',         'identify guilds.members.read');
-  url.searchParams.set('prompt',        'none');
-  window.location.href = url.toString();
-}
-
-async function handleOAuthCallback(token) {
-  history.replaceState(null, '', window.location.pathname);
-  setLoading('Connexion à Discord...');
-  try {
-    setLoading('Récupération du profil...');
-    const uRes = await fetch('https://discord.com/api/v10/users/@me', { headers: { Authorization: `Bearer ${token}` } });
-    const uText = await uRes.text();
-    let user;
-    try { user = JSON.parse(uText); } catch(e) { throw new Error('Réponse Discord invalide'); }
-    if (!uRes.ok) throw new Error('Discord ' + uRes.status + ': ' + (user.message || ''));
-    if (!user.id) throw new Error("Pas d'ID utilisateur");
-
-    setLoading('Vérification des accès...');
-    let roles = [];
-    try {
-      const mRes = await fetch(`https://discord.com/api/v10/users/@me/guilds/${GUILD_ID}/member`, { headers: { Authorization: `Bearer ${token}` } });
-      if (mRes.ok) { const m = await mRes.json(); roles = m.roles || []; }
-    } catch(_) {}
-
-    me = {
-      id:       user.id,
-      username: user.global_name || user.username,
-      avatar:   user.avatar
-        ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=64`
-        : `https://cdn.discordapp.com/embed/avatars/0.png`
-    };
-    isStaff = roles.includes(STAFF_ROLE_ID);
-
-    sessionStorage.setItem('dc_user',   JSON.stringify(me));
-    sessionStorage.setItem('dc_staff',  String(isStaff));
-    sessionStorage.setItem('dc_expiry', String(Date.now() + 8 * 3600 * 1000));
-
-    window.location.replace(REDIRECT_URI);
-  } catch(err) {
-    console.error(err);
-    setLoading('Erreur : ' + err.message);
-    setTimeout(() => showPage('landing-page'), 3000);
+/* ── STARS ── */
+(function(){
+  const c = document.getElementById('stars-canvas');
+  const ctx = c.getContext('2d');
+  let W, H, stars = [];
+  function resize(){ W = c.width = innerWidth; H = c.height = innerHeight; }
+  function make(){
+    stars = [];
+    const n = Math.floor(W*H/3000);
+    for(let i=0;i<n;i++) stars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.2+.2,o:Math.random()*.7+.1,s:Math.random()*.3+.1,t:Math.random()*Math.PI*2});
   }
-}
-
-function loadSession() {
-  const expiry = parseInt(sessionStorage.getItem('dc_expiry') || '0');
-  if (Date.now() > expiry) { sessionStorage.clear(); return false; }
-  const stored = sessionStorage.getItem('dc_user');
-  if (!stored) return false;
-  me      = JSON.parse(stored);
-  isStaff = sessionStorage.getItem('dc_staff') === 'true';
-  return true;
-}
-
-function logout() {
-  sessionStorage.clear();
-  me = null; isStaff = false;
-  showPage('landing-page');
-}
-
-// ══════════════════════
-// INIT
-// ══════════════════════
-async function init() {
-  const hash  = new URLSearchParams(window.location.hash.replace('#', ''));
-  const token = hash.get('access_token');
-  const err   = hash.get('error');
-
-  if (token) {
-    await handleOAuthCallback(token);
-    return;
-  }
-  if (err) {
-    history.replaceState(null, '', window.location.pathname);
-    showPage('landing-page');
-    return;
-  }
-  if (!loadSession()) {
-    showPage('landing-page');
-    return;
-  }
-  launchApp();
-}
-
-function launchApp() {
-  document.getElementById('user-name').textContent    = me.username;
-  document.getElementById('user-avatar').src           = me.avatar;
-  document.getElementById('compte-avatar').src         = me.avatar;
-  document.getElementById('compte-username').textContent = me.username;
-  document.getElementById('compte-id').textContent    = 'ID: ' + me.id;
-  document.getElementById('compte-name-input').value  = me.username;
-
-  if (isStaff) {
-    document.getElementById('staff-badge').style.display = 'inline-block';
-    document.getElementById('staff-nav').style.display = 'block';
-  }
-  showPage('app-page');
-  loadMyTickets();
-  loadSavedEmail();
-  initStars();
-}
-
-// ══════════════════════
-// PANELS
-// ══════════════════════
-function switchPanel(name) {
-  document.querySelectorAll('.dash-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
-  document.getElementById('panel-' + name).classList.add('active');
-  const nav = document.getElementById('nav-' + name);
-  if (nav) nav.classList.add('active');
-
-  if (name === 'tickets')       loadMyTickets();
-  if (name === 'commandes')     loadMyCommandes();
-  if (name === 'all-tickets')   loadAllTickets();
-  if (name === 'all-commandes') loadAllCommandes();
-  if (name === 'compte')        loadSavedEmail();
-}
-
-// ══════════════════════
-// HELPERS
-// ══════════════════════
-function esc(t) { const d = document.createElement('div'); d.appendChild(document.createTextNode(t||'')); return d.innerHTML; }
-function fmtDate(d) { return new Date(d).toLocaleDateString('fr-FR',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}); }
-function statusLabel(s) { return {open:'Ouvert',in_progress:'En cours',closed:'Fermé'}[s]||s; }
-function statusClass(s) { return {open:'s-open',in_progress:'s-progress',closed:'s-closed'}[s]||'s-closed'; }
-function prioLabel(p) { return {low:'Faible',medium:'Moyenne',high:'Haute'}[p]||p; }
-
-let _toastTimer;
-function toast(msg, type='info') {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.className = 'show t-' + type;
-  clearTimeout(_toastTimer);
-  _toastTimer = setTimeout(() => { t.className = ''; }, 3000);
-}
-
-// ══════════════════════
-// RENDER LIST
-// ══════════════════════
-function renderTicketList(containerId, items, showAuthor, onClickFn) {
-  const el = document.getElementById(containerId);
-  if (!items.length) {
-    el.innerHTML = `<div class="empty-state"><div class="empty-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/></svg></div><h3>Aucun élément</h3><p>Rien ici pour l'instant.</p></div>`;
-    return;
-  }
-  el.innerHTML = items.map(t => `
-    <div class="ticket-row fade-up" onclick="${onClickFn}('${t.id}')">
-      <div class="ticket-num">#${t.id.substring(0,6).toUpperCase()}</div>
-      <div class="ticket-info">
-        <div class="ticket-title-text">${esc(t.title)}</div>
-        <div class="ticket-meta-text">${showAuthor ? `${esc(t.username)} · ` : ''}${fmtDate(t.created_at)} · ${prioLabel(t.priority)}</div>
-      </div>
-      <div class="status-pill ${statusClass(t.status)}"><div class="status-dot"></div>${statusLabel(t.status)}</div>
-    </div>
-  `).join('');
-}
-
-// ══════════════════════
-// TICKETS
-// ══════════════════════
-async function loadMyTickets() {
-  const el = document.getElementById('list-my-tickets');
-  el.innerHTML = `<div style="padding:30px;text-align:center;color:var(--text3);font-size:13px;">Chargement...</div>`;
-  const { data, error } = await db.from('tickets').select('*').eq('discord_user_id', me.id).order('created_at', { ascending: false });
-  if (error) { el.innerHTML = `<div class="empty-state"><h3>Erreur Supabase</h3><p>${esc(error.message)}</p></div>`; return; }
-  const cnt = (data||[]).length;
-  document.getElementById('tickets-count-label').textContent = cnt + ' ticket' + (cnt>1?'s':'');
-  const badge = document.getElementById('ticket-count');
-  if (cnt > 0) { badge.textContent = cnt; badge.style.display = 'inline-block'; } else { badge.style.display = 'none'; }
-  renderTicketList('list-my-tickets', data||[], false, 'openTicketDetail');
-}
-
-async function loadAllTickets() {
-  const el = document.getElementById('list-all-tickets');
-  el.innerHTML = `<div style="padding:30px;text-align:center;color:var(--text3);font-size:13px;">Chargement...</div>`;
-  const { data, error } = await db.from('tickets').select('*').order('created_at', { ascending: false });
-  if (error) return;
-  renderTicketList('list-all-tickets', data||[], true, 'openAllTicketDetail');
-}
-
-async function openTicketDetail(id) {
-  currentTicketId = id;
-  currentDetailPanel = 'tickets';
-  await renderDetail(id, 'tickets-list-view', 'tickets-detail-view', false);
-}
-async function openAllTicketDetail(id) {
-  currentTicketId = id;
-  currentDetailPanel = 'all-tickets';
-  await renderDetail(id, 'all-tickets-list-view', 'all-tickets-detail-view', true);
-}
-
-async function renderDetail(id, listViewId, detailViewId, staffView) {
-  document.getElementById(listViewId).style.display = 'none';
-  const dv = document.getElementById(detailViewId);
-  dv.style.display = 'block';
-  dv.innerHTML = `<div style="padding:40px;text-align:center;color:var(--text3);font-size:13px;">Chargement...</div>`;
-
-  const { data: t } = await db.from('tickets').select('*').eq('id', id).single();
-  if (!t) return;
-
-  const canChange = isStaff && staffView;
-  const staffHtml = canChange ? `
-    <div class="staff-actions">
-      <span class="staff-actions-label">Statut :</span>
-      <button class="btn-sm btn-sm-green" onclick="updateTicketStatus('${id}','open','${listViewId}','${detailViewId}',${staffView})">Ouvert</button>
-      <button class="btn-sm btn-sm-yellow" onclick="updateTicketStatus('${id}','in_progress','${listViewId}','${detailViewId}',${staffView})">En cours</button>
-      <button class="btn-sm btn-sm-red" onclick="updateTicketStatus('${id}','closed','${listViewId}','${detailViewId}',${staffView})">Fermé</button>
-    </div>` : '';
-
-  dv.innerHTML = `
-    <button class="detail-back" onclick="closeDetail('${listViewId}','${detailViewId}')">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
-      Retour
-    </button>
-    <div class="detail-card">
-      <div class="detail-head">
-        <div class="detail-title">${esc(t.title)}</div>
-        <div class="status-pill ${statusClass(t.status)}"><div class="status-dot"></div>${statusLabel(t.status)}</div>
-      </div>
-      <div class="detail-body-text">${esc(t.description)}</div>
-      <div class="detail-meta">
-        <div class="detail-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>${esc(t.username)}</div>
-        <div class="detail-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${fmtDate(t.created_at)}</div>
-        <div class="detail-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Priorité ${prioLabel(t.priority)}</div>
-      </div>
-      ${staffHtml}
-    </div>
-    <div class="msg-section">
-      <div class="msg-header">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        Fil de discussion
-      </div>
-      <div class="msg-list" id="msg-list-${id}"></div>
-      ${t.status !== 'closed' || isStaff ? `
-      <div class="msg-input-wrap">
-        <textarea class="msg-textarea" id="msg-input-${id}" placeholder="Votre message..."></textarea>
-        <div class="msg-send-row">
-          <button class="btn-primary" onclick="sendMsg('${id}')">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-            Envoyer
-          </button>
-        </div>
-      </div>` : ''}
-    </div>`;
-
-  await loadMsgs(id);
-}
-
-async function loadMsgs(ticketId) {
-  const el = document.getElementById('msg-list-' + ticketId);
-  if (!el) return;
-  const { data } = await db.from('ticket_messages').select('*').eq('ticket_id', ticketId).order('created_at', { ascending: true });
-  if (!data || !data.length) {
-    el.innerHTML = `<div style="text-align:center;padding:24px;font-size:13px;color:var(--text3);font-family:'Outfit',monospace;">// Aucun message pour l'instant</div>`;
-    return;
-  }
-  el.innerHTML = data.map(m => `
-    <div class="msg-item fade-up">
-      <img class="msg-avatar" src="${esc(m.avatar_url||'https://cdn.discordapp.com/embed/avatars/0.png')}" alt="">
-      <div class="msg-content">
-        <div class="msg-author-row">
-          <span class="msg-author-name">${esc(m.username)}</span>
-          ${m.is_staff ? '<span class="badge-staff">STAFF</span>' : ''}
-          <span class="msg-time">${fmtDate(m.created_at)}</span>
-        </div>
-        <div class="msg-text">${esc(m.content)}</div>
-      </div>
-    </div>
-  `).join('');
-  el.scrollTop = el.scrollHeight;
-}
-
-async function sendMsg(ticketId) {
-  const inp = document.getElementById('msg-input-' + ticketId);
-  const content = inp.value.trim();
-  if (!content) return;
-  const { error } = await db.from('ticket_messages').insert({ ticket_id: ticketId, discord_user_id: me.id, username: me.username, avatar_url: me.avatar, content, is_staff: isStaff });
-  if (error) { toast('Erreur: ' + error.message, 'error'); return; }
-  inp.value = '';
-  await loadMsgs(ticketId);
-  toast('Message envoyé', 'success');
-}
-
-async function updateTicketStatus(id, status, listViewId, detailViewId, staffView) {
-  await db.from('tickets').update({ status, updated_at: new Date().toISOString() }).eq('id', id);
-  toast('Statut mis à jour', 'success');
-  await renderDetail(id, listViewId, detailViewId, staffView);
-}
-
-function closeDetail(listViewId, detailViewId) {
-  document.getElementById(listViewId).style.display = 'block';
-  document.getElementById(detailViewId).style.display = 'none';
-  if (currentDetailPanel === 'all-tickets') loadAllTickets();
-  else loadMyTickets();
-}
-
-// ══════════════════════
-// COMMANDES (identique aux tickets mais table "commandes")
-// ══════════════════════
-async function loadMyCommandes() {
-  const el = document.getElementById('list-my-commandes');
-  el.innerHTML = `<div style="padding:30px;text-align:center;color:var(--text3);font-size:13px;">Chargement...</div>`;
-  const { data, error } = await db.from('commandes').select('*').eq('discord_user_id', me.id).order('created_at', { ascending: false });
-  if (error) { el.innerHTML = `<div class="empty-state"><h3>Erreur</h3><p>${esc(error.message)}</p></div>`; return; }
-  const cnt = (data||[]).length;
-  document.getElementById('commandes-count-label').textContent = cnt + ' commande' + (cnt>1?'s':'');
-  renderTicketList('list-my-commandes', data||[], false, 'openCommandeDetail');
-}
-
-async function loadAllCommandes() {
-  const el = document.getElementById('list-all-commandes');
-  el.innerHTML = `<div style="padding:30px;text-align:center;color:var(--text3);font-size:13px;">Chargement...</div>`;
-  const { data } = await db.from('commandes').select('*').order('created_at', { ascending: false });
-  renderTicketList('list-all-commandes', data||[], true, 'openAllCommandeDetail');
-}
-
-async function openCommandeDetail(id) {
-  currentCommandeId = id;
-  await renderCommandeDetail(id, 'commandes-list-view', 'commandes-detail-view', false);
-}
-async function openAllCommandeDetail(id) {
-  currentCommandeId = id;
-  await renderCommandeDetail(id, 'all-commandes-list-view', 'all-commandes-detail-view', true);
-}
-
-async function renderCommandeDetail(id, listViewId, detailViewId, staffView) {
-  document.getElementById(listViewId).style.display = 'none';
-  const dv = document.getElementById(detailViewId);
-  dv.style.display = 'block';
-  dv.innerHTML = `<div style="padding:40px;text-align:center;color:var(--text3);">Chargement...</div>`;
-
-  const { data: t } = await db.from('commandes').select('*').eq('id', id).single();
-  if (!t) return;
-
-  const canChange = isStaff && staffView;
-  const staffHtml = canChange ? `
-    <div class="staff-actions">
-      <span class="staff-actions-label">Statut :</span>
-      <button class="btn-sm btn-sm-green" onclick="updateCommandeStatus('${id}','open','${listViewId}','${detailViewId}',${staffView})">Ouvert</button>
-      <button class="btn-sm btn-sm-yellow" onclick="updateCommandeStatus('${id}','in_progress','${listViewId}','${detailViewId}',${staffView})">En cours</button>
-      <button class="btn-sm btn-sm-red" onclick="updateCommandeStatus('${id}','closed','${listViewId}','${detailViewId}',${staffView})">Fermé</button>
-    </div>` : '';
-
-  dv.innerHTML = `
-    <button class="detail-back" onclick="closeCommandeDetail('${listViewId}','${detailViewId}','${staffView}')">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
-      Retour
-    </button>
-    <div class="detail-card">
-      <div class="detail-head">
-        <div class="detail-title">${esc(t.title)}</div>
-        <div class="status-pill ${statusClass(t.status)}"><div class="status-dot"></div>${statusLabel(t.status)}</div>
-      </div>
-      <div class="detail-body-text">${esc(t.description)}</div>
-      <div class="detail-meta">
-        <div class="detail-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>${esc(t.username)}</div>
-        <div class="detail-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${fmtDate(t.created_at)}</div>
-        <div class="detail-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Priorité ${prioLabel(t.priority)}</div>
-      </div>
-      ${staffHtml}
-    </div>
-    <div class="msg-section">
-      <div class="msg-header">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        Fil de discussion
-      </div>
-      <div class="msg-list" id="cmsg-list-${id}"></div>
-      ${t.status !== 'closed' || isStaff ? `
-      <div class="msg-input-wrap">
-        <textarea class="msg-textarea" id="cmsg-input-${id}" placeholder="Votre message..."></textarea>
-        <div class="msg-send-row">
-          <button class="btn-primary" onclick="sendCMsg('${id}')">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-            Envoyer
-          </button>
-        </div>
-      </div>` : ''}
-    </div>`;
-  await loadCMsgs(id);
-}
-
-async function loadCMsgs(id) {
-  const el = document.getElementById('cmsg-list-' + id);
-  if (!el) return;
-  const { data } = await db.from('commande_messages').select('*').eq('commande_id', id).order('created_at', { ascending: true });
-  if (!data || !data.length) { el.innerHTML = `<div style="text-align:center;padding:24px;font-size:13px;color:var(--text3);font-family:'Outfit',monospace;">// Aucun message</div>`; return; }
-  el.innerHTML = data.map(m => `
-    <div class="msg-item fade-up">
-      <img class="msg-avatar" src="${esc(m.avatar_url||'https://cdn.discordapp.com/embed/avatars/0.png')}" alt="">
-      <div class="msg-content">
-        <div class="msg-author-row"><span class="msg-author-name">${esc(m.username)}</span>${m.is_staff?'<span class="badge-staff">STAFF</span>':''}<span class="msg-time">${fmtDate(m.created_at)}</span></div>
-        <div class="msg-text">${esc(m.content)}</div>
-      </div>
-    </div>`).join('');
-  el.scrollTop = el.scrollHeight;
-}
-
-async function sendCMsg(id) {
-  const inp = document.getElementById('cmsg-input-' + id);
-  const content = inp.value.trim();
-  if (!content) return;
-  const { error } = await db.from('commande_messages').insert({ commande_id: id, discord_user_id: me.id, username: me.username, avatar_url: me.avatar, content, is_staff: isStaff });
-  if (error) { toast('Erreur', 'error'); return; }
-  inp.value = '';
-  await loadCMsgs(id);
-  toast('Message envoyé', 'success');
-}
-
-async function updateCommandeStatus(id, status, listViewId, detailViewId, staffView) {
-  await db.from('commandes').update({ status, updated_at: new Date().toISOString() }).eq('id', id);
-  toast('Statut mis à jour', 'success');
-  await renderCommandeDetail(id, listViewId, detailViewId, staffView);
-}
-
-function closeCommandeDetail(listViewId, detailViewId, staffView) {
-  document.getElementById(listViewId).style.display = 'block';
-  document.getElementById(detailViewId).style.display = 'none';
-  if (staffView === 'true') loadAllCommandes(); else loadMyCommandes();
-}
-
-// ══════════════════════
-// MODAL CREATE
-// ══════════════════════
-function openModal(type) {
-  currentModalType = type;
-  document.getElementById('modal-title').textContent = type === 'ticket' ? 'Nouveau ticket' : 'Nouvelle commande';
-  document.getElementById('new-title').value = '';
-  document.getElementById('new-desc').value = '';
-  document.getElementById('new-priority').value = 'medium';
-  document.getElementById('modal-new').classList.add('open');
-}
-function closeModal() { document.getElementById('modal-new').classList.remove('open'); }
-
-async function submitNew() {
-  const title = document.getElementById('new-title').value.trim();
-  const description = document.getElementById('new-desc').value.trim();
-  const priority = document.getElementById('new-priority').value;
-  if (!title || !description) { toast('Remplis tous les champs', 'error'); return; }
-
-  const table = currentModalType === 'ticket' ? 'tickets' : 'commandes';
-  const { error } = await db.from(table).insert({ discord_user_id: me.id, username: me.username, avatar_url: me.avatar, title, description, priority, status: 'open' });
-  if (error) { toast('Erreur: ' + error.message, 'error'); return; }
-
-  closeModal();
-  toast((currentModalType === 'ticket' ? 'Ticket' : 'Commande') + ' créé !', 'success');
-  if (currentModalType === 'ticket') loadMyTickets();
-  else loadMyCommandes();
-}
-
-// ══════════════════════
-// COMPTE / EMAIL
-// ══════════════════════
-async function loadSavedEmail() {
-  if (!me) return;
-  const { data } = await db.from('user_profiles').select('email').eq('discord_user_id', me.id).single();
-  if (data && data.email) document.getElementById('compte-email-input').value = data.email;
-}
-
-async function saveEmail() {
-  const email = document.getElementById('compte-email-input').value.trim();
-  if (!email) { toast('Entre un email valide', 'error'); return; }
-  const { error } = await db.from('user_profiles').upsert({ discord_user_id: me.id, username: me.username, email, updated_at: new Date().toISOString() }, { onConflict: 'discord_user_id' });
-  if (error) { toast('Erreur: ' + error.message, 'error'); return; }
-  toast('Email sauvegardé !', 'success');
-}
-
-// ══════════════════════
-// AVIS
-// ══════════════════════
-function initStars() {
-  document.querySelectorAll('.star').forEach(s => {
-    s.addEventListener('click', () => {
-      avisRating = parseInt(s.dataset.val);
-      document.querySelectorAll('.star').forEach(st => {
-        st.classList.toggle('active', parseInt(st.dataset.val) <= avisRating);
-      });
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    stars.forEach(s=>{
+      s.t+=s.s*.015; s.o=(.3+.4*Math.sin(s.t));
+      ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(180,190,255,${s.o})`; ctx.fill();
     });
+    requestAnimationFrame(draw);
+  }
+  resize(); make(); draw();
+  window.addEventListener('resize',()=>{ resize(); make(); });
+})();
+
+/* ── THEME ── */
+(function(){
+  const t = localStorage.getItem('theme');
+  if(t==='light') document.documentElement.dataset.theme='light';
+  updateThemeIcons();
+})();
+function toggleTheme(){
+  const light = document.documentElement.dataset.theme==='light';
+  document.documentElement.dataset.theme = light?'':'light';
+  localStorage.setItem('theme', light?'dark':'light');
+  updateThemeIcons();
+}
+function updateThemeIcons(){
+  const light = document.documentElement.dataset.theme==='light';
+  const moon = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>`;
+  const sun  = `<circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>`;
+  ['ti','ti2'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.innerHTML = light ? moon : sun;
   });
 }
 
-async function submitAvis() {
-  if (!avisRating) { toast('Choisis une note', 'error'); return; }
-  const text = document.getElementById('avis-text').value.trim();
-  const service = document.getElementById('avis-service').value;
-  if (!text) { toast('Écris ton avis', 'error'); return; }
+/* ── PAGES ── */
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>{p.classList.remove('active');p.style.display='none';});
+  const el=document.getElementById(id);
+  el.style.display = id==='app-page' ? 'flex' : 'block';
+  el.style.flexDirection = 'column';
+  el.classList.add('active');
+}
+function setLoading(m){ showPage('loading-page'); document.getElementById('loading-txt').textContent=m; }
 
-  const stars = '⭐'.repeat(avisRating);
-  const payload = {
-    username: 'Dev Center — Avis',
-    embeds: [{
-      title: stars + ' Nouvel avis',
-      color: 0x4f6ef7,
-      fields: [
-        { name: 'Utilisateur', value: `${me.username} (\`${me.id}\`)`, inline: true },
-        { name: 'Service', value: service, inline: true },
-        { name: 'Note', value: `${avisRating}/5 ${stars}`, inline: true },
-        { name: 'Avis', value: text }
-      ],
-      thumbnail: { url: me.avatar },
-      timestamp: new Date().toISOString()
-    }]
-  };
+/* ── AUTH ── */
+function loginWithDiscord(){
+  const u=new URL('https://discord.com/api/oauth2/authorize');
+  u.searchParams.set('client_id',CLIENT_ID); u.searchParams.set('redirect_uri',REDIRECT_URI);
+  u.searchParams.set('response_type','token'); u.searchParams.set('scope','identify guilds.members.read');
+  u.searchParams.set('prompt','none'); window.location.href=u.toString();
+}
+async function handleOAuth(token){
+  history.replaceState(null,'',window.location.pathname);
+  setLoading('Connexion à Discord...');
+  try{
+    const uR=await fetch('https://discord.com/api/v10/users/@me',{headers:{Authorization:`Bearer ${token}`}});
+    if(!uR.ok) throw new Error('Discord '+uR.status);
+    const user=await uR.json();
+    if(!user.id) throw new Error("Pas d'ID utilisateur");
+    setLoading('Vérification des accès...');
+    let roles=[];
+    try{ const mR=await fetch(`https://discord.com/api/v10/users/@me/guilds/${GUILD_ID}/member`,{headers:{Authorization:`Bearer ${token}`}}); if(mR.ok){const m=await mR.json();roles=m.roles||[];} }catch(_){}
+    me={id:user.id,username:user.global_name||user.username,avatar:user.avatar?`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=64`:'https://cdn.discordapp.com/embed/avatars/0.png'};
+    isStaff=roles.includes(STAFF_ROLE);
+    const exp=Date.now()+8*3600*1000;
+    sessionStorage.setItem('dc_user',JSON.stringify(me));
+    sessionStorage.setItem('dc_staff',String(isStaff));
+    sessionStorage.setItem('dc_expiry',String(exp));
+    window.location.replace(REDIRECT_URI);
+  }catch(e){ setLoading('Erreur: '+e.message); setTimeout(()=>showPage('landing-page'),3000); }
+}
+function loadSession(){
+  const exp=parseInt(sessionStorage.getItem('dc_expiry')||'0');
+  if(Date.now()>exp){sessionStorage.clear();return false;}
+  const s=sessionStorage.getItem('dc_user');
+  if(!s) return false;
+  me=JSON.parse(s); isStaff=sessionStorage.getItem('dc_staff')==='true';
+  return true;
+}
+function logout(){ sessionStorage.clear(); me=null; isStaff=false; showPage('landing-page'); }
 
-  try {
-    await fetch(AVIS_WEBHOOK, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-    document.getElementById('avis-form').style.display = 'none';
-    document.getElementById('avis-success').classList.add('show');
-    toast('Avis envoyé !', 'success');
-  } catch(e) {
-    toast('Erreur lors de l\'envoi', 'error');
-  }
+/* ── INIT ── */
+async function init(){
+  const hash=new URLSearchParams(window.location.hash.replace('#',''));
+  const token=hash.get('access_token');
+  if(token){ await handleOAuth(token); return; }
+  if(hash.get('error')){ history.replaceState(null,'',window.location.pathname); showPage('landing-page'); return; }
+  if(!loadSession()){ showPage('landing-page'); return; }
+  launchApp();
+}
+function launchApp(){
+  document.getElementById('user-av').src=me.avatar;
+  document.getElementById('user-nm').textContent=me.username;
+  document.getElementById('c-av').src=me.avatar;
+  document.getElementById('c-nm').textContent=me.username;
+  document.getElementById('c-usr').textContent='@'+me.username.toLowerCase().replace(/\s/g,'_');
+  document.getElementById('c-id').textContent=me.id;
+  document.getElementById('c-session').textContent=new Date().toLocaleString('fr-FR');
+  document.getElementById('c-since').textContent='juil. 2025';
+  document.getElementById('c-visits').textContent=Math.floor(Math.random()*50+10);
+  document.getElementById('c-roles').textContent=isStaff?'Staff + Membre':'Membre';
+  document.getElementById('c-staff-val').innerHTML=isStaff?'<span class="c-badge c-green">Oui</span>':'<span class="c-badge c-gray">Non</span>';
+  if(isStaff){ document.getElementById('staff-bdg').style.display='inline-block'; document.getElementById('staff-nav').style.display='block'; }
+  showPage('app-page');
+  initStars();
+  loadMyTickets();
+  loadEmail();
 }
 
-// ══════════════════════
-// PRICING TABS
-// ══════════════════════
-function switchPricing(type, btn) {
-  ['discord','web','bot'].forEach(t => document.getElementById('pricing-' + t).style.display = t === type ? 'block' : 'none');
-  document.querySelectorAll('.pricing-tab').forEach(b => b.classList.remove('active'));
+/* ── PANELS ── */
+function goPanel(name){
+  document.querySelectorAll('.dash-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sb-link').forEach(l=>l.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  const n=document.getElementById('nav-'+name);
+  if(n) n.classList.add('active');
+  if(name==='tickets')  loadMyTickets();
+  if(name==='commandes') loadMyCommandes();
+  if(name==='all-t')    loadAllTickets();
+  if(name==='all-c')    loadAllCommandes();
+  if(name==='compte')   loadEmail();
+}
+
+/* ── HELPERS ── */
+function esc(t){const d=document.createElement('div');d.appendChild(document.createTextNode(t||''));return d.innerHTML;}
+function fd(d){return new Date(d).toLocaleString('fr-FR',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});}
+function slbl(s){return{open:'Ouvert',in_progress:'En cours',closed:'Fermé'}[s]||s;}
+function scls(s){return{open:'s-open',in_progress:'s-prog',closed:'s-closed'}[s]||'s-closed';}
+function plbl(p){return{low:'Faible',medium:'Moyenne',high:'Haute'}[p]||p;}
+let _tt;
+function toast(m,t='i'){const el=document.getElementById('toast');el.textContent=m;el.className='show t-'+t;clearTimeout(_tt);_tt=setTimeout(()=>{el.className='';},3000);}
+
+/* ── RENDER LIST ── */
+function renderList(cid,items,showAuthor,clickFn){
+  const el=document.getElementById(cid);
+  if(!items.length){
+    el.innerHTML=`<div class="empty"><div class="empty-box"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/></svg></div><h3>Aucun élément</h3><p>Rien ici pour l'instant.</p></div>`;
+    return;
+  }
+  el.innerHTML=items.map(t=>`
+    <div class="t-row fade-up" onclick="${clickFn}('${t.id}')">
+      <div class="t-num">#${t.id.substring(0,6).toUpperCase()}</div>
+      <div class="t-info"><div class="t-tit">${esc(t.title)}</div><div class="t-meta">${showAuthor?esc(t.username)+' · ':''}${fd(t.created_at)} · ${plbl(t.priority)}</div></div>
+      <div class="spill ${scls(t.status)}"><div class="sdot"></div>${slbl(t.status)}</div>
+    </div>`).join('');
+}
+
+/* ── TICKETS ── */
+async function loadMyTickets(){
+  document.getElementById('list-t').innerHTML=`<div style="padding:30px;text-align:center;color:var(--text3);font-size:13px;font-family:'Outfit',monospace;">Chargement...</div>`;
+  const {data,error}=await db.from('tickets').select('*').eq('discord_user_id',me.id).order('created_at',{ascending:false});
+  if(error){document.getElementById('list-t').innerHTML=`<div class="empty"><h3>Erreur</h3><p>${esc(error.message)}</p></div>`;return;}
+  const cnt=(data||[]).length; const tc=document.getElementById('tc');
+  if(cnt>0){tc.textContent=cnt;tc.style.display='inline-block';}else tc.style.display='none';
+  renderList('list-t',data||[],false,'openTDet');
+}
+async function loadAllTickets(){
+  document.getElementById('list-at').innerHTML=`<div style="padding:30px;text-align:center;color:var(--text3);font-size:13px;">Chargement...</div>`;
+  const{data}=await db.from('tickets').select('*').order('created_at',{ascending:false});
+  renderList('list-at',data||[],true,'openATDet');
+}
+async function openTDet(id){ showDet('tv-list','tv-det',id,'tickets',false); }
+async function openATDet(id){ showDet('atv-list','atv-det',id,'tickets',true); }
+
+/* ── COMMANDES ── */
+async function loadMyCommandes(){
+  document.getElementById('list-c').innerHTML=`<div style="padding:30px;text-align:center;color:var(--text3);font-size:13px;">Chargement...</div>`;
+  const{data,error}=await db.from('commandes').select('*').eq('discord_user_id',me.id).order('created_at',{ascending:false});
+  if(error){document.getElementById('list-c').innerHTML=`<div class="empty"><h3>Erreur</h3><p>${esc(error.message)}</p></div>`;return;}
+  renderList('list-c',data||[],false,'openCDet');
+}
+async function loadAllCommandes(){
+  document.getElementById('list-ac').innerHTML=`<div style="padding:30px;text-align:center;color:var(--text3);font-size:13px;">Chargement...</div>`;
+  const{data}=await db.from('commandes').select('*').order('created_at',{ascending:false});
+  renderList('list-ac',data||[],true,'openACDet');
+}
+async function openCDet(id){ showDet('cv-list','cv-det',id,'commandes',false); }
+async function openACDet(id){ showDet('acv-list','acv-det',id,'commandes',true); }
+
+/* ── DETAIL ── */
+async function showDet(listId,detId,id,table,staffView){
+  document.getElementById(listId).style.display='none';
+  const dv=document.getElementById(detId);
+  dv.style.display='flex'; dv.style.flexDirection='column';
+  dv.innerHTML=`<div style="padding:40px;text-align:center;color:var(--text3);">Chargement...</div>`;
+  const{data:t}=await db.from(table).select('*').eq('id',id).single();
+  if(!t) return;
+  const fkField=table==='tickets'?'ticket_id':'commande_id';
+  const msgTable=table==='tickets'?'ticket_messages':'commande_messages';
+  const canAct=isStaff&&staffView;
+  const staffHtml=canAct?`
+    <div class="staff-acts">
+      <span class="acts-lbl">Statut :</span>
+      <button class="btn-sm sm-green" onclick="setStatus('${id}','open','${listId}','${detId}','${table}',${staffView})">Ouvert</button>
+      <button class="btn-sm sm-yellow" onclick="setStatus('${id}','in_progress','${listId}','${detId}','${table}',${staffView})">En cours</button>
+      <button class="btn-sm sm-red" onclick="setStatus('${id}','closed','${listId}','${detId}','${table}',${staffView})">Fermé</button>
+      <button class="btn-sm sm-dark" onclick="setStatus('${id}','closed','${listId}','${detId}','${table}',${staffView},true)" style="margin-left:8px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Fermer définitivement</button>
+    </div>`:''
+  ;
+  dv.innerHTML=`
+    <button class="det-back" onclick="closeDet('${listId}','${detId}','${table}','${staffView}')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+      Retour
+    </button>
+    <div class="user-info-card">
+      <img class="uic-av" src="${esc(t.avatar_url||'https://cdn.discordapp.com/embed/avatars/0.png')}" alt="">
+      <div><div class="uic-name">${esc(t.username)}</div><div class="uic-id">ID Discord : ${esc(t.discord_user_id)}</div></div>
+    </div>
+    <div class="det-card">
+      <div class="det-head"><div class="det-title">${esc(t.title)}</div><div class="spill ${scls(t.status)}"><div class="sdot"></div>${slbl(t.status)}</div></div>
+      <div class="det-body">${esc(t.description)}</div>
+      <div class="det-meta">
+        <div class="det-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${fd(t.created_at)}</div>
+        <div class="det-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Priorité ${plbl(t.priority)}</div>
+        ${t.type?`<div class="det-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>${esc(t.type)}</div>`:''}
+      </div>
+      ${staffHtml}
+    </div>
+    <div class="msg-sec" style="flex:1">
+      <div class="msg-hdr"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Fil de discussion</div>
+      <div class="msg-list" id="ml-${id}"></div>
+      ${t.status!=='closed'||isStaff?`
+      <div class="msg-inp-wrap">
+        <textarea class="msg-ta" id="mi-${id}" placeholder="Votre message..."></textarea>
+        <div class="msg-send-row"><button class="btn-primary" onclick="sendMsg('${id}','${fkField}','${msgTable}')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Envoyer</button></div>
+      </div>`:'<div style="padding:12px 18px;text-align:center;font-size:12px;color:var(--text3);">Ce ticket est fermé définitivement.</div>'}
+    </div>`;
+  await loadMsgs(id,fkField,msgTable);
+}
+
+async function loadMsgs(id,fkField,msgTable){
+  const el=document.getElementById('ml-'+id);
+  if(!el) return;
+  const{data}=await db.from(msgTable).select('*').eq(fkField,id).order('created_at',{ascending:true});
+  if(!data||!data.length){el.innerHTML=`<div style="text-align:center;padding:24px;font-size:13px;color:var(--text3);font-family:'Outfit',monospace;">// Aucun message pour l'instant</div>`;return;}
+  el.innerHTML=data.map(m=>`<div class="msg-item"><img class="msg-av" src="${esc(m.avatar_url||'https://cdn.discordapp.com/embed/avatars/0.png')}" alt=""><div class="msg-c"><div class="msg-ar"><span class="msg-name">${esc(m.username)}</span>${m.is_staff?'<span class="badge-staff">STAFF</span>':''}<span class="msg-time">${fd(m.created_at)}</span></div><div class="msg-txt">${esc(m.content)}</div></div></div>`).join('');
+  el.scrollTop=el.scrollHeight;
+}
+
+async function sendMsg(id,fkField,msgTable){
+  const inp=document.getElementById('mi-'+id);
+  const content=inp.value.trim();
+  if(!content) return;
+  const row={discord_user_id:me.id,username:me.username,avatar_url:me.avatar,content,is_staff:isStaff};
+  row[fkField]=id;
+  const{error}=await db.from(msgTable).insert(row);
+  if(error){toast('Erreur: '+error.message,'e');return;}
+  inp.value='';
+  await loadMsgs(id,fkField,msgTable);
+  toast('Message envoyé','s');
+}
+
+async function setStatus(id,status,listId,detId,table,staffView,permanent=false){
+  const upd={status,updated_at:new Date().toISOString()};
+  if(permanent) upd.permanent=true;
+  await db.from(table).update(upd).eq('id',id);
+  toast(permanent?'Ticket fermé définitivement':'Statut mis à jour','s');
+  await showDet(listId,detId,id,table,staffView);
+}
+
+function closeDet(listId,detId,table,staffView){
+  document.getElementById(listId).style.display='block';
+  document.getElementById(detId).style.display='none';
+  if(table==='tickets'){ if(staffView==='true') loadAllTickets(); else loadMyTickets(); }
+  else { if(staffView==='true') loadAllCommandes(); else loadMyCommandes(); }
+}
+
+/* ── MODAL ── */
+function openModal(type,preset=''){
+  modalType=type; presetOrder=preset;
+  document.getElementById('modal-ttl').textContent=type==='ticket'?'Nouveau ticket':'Nouvelle commande';
+  document.getElementById('new-title').value=preset||'';
+  document.getElementById('new-desc').value='';
+  document.getElementById('new-prio').value='medium';
+  document.getElementById('new-type-wrap').style.display=type==='commande'?'block':'none';
+  if(preset) document.getElementById('new-type').value=preset;
+  document.getElementById('modal-new').classList.add('open');
+}
+function closeModal(){ document.getElementById('modal-new').classList.remove('open'); }
+
+async function submitNew(){
+  const title=document.getElementById('new-title').value.trim();
+  const desc=document.getElementById('new-desc').value.trim();
+  const prio=document.getElementById('new-prio').value;
+  const type=modalType==='commande'?document.getElementById('new-type').value:'';
+  if(!title||!desc){toast('Remplis tous les champs','e');return;}
+  const table=modalType==='ticket'?'tickets':'commandes';
+  const row={discord_user_id:me.id,username:me.username,avatar_url:me.avatar,title,description:desc,priority:prio,status:'open'};
+  if(type) row.type=type;
+  const{error}=await db.from(table).insert(row);
+  if(error){toast('Erreur: '+error.message,'e');return;}
+  closeModal(); toast((modalType==='ticket'?'Ticket':'Commande')+' créé !','s');
+  if(modalType==='ticket') loadMyTickets(); else loadMyCommandes();
+}
+
+/* ── REDIRECT FROM PRICING ── */
+function goToOrder(plan){
+  if(!me){ loginWithDiscord(); return; }
+  goPanel('commandes');
+  setTimeout(()=>openModal('commande',plan),300);
+}
+
+/* ── COMPTE ── */
+async function loadEmail(){
+  if(!me) return;
+  const{data}=await db.from('user_profiles').select('email').eq('discord_user_id',me.id).single();
+  if(data&&data.email) document.getElementById('c-email').value=data.email;
+}
+async function saveEmail(){
+  const email=document.getElementById('c-email').value.trim();
+  if(!email){toast('Entre un email valide','e');return;}
+  const{error}=await db.from('user_profiles').upsert({discord_user_id:me.id,username:me.username,email,updated_at:new Date().toISOString()},{onConflict:'discord_user_id'});
+  if(error){toast('Erreur: '+error.message,'e');return;}
+  toast('Email sauvegardé !','s');
+}
+
+/* ── AVIS ── */
+function initStars(){
+  const wrap=document.getElementById('stars');
+  if(!wrap) return;
+  wrap.innerHTML='';
+  for(let i=1;i<=5;i++){
+    const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+    svg.setAttribute('class','star'); svg.setAttribute('data-v',i);
+    svg.setAttribute('width','28'); svg.setAttribute('height','28');
+    svg.setAttribute('viewBox','0 0 24 24'); svg.setAttribute('fill','currentColor');
+    svg.innerHTML='<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>';
+    svg.addEventListener('click',()=>{ avisRating=i; document.querySelectorAll('.star').forEach(s=>{ s.classList.toggle('on',parseInt(s.dataset.v)<=i); }); });
+    wrap.appendChild(svg);
+  }
+}
+async function submitAvis(){
+  if(!avisRating){toast('Choisis une note','e');return;}
+  const txt=document.getElementById('avis-txt').value.trim();
+  const svc=document.getElementById('avis-svc').value;
+  if(!txt){toast("Écris ton avis",'e');return;}
+  const stars='⭐'.repeat(avisRating);
+  const payload={username:'Dev Center — Avis',embeds:[{title:stars+' Nouvel avis',color:0x4f6ef7,fields:[{name:'Utilisateur',value:`${me.username} (\`${me.id}\`)`,inline:true},{name:'Service',value:svc,inline:true},{name:'Note',value:`${avisRating}/5 ${stars}`,inline:true},{name:'Avis',value:txt}],thumbnail:{url:me.avatar},timestamp:new Date().toISOString()}]};
+  try{
+    await fetch(WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    document.getElementById('avis-form-wrap').style.display='none';
+    document.getElementById('avis-ok-msg').classList.add('show');
+    toast('Avis envoyé !','s');
+  }catch(e){ toast("Erreur lors de l'envoi",'e'); }
+}
+
+/* ── PRICING TABS ── */
+function switchPricing(t,btn){
+  ['discord','web','bot'].forEach(x=>document.getElementById('p-'+x).style.display=x===t?'block':'none');
+  document.querySelectorAll('.ptab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
 }
 
-// ══════════════════════
-// START
-// ══════════════════════
 init();
 </script>
 </body>
