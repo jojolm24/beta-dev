@@ -358,10 +358,10 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
       <h1 class="hero-title">Construisez,<br>déployez<br>avec<br><span>Dev Center</span></h1>
       <p class="hero-desc">Votre espace de développement tout-en-un.<br>Créez des serveurs Discord professionnels,<br>lancez vos sites web sans effort.<br>La communauté qui code avec vous.</p>
       <div class="hero-btns">
-        <button class="btn-primary" onclick="loginWithDiscord()">
+        <a class="btn-primary" href="https://discord.gg/fyBrf8UJuu" target="_blank" rel="noopener">
           <svg width="14" height="11" viewBox="0 0 71 55" fill="currentColor"><path d="M60.1 4.9C55.6 2.8 50.7 1.3 45.7.4c-.7 1.2-1.4 2.6-1.9 3.8C38.2 3.4 32.7 3.4 27.4 4.2c-.5-1.2-1.2-2.6-1.9-3.8C20.3 1.3 15.4 2.8 10.9 4.9 1.6 18.7-.9 32.1.3 45.4c7 5.1 13.8 8.4 20.6 10.6.5-.7 1-1.4 1.4-2.2-.8-.3-1.5-.6-2.3-1l.4-.3c11.8 5.3 24.5 5.3 36.2 0l.4.3c-.7.4-1.5.7-2.3 1 .4.8.9 1.5 1.4 2.2 6.7-2.2 13.5-5.5 20.5-10.6 1.3-13.3-1.7-26.6-6.6-40.5zM23.7 37.3c-2.9 0-5.3-2.7-5.3-5.9s2.3-5.9 5.3-5.9 5.4 2.7 5.3 5.9c0 3.3-2.3 5.9-5.3 5.9zm23.6 0c-2.9 0-5.3-2.7-5.3-5.9s2.3-5.9 5.3-5.9 5.4 2.7 5.3 5.9c0 3.3-2.3 5.9-5.3 5.9z"/></svg>
           Rejoindre — Discord
-        </button>
+        </a>
         <a href="#features" class="btn-secondary">Explorer les offres</a>
       </div>
     </div>
@@ -616,41 +616,50 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
 <!-- MODAL TICKET/COMMANDE -->
 <div class="modal-ov" id="modal-new">
   <div class="modal">
-    <div class="modal-title">
-      <div class="modal-title-icon" id="modal-icon">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/></svg>
+    <div class="modal-hdr" id="modal-hdr-new" style="background:linear-gradient(135deg,rgba(79,110,247,.15),rgba(129,140,248,.08));">
+      <div class="modal-hdr-icon" id="modal-icon" style="background:rgba(79,110,247,.15);color:var(--primary);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/></svg>
       </div>
-      <span id="modal-ttl">Nouveau ticket</span>
-    </div>
-    <div class="form-group">
-      <label class="f-lbl">Titre</label>
-      <input class="f-input" id="new-title" placeholder="Résumé de votre demande...">
-    </div>
-    <div class="form-group">
-      <label class="f-lbl">Description</label>
-      <textarea class="f-textarea" id="new-desc" placeholder="Décrivez votre problème ou demande en détail..." style="min-height:120px;"></textarea>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-      <div class="form-group" style="margin-bottom:0">
-        <label class="f-lbl">Priorité</label>
-        <select class="f-select" id="new-prio">
-          <option value="low">🟢 Faible</option>
-          <option value="medium" selected>🟡 Moyenne</option>
-          <option value="high">🔴 Haute</option>
-        </select>
+      <div class="modal-hdr-text">
+        <div class="modal-hdr-title" id="modal-ttl">Nouveau ticket</div>
+        <div class="modal-hdr-sub" id="modal-sub">Créer une demande de support</div>
       </div>
-      <div class="form-group" id="new-type-wrap" style="margin-bottom:0;display:none">
-        <label class="f-lbl">Type</label>
-        <select class="f-select" id="new-type">
-          <option value="">Sélectionner...</option>
-          <option value="Serveur Discord Free">Discord — Free</option>
-          <option value="Serveur Discord Boss">Discord — Boss</option>
-          <option value="Serveur Discord Master">Discord — Master</option>
-          <option value="Site Web Starter">Web — Starter</option>
-          <option value="Site Web Pro">Web — Pro</option>
-          <option value="Bot Discord Starter">Bot — Starter</option>
-          <option value="Autre">Autre</option>
-        </select>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="f-lbl">Titre</label>
+        <input class="f-input" id="new-title" placeholder="Résumé de votre demande...">
+      </div>
+      <div class="form-group">
+        <label class="f-lbl">Description</label>
+        <textarea class="f-textarea" id="new-desc" placeholder="Décrivez votre problème ou demande en détail..." style="min-height:110px;"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="f-lbl">Votre email de contact</label>
+        <input class="f-input" id="new-email" type="email" placeholder="votre@email.com">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="form-group" style="margin-bottom:0">
+          <label class="f-lbl">Priorité</label>
+          <select class="f-select" id="new-prio">
+            <option value="low">🟢 Faible</option>
+            <option value="medium" selected>🟡 Moyenne</option>
+            <option value="high">🔴 Haute</option>
+          </select>
+        </div>
+        <div class="form-group" id="new-type-wrap" style="margin-bottom:0;display:none">
+          <label class="f-lbl">Type</label>
+          <select class="f-select" id="new-type">
+            <option value="">Sélectionner...</option>
+            <option value="Serveur Discord Free">Discord — Free</option>
+            <option value="Serveur Discord Boss">Discord — Boss</option>
+            <option value="Serveur Discord Master">Discord — Master</option>
+            <option value="Site Web Starter">Web — Starter</option>
+            <option value="Site Web Pro">Web — Pro</option>
+            <option value="Bot Discord Starter">Bot — Starter</option>
+            <option value="Autre">Autre</option>
+          </select>
+        </div>
       </div>
     </div>
     <div class="modal-acts">
@@ -666,38 +675,43 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
 <!-- MODAL CHANGELOG -->
 <div class="modal-ov" id="modal-cl">
   <div class="modal">
-    <div class="modal-title">
-      <div class="modal-title-icon" style="background:rgba(34,197,94,.12);color:#22c55e">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    <div class="modal-hdr" style="background:linear-gradient(135deg,rgba(34,197,94,.12),rgba(16,185,129,.06));">
+      <div class="modal-hdr-icon" style="background:rgba(34,197,94,.15);color:#22c55e;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
       </div>
-      Nouveau changelog
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-      <div class="form-group" style="margin-bottom:0">
-        <label class="f-lbl">Version</label>
-        <input class="f-input" id="cl-ver" placeholder="ex: v1.2.0">
-      </div>
-      <div class="form-group" style="margin-bottom:0">
-        <label class="f-lbl">Type de mise à jour</label>
-        <select class="f-select" id="cl-type">
-          <option value="major">Majeur</option>
-          <option value="minor" selected>Mineur</option>
-          <option value="patch">Patch</option>
-        </select>
+      <div class="modal-hdr-text">
+        <div class="modal-hdr-title">Nouveau changelog</div>
+        <div class="modal-hdr-sub">Publier une mise à jour</div>
       </div>
     </div>
-    <div class="form-group" style="margin-top:12px">
-      <label class="f-lbl">Titre</label>
-      <input class="f-input" id="cl-title" placeholder="Titre du changelog...">
-    </div>
-    <div class="form-group">
-      <label class="f-lbl">Description des changements</label>
-      <textarea class="f-textarea" id="cl-desc" placeholder="Décrivez les changements apportés..." style="min-height:120px;"></textarea>
+    <div class="modal-body">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="form-group" style="margin-bottom:0">
+          <label class="f-lbl">Version</label>
+          <input class="f-input" id="cl-ver" placeholder="ex: v1.2.0">
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="f-lbl">Niveau</label>
+          <select class="f-select" id="cl-type">
+            <option value="major">🟢 Majeur</option>
+            <option value="minor" selected>🟡 Mineur</option>
+            <option value="patch">🔵 Patch</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group" style="margin-top:14px">
+        <label class="f-lbl">Titre</label>
+        <input class="f-input" id="cl-title" placeholder="Titre du changelog...">
+      </div>
+      <div class="form-group">
+        <label class="f-lbl">Description des changements</label>
+        <textarea class="f-textarea" id="cl-desc" placeholder="Décrivez les changements apportés..." style="min-height:110px;"></textarea>
+      </div>
     </div>
     <div class="modal-acts">
       <button class="btn-cancel" onclick="document.getElementById('modal-cl').classList.remove('open')">Annuler</button>
-      <button class="btn-primary" onclick="submitCL()">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <button class="btn-primary" style="background:#22c55e;box-shadow:0 4px 14px rgba(34,197,94,.3);" onmouseover="this.style.background='#16a34a'" onmouseout="this.style.background='#22c55e'" onclick="submitCL()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
         Publier
       </button>
     </div>
@@ -707,23 +721,28 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
 <!-- MODAL ANNONCE -->
 <div class="modal-ov" id="modal-ann">
   <div class="modal">
-    <div class="modal-title">
-      <div class="modal-title-icon" style="background:rgba(168,85,247,.12);color:#a855f7">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 17H2a3 3 0 0 0 3-3V9a7 7 0 0 1 14 0v5a3 3 0 0 0 3 3zm-8.27 4a2 2 0 0 1-3.46 0"/></svg>
+    <div class="modal-hdr" style="background:linear-gradient(135deg,rgba(168,85,247,.12),rgba(139,92,246,.06));">
+      <div class="modal-hdr-icon" style="background:rgba(168,85,247,.15);color:#a855f7;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 17H2a3 3 0 0 0 3-3V9a7 7 0 0 1 14 0v5a3 3 0 0 0 3 3zm-8.27 4a2 2 0 0 1-3.46 0"/></svg>
       </div>
-      Nouvelle annonce
+      <div class="modal-hdr-text">
+        <div class="modal-hdr-title">Nouvelle annonce</div>
+        <div class="modal-hdr-sub">Message visible par toute l'équipe staff</div>
+      </div>
     </div>
-    <div class="form-group">
-      <label class="f-lbl">Titre de l'annonce</label>
-      <input class="f-input" id="ann-title" placeholder="Titre...">
-    </div>
-    <div class="form-group">
-      <label class="f-lbl">Contenu</label>
-      <textarea class="f-textarea" id="ann-body" placeholder="Rédigez votre annonce..." style="min-height:130px;"></textarea>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="f-lbl">Titre de l'annonce</label>
+        <input class="f-input" id="ann-title" placeholder="Ex: Mise à jour importante...">
+      </div>
+      <div class="form-group">
+        <label class="f-lbl">Contenu</label>
+        <textarea class="f-textarea" id="ann-body" placeholder="Rédigez votre annonce..." style="min-height:130px;"></textarea>
+      </div>
     </div>
     <div class="modal-acts">
       <button class="btn-cancel" onclick="document.getElementById('modal-ann').classList.remove('open')">Annuler</button>
-      <button class="btn-primary" onclick="submitAnn()">
+      <button class="btn-primary" style="background:#a855f7;box-shadow:0 4px 14px rgba(168,85,247,.3);" onmouseover="this.style.background='#9333ea'" onmouseout="this.style.background='#a855f7'" onclick="submitAnn()">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
         Publier
       </button>
@@ -1061,14 +1080,18 @@ function closeModal(){ document.getElementById('modal-new').classList.remove('op
 async function submitNew(){
   const title=document.getElementById('new-title').value.trim();
   const desc=document.getElementById('new-desc').value.trim();
+  const email=document.getElementById('new-email')?.value.trim()||'';
   const prio=document.getElementById('new-prio').value;
   const type=modalType==='commande'?document.getElementById('new-type').value:'';
   if(!title||!desc){toast('Remplis tous les champs','e');return;}
   const table=modalType==='ticket'?'tickets':'commandes';
   const row={discord_user_id:me.id,username:me.username,avatar_url:me.avatar,title,description:desc,priority:prio,status:'open'};
   if(type) row.type=type;
+  if(email) row.contact_email=email;
   const{error}=await db.from(table).insert(row);
   if(error){toast('Erreur: '+error.message,'e');return;}
+  // Also save email to profile if provided
+  if(email) db.from('user_profiles').upsert({discord_user_id:me.id,username:me.username,email,updated_at:new Date().toISOString()},{onConflict:'discord_user_id'});
   closeModal(); toast((modalType==='ticket'?'Ticket':'Commande')+' créé !','s');
   if(modalType==='ticket') loadMyTickets(); else loadMyCommandes();
 }
@@ -1198,11 +1221,21 @@ function openModal(type,preset){
   preset=preset||''; modalType=type; presetOrder=preset;
   var isC=type==='commande';
   document.getElementById('modal-ttl').textContent=isC?'Nouvelle commande':'Nouveau ticket';
-  document.getElementById('modal-icon').innerHTML=isC
-    ?'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>'
-    :'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/></svg>';
+  document.getElementById('modal-sub').textContent=isC?'Passer une nouvelle commande':'Créer une demande de support';
+  var hdr=document.getElementById('modal-hdr-new');
+  var ico=document.getElementById('modal-icon');
+  if(isC){
+    hdr.style.background='linear-gradient(135deg,rgba(6,182,212,.12),rgba(79,110,247,.06))';
+    ico.style.background='rgba(6,182,212,.15)'; ico.style.color='#06b6d4';
+    ico.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>';
+  }else{
+    hdr.style.background='linear-gradient(135deg,rgba(79,110,247,.15),rgba(129,140,248,.08))';
+    ico.style.background='rgba(79,110,247,.15)'; ico.style.color='var(--primary)';
+    ico.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/></svg>';
+  }
   document.getElementById('new-title').value=preset||'';
   document.getElementById('new-desc').value='';
+  document.getElementById('new-email').value='';
   document.getElementById('new-prio').value='medium';
   document.getElementById('new-type-wrap').style.display=isC?'block':'none';
   if(preset) document.getElementById('new-type').value=preset;
