@@ -408,6 +408,8 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
 @media(max-width:1100px){.compte-grid{grid-template-columns:1fr 1fr;}.pgrid3{grid-template-columns:1fr 1fr;}}
 
 /* ── MOBILE NAV TOGGLE ── */
+.app-burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px;border:none;background:transparent;margin-right:4px;}
+.app-burger span{display:block;width:20px;height:2px;background:var(--text);border-radius:2px;transition:all .3s;}
 .nav-burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px;border:none;background:transparent;}
 .nav-burger span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px;transition:all .3s;}
 .mobile-menu{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.6);backdrop-filter:blur(10px);}
@@ -468,8 +470,9 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
   .topbar-logo{font-size:14px;}
   .btn-home{display:none;}
   .btn-logout span{display:none;}
-  .app-main{padding:12px 14px 80px;}
-  .bottom-nav{display:block;}
+  .app-main{padding:12px 14px 20px;}
+  .app-burger{display:flex !important;}
+  /* bottom nav hidden on mobile too — use app hamburger */
   #app-page{padding-bottom:0;}
 
   /* Panels */
@@ -679,6 +682,9 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
 <!-- APP -->
 <div id="app-page" class="page">
   <div class="topbar">
+    <button class="app-burger" onclick="document.getElementById('mobile-app-menu').classList.add('open')" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
     <div class="topbar-logo" onclick="goToLanding()" style="cursor:pointer;">
       <img src="https://cdn.discordapp.com/icons/1452963098284785765/4255d99dd972ab407c31044fe9a899b0.png?size=64" class="topbar-logo-img" alt="">
       Dev Center
@@ -1029,8 +1035,6 @@ function launchApp(){
   if(me.email) document.getElementById('c-email-val').textContent=me.email;
   if(isStaff){document.getElementById('staff-bdg').style.display='inline-block';document.getElementById('staff-nav').style.display='block';var mms=document.getElementById('mm-staff');if(mms)mms.style.display='block';}
   if(isAdmin){document.getElementById('btn-add-cl').style.display='inline-flex';document.getElementById('btn-add-ann').style.display='inline-flex';document.getElementById('admin-nav').style.display='block';var mma=document.getElementById('mm-admin');if(mma)mma.style.display='block';}
-  // Show bottom nav on mobile
-  var bn=document.getElementById('bottom-nav');if(bn)bn.style.display='block';
   updateNavbar();
   showPage('app-page');
   initStars();
