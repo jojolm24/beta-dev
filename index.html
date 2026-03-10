@@ -405,9 +405,108 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
 .perm-check.off{background:rgba(239,68,68,.12);color:#ef4444;}
 .perm-check.off:hover{background:rgba(239,68,68,.25);}
 
-@media(max-width:1100px){.compte-grid{grid-template-columns:1fr 1fr;}}
-@media(max-width:900px){.hero{grid-template-columns:1fr;padding:48px 24px;}.terminal{display:none;}.pgrid3{grid-template-columns:1fr;}.about-grid{grid-template-columns:1fr;}.why-grid{grid-template-columns:1fr 1fr;}.section{padding:56px 24px;}.navbar{padding:0 20px;}.nav-links{display:none;}}
-@media(max-width:700px){.sidebar{width:56px;}.sb-link span,.sb-lbl,.sb-count{display:none;}.sb-link{justify-content:center;}.sb-link .sb-icon{margin:0;}.app-main{padding:16px;}.compte-grid{grid-template-columns:1fr;}}
+@media(max-width:1100px){.compte-grid{grid-template-columns:1fr 1fr;}.pgrid3{grid-template-columns:1fr 1fr;}}
+
+/* ── MOBILE NAV TOGGLE ── */
+.nav-burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px;border:none;background:transparent;}
+.nav-burger span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px;transition:all .3s;}
+.mobile-menu{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.6);backdrop-filter:blur(10px);}
+.mobile-menu.open{display:flex;flex-direction:column;}
+.mobile-menu-inner{background:var(--bg2);padding:24px 20px;display:flex;flex-direction:column;gap:6px;margin-top:auto;border-radius:24px 24px 0 0;border:1px solid var(--border);max-height:80vh;overflow-y:auto;}
+.mobile-menu-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border);}
+.mm-link{display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:12px;font-size:14px;font-weight:500;color:var(--text2);cursor:pointer;text-decoration:none;transition:all .2s;border:none;background:transparent;width:100%;font-family:'Outfit',sans-serif;}
+.mm-link:hover,.mm-link.active{background:var(--primary-l);color:var(--primary);}
+.mm-link-icon{width:34px;height:34px;border-radius:10px;background:var(--bg3);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+
+/* ── BOTTOM NAV (mobile app) ── */
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:200;background:var(--bg2);border-top:1px solid var(--border);padding:6px 8px calc(6px + env(safe-area-inset-bottom));backdrop-filter:blur(20px);}
+.bn-items{display:flex;justify-content:space-around;align-items:center;}
+.bn-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 10px;border-radius:12px;cursor:pointer;border:none;background:transparent;font-family:'Outfit',sans-serif;color:var(--text3);font-size:10px;font-weight:500;transition:all .2s;position:relative;min-width:48px;}
+.bn-item.active,.bn-item:hover{color:var(--primary);}
+.bn-item.active{background:var(--primary-l);}
+.bn-badge{position:absolute;top:4px;right:6px;background:var(--primary);color:#fff;font-size:9px;font-weight:700;padding:1px 5px;border-radius:10px;min-width:16px;text-align:center;}
+
+@media(max-width:900px){
+  /* Landing */
+  .hero{grid-template-columns:1fr;padding:48px 20px 40px;gap:32px;}
+  .hero-title{font-size:46px;}
+  .terminal{display:none;}
+  .pgrid3,.pgrid2{grid-template-columns:1fr;}
+  .about-grid{grid-template-columns:1fr;}
+  .why-grid{grid-template-columns:1fr 1fr;}
+  .section{padding:52px 20px;}
+  .section-inner{padding:0 20px;}
+  .navbar{padding:0 16px;}
+  .nav-links{display:none;}
+  .nav-burger{display:flex;}
+  .footer-strip{flex-direction:column;gap:10px;text-align:center;padding:20px;}
+  /* Stats */
+  .stats-grid{grid-template-columns:1fr 1fr;}
+}
+
+@media(max-width:640px){
+  /* Landing hero */
+  .hero{padding:32px 16px 28px;}
+  .hero-title{font-size:36px;letter-spacing:-.02em;}
+  .hero-desc{font-size:14px;}
+  .hero-btns{gap:10px;}
+  .btn-primary,.btn-secondary{padding:11px 16px;font-size:13px;}
+  .s-title{font-size:28px;}
+  .section{padding:40px 16px;}
+  .section-inner{padding:0 16px;}
+  .why-grid{grid-template-columns:1fr;}
+  .team-grid{gap:12px;}
+  .team-card{width:100%;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .ptabs{flex-wrap:wrap;width:100%;}
+  .ptab{flex:1;justify-content:center;font-size:12px;}
+  .navbar{padding:0 14px;height:56px;}
+
+  /* App layout */
+  .sidebar{display:none;}
+  .topbar{height:52px;padding:0 14px;}
+  .topbar-logo{font-size:14px;}
+  .btn-home{display:none;}
+  .btn-logout span{display:none;}
+  .app-main{padding:12px 14px 80px;}
+  .bottom-nav{display:block;}
+  #app-page{padding-bottom:0;}
+
+  /* Panels */
+  .ph{flex-direction:column;align-items:flex-start;gap:10px;}
+  .ph .btn-primary{width:100%;justify-content:center;}
+  .t-row{padding:12px 14px;}
+  .t-tit{font-size:13px;}
+  .compte-grid{grid-template-columns:1fr;}
+  .compte-col{padding:16px;}
+  
+  /* Detail view */
+  .det-title{font-size:17px;}
+  .staff-acts{flex-wrap:wrap;gap:6px;}
+  .creator-grid{grid-template-columns:1fr 1fr;}
+  
+  /* Messages */
+  .msg-list{max-height:280px;}
+  
+  /* Modals */
+  .modal-ov{align-items:flex-end;padding:0;}
+  .modal{border-radius:20px 20px 0 0;max-width:100%;width:100%;max-height:92vh;overflow-y:auto;}
+  .modal-body{padding:16px 18px;}
+  .modal-acts{padding:14px 18px;}
+  .modal-hdr{padding:18px 18px 14px;}
+  
+  /* Changelog / annonce */
+  .cl-head{flex-wrap:wrap;}
+  .cl-date{margin-left:0;width:100%;}
+  .ann-card{padding:16px;}
+  
+  /* Contrats */
+  .contrat-card{flex-direction:column;align-items:flex-start;gap:10px;}
+  .contrat-actions{width:100%;justify-content:flex-end;}
+  
+  /* Perms */
+  .perm-item{padding:10px 14px;}
+}
 </style>
 </head>
 <body>
@@ -435,12 +534,38 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
     </ul>
     <div class="nav-right">
       <button class="btn-icon" onclick="toggleTheme()"><svg id="ti" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
-      <button class="btn-connect" onclick="loginWithDiscord()">
+      <button class="btn-connect" id="nav-dash-btn" style="display:none" onclick="showPage('app-page')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </button>
+      <button class="btn-connect" id="nav-login-btn" onclick="loginWithDiscord()">
         <svg width="16" height="12" viewBox="0 0 71 55" fill="currentColor"><path d="M60.1 4.9C55.6 2.8 50.7 1.3 45.7.4c-.7 1.2-1.4 2.6-1.9 3.8C38.2 3.4 32.7 3.4 27.4 4.2c-.5-1.2-1.2-2.6-1.9-3.8C20.3 1.3 15.4 2.8 10.9 4.9 1.6 18.7-.9 32.1.3 45.4c7 5.1 13.8 8.4 20.6 10.6.5-.7 1-1.4 1.4-2.2-.8-.3-1.5-.6-2.3-1l.4-.3c11.8 5.3 24.5 5.3 36.2 0l.4.3c-.7.4-1.5.7-2.3 1 .4.8.9 1.5 1.4 2.2 6.7-2.2 13.5-5.5 20.5-10.6 1.3-13.3-1.7-26.6-6.6-40.5zM23.7 37.3c-2.9 0-5.3-2.7-5.3-5.9s2.3-5.9 5.3-5.9 5.4 2.7 5.3 5.9c0 3.3-2.3 5.9-5.3 5.9zm23.6 0c-2.9 0-5.3-2.7-5.3-5.9s2.3-5.9 5.3-5.9 5.4 2.7 5.3 5.9c0 3.3-2.3 5.9-5.3 5.9z"/></svg>
         Se connecter
       </button>
+      <button class="nav-burger" onclick="document.getElementById('mobile-menu').classList.add('open')" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </nav>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobile-menu" onclick="if(event.target===this)this.classList.remove('open')">
+    <div class="mobile-menu-inner">
+      <div class="mobile-menu-hdr">
+        <div style="display:flex;align-items:center;gap:10px;"><img src="https://cdn.discordapp.com/icons/1452963098284785765/4255d99dd972ab407c31044fe9a899b0.png?size=64" style="width:28px;height:28px;border-radius:8px;" alt=""><span style="font-family:'Syne',sans-serif;font-weight:800;font-size:16px;">Dev Center</span></div>
+        <button onclick="document.getElementById('mobile-menu').classList.remove('open')" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+      <a class="mm-link" href="#features" onclick="document.getElementById('mobile-menu').classList.remove('open')"><div class="mm-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>Fonctionnalités</a>
+      <a class="mm-link" href="#about" onclick="document.getElementById('mobile-menu').classList.remove('open')"><div class="mm-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>Qui sommes-nous</a>
+      <a class="mm-link" href="#why" onclick="document.getElementById('mobile-menu').classList.remove('open')"><div class="mm-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>Pourquoi nous ?</a>
+      <a class="mm-link" href="#team" onclick="document.getElementById('mobile-menu').classList.remove('open')"><div class="mm-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>Équipe</a>
+      <div style="margin-top:8px;padding-top:12px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:8px;">
+        <a class="btn-primary" href="https://discord.gg/fyBrf8UJuu" target="_blank" rel="noopener" style="justify-content:center;"><svg width="14" height="11" viewBox="0 0 71 55" fill="currentColor"><path d="M60.1 4.9C55.6 2.8 50.7 1.3 45.7.4c-.7 1.2-1.4 2.6-1.9 3.8C38.2 3.4 32.7 3.4 27.4 4.2c-.5-1.2-1.2-2.6-1.9-3.8C20.3 1.3 15.4 2.8 10.9 4.9 1.6 18.7-.9 32.1.3 45.4c7 5.1 13.8 8.4 20.6 10.6.5-.7 1-1.4 1.4-2.2-.8-.3-1.5-.6-2.3-1l.4-.3c11.8 5.3 24.5 5.3 36.2 0l.4.3c-.7.4-1.5.7-2.3 1 .4.8.9 1.5 1.4 2.2 6.7-2.2 13.5-5.5 20.5-10.6 1.3-13.3-1.7-26.6-6.6-40.5zM23.7 37.3c-2.9 0-5.3-2.7-5.3-5.9s2.3-5.9 5.3-5.9 5.4 2.7 5.3 5.9c0 3.3-2.3 5.9-5.3 5.9zm23.6 0c-2.9 0-5.3-2.7-5.3-5.9s2.3-5.9 5.3-5.9 5.4 2.7 5.3 5.9c0 3.3-2.3 5.9-5.3 5.9z"/></svg>Rejoindre Discord</a>
+        <button id="mm-dash-btn" class="btn-secondary" style="width:100%;justify-content:center;display:none;" onclick="document.getElementById('mobile-menu').classList.remove('open');showPage('app-page')">Retourner au Dashboard</button>
+        <button id="mm-login-btn" class="btn-connect" style="width:100%;justify-content:center;" onclick="loginWithDiscord()"><svg width="16" height="12" viewBox="0 0 71 55" fill="currentColor"><path d="M60.1 4.9C55.6 2.8 50.7 1.3 45.7.4c-.7 1.2-1.4 2.6-1.9 3.8C38.2 3.4 32.7 3.4 27.4 4.2c-.5-1.2-1.2-2.6-1.9-3.8C20.3 1.3 15.4 2.8 10.9 4.9 1.6 18.7-.9 32.1.3 45.4c7 5.1 13.8 8.4 20.6 10.6.5-.7 1-1.4 1.4-2.2-.8-.3-1.5-.6-2.3-1l.4-.3c11.8 5.3 24.5 5.3 36.2 0l.4.3c-.7.4-1.5.7-2.3 1 .4.8.9 1.5 1.4 2.2 6.7-2.2 13.5-5.5 20.5-10.6 1.3-13.3-1.7-26.6-6.6-40.5zM23.7 37.3c-2.9 0-5.3-2.7-5.3-5.9s2.3-5.9 5.3-5.9 5.4 2.7 5.3 5.9c0 3.3-2.3 5.9-5.3 5.9zm23.6 0c-2.9 0-5.3-2.7-5.3-5.9s2.3-5.9 5.3-5.9 5.4 2.7 5.3 5.9c0 3.3-2.3 5.9-5.3 5.9z"/></svg>Se connecter</button>
+      </div>
+    </div>
+  </div>
 
   <div class="hero">
     <div>
@@ -488,15 +613,15 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
       <button class="ptab" onclick="switchPricing('bot',this)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg>Bot Discord</button>
     </div>
     <div id="p-discord"><div class="pgrid3">
-      <div class="pcard"><div class="picon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div class="pname">Free</div><div class="pdesc">Gratuit</div><div class="pprice">0 Boost requis</div><ul class="pfeats"><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Salon personnalisé</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Rôle personnalisé</li></ul><button class="btn-plan" onclick="goToOrder('Serveur Discord Free')">Passer commande</button></div>
-      <div class="pcard"><div class="picon" style="color:#f59e0b;background:rgba(245,158,11,.1)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div class="pname">Boss</div><div class="pdesc">1 Boost requis</div><div class="pprice" style="color:#f59e0b">1 Boost Discord</div><ul class="pfeats"><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Salon + Rôle + Permissions</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Système de suggestions</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Support prioritaire</li></ul><button class="btn-plan" onclick="goToOrder('Serveur Discord Boss')">Passer commande</button></div>
-      <div class="pcard pop"><div class="pop-badge">Populaire</div><div class="picon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div class="pname">Master</div><div class="pdesc">2 Boosts requis</div><div class="pprice">2 Boosts Discord</div><ul class="pfeats"><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Tout du Boss</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Configuration bot</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Suggestions + badges</li></ul><button class="btn-plan" onclick="goToOrder('Serveur Discord Master')">Passer commande</button></div>
+      <div class="pcard"><div class="picon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div class="pname">Free <span id="mod-badge-discord_free" style="display:none;font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px;vertical-align:middle;"></span></div><div class="pdesc">Gratuit</div><div class="pprice">0 Boost requis</div><ul class="pfeats"><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Salon personnalisé</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Rôle personnalisé</li></ul><button class="btn-plan" onclick="goToOrder('Serveur Discord Free')">Passer commande</button></div>
+      <div class="pcard"><div class="picon" style="color:#f59e0b;background:rgba(245,158,11,.1)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div class="pname">Boss <span id="mod-badge-discord_boss" style="display:none;font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px;vertical-align:middle;"></span></div><div class="pdesc">1 Boost requis</div><div class="pprice" style="color:#f59e0b">1 Boost Discord</div><ul class="pfeats"><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Salon + Rôle + Permissions</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Système de suggestions</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Support prioritaire</li></ul><button class="btn-plan" onclick="goToOrder('Serveur Discord Boss')">Passer commande</button></div>
+      <div class="pcard pop"><div class="pop-badge">Populaire</div><div class="picon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div class="pname">Master <span id="mod-badge-discord_master" style="display:none;font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px;vertical-align:middle;"></span></div><div class="pdesc">2 Boosts requis</div><div class="pprice">2 Boosts Discord</div><ul class="pfeats"><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Tout du Boss</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Configuration bot</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Suggestions + badges</li></ul><button class="btn-plan" onclick="goToOrder('Serveur Discord Master')">Passer commande</button></div>
     </div></div>
     <div id="p-web" style="display:none"><div class="pgrid2">
-      <div class="pcard"><div class="pname">Starter</div><div class="pdesc">Particuliers / Petits projets</div><div class="pprice">Selon votre développeur</div><ul class="pfeats"><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Site vitrine + hébergement</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Support ticket 48h</li></ul><button class="btn-plan" onclick="goToOrder('Site Web Starter')">Passer commande</button></div>
-      <div class="pcard pop"><div class="pop-badge">Populaire</div><div class="pname">Pro</div><div class="pdesc">Projet structuré / Business</div><div class="pprice">Selon votre développeur</div><ul class="pfeats"><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Design 100% personnalisé</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Blog + stats + sauvegardes</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Support prioritaire</li></ul><button class="btn-plan" onclick="goToOrder('Site Web Pro')">Passer commande</button></div>
+      <div class="pcard"><div class="pname">Starter <span id="mod-badge-web_starter" style="display:none;font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px;vertical-align:middle;"></span></div><div class="pdesc">Particuliers / Petits projets</div><div class="pprice">Selon votre développeur</div><ul class="pfeats"><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Site vitrine + hébergement</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Support ticket 48h</li></ul><button class="btn-plan" onclick="goToOrder('Site Web Starter')">Passer commande</button></div>
+      <div class="pcard pop"><div class="pop-badge">Populaire</div><div class="pname">Pro <span id="mod-badge-web_pro" style="display:none;font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px;vertical-align:middle;"></span></div><div class="pdesc">Projet structuré / Business</div><div class="pprice">Selon votre développeur</div><ul class="pfeats"><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Design 100% personnalisé</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Blog + stats + sauvegardes</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Support prioritaire</li></ul><button class="btn-plan" onclick="goToOrder('Site Web Pro')">Passer commande</button></div>
     </div></div>
-    <div id="p-bot" style="display:none"><div class="bot-card"><div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;"><div style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#7c3aed,#a78bfa);display:flex;align-items:center;justify-content:center;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg></div><div><div class="pname">Bot Discord — Starter</div><div style="font-size:11px;font-weight:700;background:rgba(34,197,94,.1);color:#22c55e;padding:2px 8px;border-radius:5px;display:inline-flex;align-items:center;gap:4px;margin-top:4px;"><span style="width:6px;height:6px;border-radius:50%;background:currentColor;display:inline-block;"></span>DISPONIBLE</div></div></div><ul class="pfeats" style="margin-bottom:20px;"><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>23 commandes personnalisées</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Modération + fun + utilitaires</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Bot prêt à utiliser</li></ul><button class="btn-primary" style="width:100%;justify-content:center" onclick="goToOrder('Bot Discord Starter')">Commander</button></div></div>
+    <div id="p-bot" style="display:none"><div class="bot-card"><div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;"><div style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#7c3aed,#a78bfa);display:flex;align-items:center;justify-content:center;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg></div><div><div class="pname">Bot Discord — Starter <span id="mod-badge-bot_starter" style="display:none;font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px;vertical-align:middle;"></span></div><div style="font-size:11px;font-weight:700;background:rgba(34,197,94,.1);color:#22c55e;padding:2px 8px;border-radius:5px;display:inline-flex;align-items:center;gap:4px;margin-top:4px;"><span style="width:6px;height:6px;border-radius:50%;background:currentColor;display:inline-block;"></span>DISPONIBLE</div></div></div><ul class="pfeats" style="margin-bottom:20px;"><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>23 commandes personnalisées</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Modération + fun + utilitaires</li><li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Bot prêt à utiliser</li></ul><button class="btn-primary" style="width:100%;justify-content:center" onclick="goToOrder('Bot Discord Starter')">Commander</button></div></div>
   </div>
 
   <!-- ABOUT -->
@@ -583,6 +708,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
         <div id="admin-nav" style="display:none">
           <div class="sb-lbl">Admin</div>
           <button class="sb-link" id="nav-perms" onclick="goPanel('perms')"><div class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><span>Permissions staff</span></button>
+          <button class="sb-link" id="nav-modules" onclick="goPanel('modules')"><div class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="6" height="6" rx="1"/><rect x="9" y="3" width="6" height="6" rx="1"/><rect x="16" y="3" width="6" height="6" rx="1"/><rect x="2" y="10" width="6" height="6" rx="1"/><rect x="9" y="10" width="6" height="6" rx="1"/><rect x="16" y="10" width="6" height="6" rx="1"/><rect x="2" y="17" width="6" height="6" rx="1"/><rect x="9" y="17" width="6" height="6" rx="1"/><rect x="16" y="17" width="6" height="6" rx="1"/></svg></div><span>Config modules</span></button>
         </div>
       </div>
     </aside>
@@ -663,6 +789,11 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
       <div class="dash-panel" id="panel-perms">
         <div class="ph"><div class="ph-left"><h2>Permissions Staff</h2><p>Gérez les droits de chaque membre du staff.</p></div></div>
         <div class="perm-grid" id="list-perms"></div>
+      </div>
+      <!-- MODULES CONFIG -->
+      <div class="dash-panel" id="panel-modules">
+        <div class="ph"><div class="ph-left"><h2>Configuration modules</h2><p>Gérez la disponibilité des services affichés sur l'accueil.</p></div></div>
+        <div id="list-modules"></div>
       </div>
     </main>
   </div>
@@ -746,6 +877,59 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
   </div>
 </div>
 
+<!-- BOTTOM NAV (mobile) -->
+<nav class="bottom-nav" id="bottom-nav" style="display:none;">
+  <div class="bn-items">
+    <button class="bn-item active" id="bn-tickets" onclick="goPanel('tickets')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/></svg>
+      <span id="bn-count" style="display:none;" class="bn-badge">0</span>
+      Tickets
+    </button>
+    <button class="bn-item" id="bn-commandes" onclick="goPanel('commandes')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>
+      Commandes
+    </button>
+    <button class="bn-item" id="bn-avis" onclick="goPanel('avis')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      Avis
+    </button>
+    <button class="bn-item" id="bn-compte" onclick="goPanel('compte')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Compte
+    </button>
+    <button class="bn-item" id="bn-more" onclick="document.getElementById('mobile-app-menu').classList.add('open')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg>
+      Plus
+    </button>
+  </div>
+</nav>
+
+<!-- MOBILE APP MENU (More) -->
+<div class="mobile-menu" id="mobile-app-menu" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="mobile-menu-inner">
+    <div class="mobile-menu-hdr">
+      <span style="font-family:'Syne',sans-serif;font-weight:800;">Plus d'options</span>
+      <button onclick="document.getElementById('mobile-app-menu').classList.remove('open')" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <button class="mm-link" onclick="closeMobileMenu();goPanel('changelogs')"><div class="mm-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>Changelogs</button>
+    <div id="mm-staff" style="display:none">
+      <div style="font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;padding:10px 14px 4px;">Staff</div>
+      <button class="mm-link" onclick="closeMobileMenu();goPanel('all-t')"><div class="mm-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></div>Tous les tickets</button>
+      <button class="mm-link" onclick="closeMobileMenu();goPanel('all-c')"><div class="mm-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg></div>Toutes les commandes</button>
+      <button class="mm-link" onclick="closeMobileMenu();goPanel('contrats')"><div class="mm-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg></div>Contrats</button>
+      <button class="mm-link" onclick="closeMobileMenu();goPanel('annonces')"><div class="mm-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 17H2a3 3 0 0 0 3-3V9a7 7 0 0 1 14 0v5a3 3 0 0 0 3 3z"/></svg></div>Annonces</button>
+    </div>
+    <div id="mm-admin" style="display:none">
+      <div style="font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;padding:10px 14px 4px;">Admin</div>
+      <button class="mm-link" onclick="closeMobileMenu();goPanel('perms')"><div class="mm-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>Permissions staff</button>
+      <button class="mm-link" onclick="closeMobileMenu();goPanel('modules')"><div class="mm-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="6" height="6" rx="1"/><rect x="9" y="3" width="6" height="6" rx="1"/><rect x="16" y="3" width="6" height="6" rx="1"/></svg></div>Config modules</button>
+    </div>
+    <div style="margin-top:8px;padding-top:12px;border-top:1px solid var(--border);">
+      <button class="mm-link" style="color:var(--red);" onclick="logout()"><div class="mm-link-icon" style="background:rgba(239,68,68,.1);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></div>Se déconnecter</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
 <script>
 const SUPABASE_URL='https://llheudregeksbyjuscrw.supabase.co';
@@ -807,11 +991,24 @@ async function handleOAuth(token){
   }catch(e){setLoading('Erreur: '+e.message);setTimeout(()=>showPage('landing-page'),3000);}
 }
 function loadSession(){const exp=parseInt(sessionStorage.getItem('dc_expiry')||'0');if(Date.now()>exp){sessionStorage.clear();return false;}const s=sessionStorage.getItem('dc_user');if(!s)return false;me=JSON.parse(s);isStaff=sessionStorage.getItem('dc_staff')==='true';isAdmin=sessionStorage.getItem('dc_admin')==='true';return true;}
-function logout(){clearInterval(rtInterval);sessionStorage.clear();me=null;isStaff=false;isAdmin=false;showPage('landing-page');}
-function goToLanding(){showPage('landing-page');}// ne déconnecte pas
+function logout(){clearInterval(rtInterval);sessionStorage.clear();me=null;isStaff=false;isAdmin=false;showPage('landing-page');updateNavbar();}
+function goToLanding(){showPage('landing-page');updateNavbar();}
+function updateNavbar(){
+  var loggedIn=!!(me&&me.id);
+  var d=document.getElementById('nav-dash-btn');
+  var l=document.getElementById('nav-login-btn');
+  var md=document.getElementById('mm-dash-btn');
+  var ml=document.getElementById('mm-login-btn');
+  if(d)d.style.display=loggedIn?'inline-flex':'none';
+  if(l)l.style.display=loggedIn?'none':'inline-flex';
+  if(md)md.style.display=loggedIn?'block':'none';
+  if(ml)ml.style.display=loggedIn?'none':'inline-flex';
+}
 
 /* ── INIT ── */
 async function init(){
+  // Always refresh module badges on landing
+  refreshModuleBadges();
   const hash=new URLSearchParams(window.location.hash.replace('#',''));
   const token=hash.get('access_token');
   if(token){await handleOAuth(token);return;}
@@ -830,8 +1027,11 @@ function launchApp(){
   document.getElementById('c-roles').textContent=isAdmin?'Admin + Staff + Membre':isStaff?'Staff + Membre':'Membre';
   document.getElementById('c-staff-val').innerHTML=isStaff?'<span class="c-badge c-green">Oui</span>':'<span class="c-badge c-gray">Non</span>';
   if(me.email) document.getElementById('c-email-val').textContent=me.email;
-  if(isStaff){document.getElementById('staff-bdg').style.display='inline-block';document.getElementById('staff-nav').style.display='block';}
-  if(isAdmin){document.getElementById('btn-add-cl').style.display='inline-flex';document.getElementById('btn-add-ann').style.display='inline-flex';document.getElementById('admin-nav').style.display='block';}
+  if(isStaff){document.getElementById('staff-bdg').style.display='inline-block';document.getElementById('staff-nav').style.display='block';var mms=document.getElementById('mm-staff');if(mms)mms.style.display='block';}
+  if(isAdmin){document.getElementById('btn-add-cl').style.display='inline-flex';document.getElementById('btn-add-ann').style.display='inline-flex';document.getElementById('admin-nav').style.display='block';var mma=document.getElementById('mm-admin');if(mma)mma.style.display='block';}
+  // Show bottom nav on mobile
+  var bn=document.getElementById('bottom-nav');if(bn)bn.style.display='block';
+  updateNavbar();
   showPage('app-page');
   initStars();
   loadMyTickets();
@@ -855,7 +1055,11 @@ function goPanel(n){
   if(n==='annonces')loadAnnonces();
   if(n==='contrats')loadContrats();
   if(n==='perms')loadPerms();
+  if(n==='modules')loadModules();
+  // Update bottom nav active state
+  ['tickets','commandes','avis','compte'].forEach(function(x){var b=document.getElementById('bn-'+x);if(b)b.classList.toggle('active',x===n);});
 }
+function closeMobileMenu(){document.getElementById('mobile-app-menu').classList.remove('open');}
 
 /* ── HELPERS ── */
 function esc(t){const d=document.createElement('div');d.appendChild(document.createTextNode(t||''));return d.innerHTML;}
@@ -879,7 +1083,9 @@ async function loadMyTickets(){
   const{data,error}=await db.from('tickets').select('*').eq('discord_user_id',me.id).order('created_at',{ascending:false});
   if(error){document.getElementById('list-t').innerHTML='<div class="empty"><h3>Erreur</h3><p>'+esc(error.message)+'</p></div>';return;}
   const cnt=(data||[]).length;const tc=document.getElementById('tc');
-  if(cnt>0){tc.textContent=cnt;tc.style.display='inline-block';}else tc.style.display='none';
+  var bnc=document.getElementById('bn-count');
+  if(cnt>0){tc.textContent=cnt;tc.style.display='inline-block';if(bnc){bnc.textContent=cnt;bnc.style.display='block';}}
+  else{tc.style.display='none';if(bnc)bnc.style.display='none';}
   renderList('list-t',data||[],false,'openTDet');
 }
 async function loadAllTickets(){document.getElementById('list-at').innerHTML='<div style="padding:30px;text-align:center;color:var(--text3);font-size:13px;">Chargement...</div>';const{data}=await db.from('tickets').select('*').order('created_at',{ascending:false});renderList('list-at',data||[],true,'openATDet');}
@@ -1327,6 +1533,95 @@ async function togglePerm(key){
   const{error}=await db.from('staff_role_config').update(up).eq('id',1);
   if(error){toast('Erreur: '+error.message,'e');staffPerms[key]=current;renderPermsPanel(document.getElementById('list-perms'));}
   else toast((newVal?'✅ Autorisé':'❌ Refusé')+' — '+PERM_DEFS.find(d=>d.key===key)?.label,'s');
+}
+
+/* ── MODULES CONFIG ── */
+var MODULE_LIST=[
+  {key:'discord_free',label:'Serveur Discord — Free',cat:'Discord',icon:'discord',color:'#4f6ef7'},
+  {key:'discord_boss',label:'Serveur Discord — Boss',cat:'Discord',icon:'discord',color:'#f59e0b'},
+  {key:'discord_master',label:'Serveur Discord — Master',cat:'Discord',icon:'discord',color:'#a78bfa'},
+  {key:'web_starter',label:'Site Web — Starter',cat:'Web',icon:'web',color:'#06b6d4'},
+  {key:'web_pro',label:'Site Web — Pro',cat:'Web',icon:'web',color:'#4f6ef7'},
+  {key:'bot_starter',label:'Bot Discord — Starter',cat:'Bot',icon:'bot',color:'#22c55e'},
+];
+var MODULE_STATUSES={active:{label:'Actif',color:'#22c55e',bg:'rgba(34,197,94,.12)',dot:'#22c55e'},maintenance:{label:'Maintenance',color:'#f59e0b',bg:'rgba(245,158,11,.12)',dot:'#f59e0b'},unavailable:{label:'Indisponible',color:'#ef4444',bg:'rgba(239,68,68,.12)',dot:'#ef4444'},coming_soon:{label:'Bientôt',color:'#a78bfa',bg:'rgba(167,139,250,.12)',dot:'#a78bfa'}};
+var modulesCache={};
+
+async function loadModules(){
+  var el=document.getElementById('list-modules');if(!el)return;
+  el.innerHTML='<div style="padding:30px;text-align:center;color:var(--text3);font-size:13px;">Chargement...</div>';
+  var res=await db.from('modules_config').select('*');
+  if(res.error){
+    el.innerHTML='<div class="empty"><h3>Erreur DB</h3><p>'+esc(res.error.message)+'</p><div style="margin-top:14px;background:var(--bg3);border-radius:10px;padding:16px;text-align:left;font-size:12px;"><b style="color:var(--text2);">SQL requis :</b><br><code style="font-family:monospace;color:var(--primary);font-size:11px;line-height:1.8;">CREATE TABLE modules_config(key TEXT PRIMARY KEY, status TEXT DEFAULT \'active\', message TEXT);<br>ALTER TABLE modules_config DISABLE ROW LEVEL SECURITY;</code></div></div>';
+    return;
+  }
+  var rows=res.data||[];
+  rows.forEach(function(r){modulesCache[r.key]=r;});
+  var cats=['Discord','Web','Bot'];
+  var html='';
+  cats.forEach(function(cat){
+    var mods=MODULE_LIST.filter(function(m){return m.cat===cat;});
+    html+='<div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:14px;">'
+      +'<div style="padding:14px 20px;border-bottom:1px solid var(--border);background:var(--bg3);display:flex;align-items:center;gap:10px;">'
+      +'<div style="font-family:Syne,sans-serif;font-size:14px;font-weight:800;">'+cat+'</div>'
+      +'</div>';
+    mods.forEach(function(m){
+      var cur=modulesCache[m.key]||{status:'active',message:''};
+      var st=MODULE_STATUSES[cur.status]||MODULE_STATUSES.active;
+      html+='<div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px;flex-wrap:wrap;" id="mrow-'+m.key+'">'
+        +'<div style="flex:1;min-width:180px;">'
+        +'<div style="font-size:14px;font-weight:600;margin-bottom:3px;">'+m.label+'</div>'
+        +'<div style="display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:700;background:'+st.bg+';color:'+st.color+';" id="mst-'+m.key+'">'
+        +'<span style="width:6px;height:6px;border-radius:50%;background:'+st.dot+';display:inline-block;"></span>'+st.label
+        +'</div>'
+        +'</div>'
+        +'<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">'
+        +'<select onchange="updateModuleStatus(\''+m.key+'\',this.value)" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 10px;color:var(--text);font-size:12px;font-family:Outfit,sans-serif;outline:none;cursor:pointer;" id="msel-'+m.key+'">'
+        +Object.keys(MODULE_STATUSES).map(function(s){return'<option value="'+s+'"'+(cur.status===s?' selected':'')+'>'+MODULE_STATUSES[s].label+'</option>';}).join('')
+        +'</select>'
+        +'<input style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 10px;color:var(--text);font-size:12px;font-family:Outfit,sans-serif;outline:none;width:180px;" placeholder="Message optionnel..." value="'+esc(cur.message||'')+'" id="mmsg-'+m.key+'">'
+        +'<button onclick="saveModuleConfig(\''+m.key+'\')" class="btn-sm sm-green">Sauvegarder</button>'
+        +'</div></div>';
+    });
+    html+='</div>';
+  });
+  el.innerHTML=html;
+}
+
+async function updateModuleStatus(key,status){
+  modulesCache[key]=modulesCache[key]||{};
+  modulesCache[key].status=status;
+  var st=MODULE_STATUSES[status]||MODULE_STATUSES.active;
+  var el=document.getElementById('mst-'+key);
+  if(el) el.innerHTML='<span style="width:6px;height:6px;border-radius:50%;background:'+st.dot+';display:inline-block;"></span>'+st.label;
+  if(el){el.style.background=st.bg;el.style.color=st.color;}
+}
+
+async function saveModuleConfig(key){
+  var sel=document.getElementById('msel-'+key);
+  var msg=document.getElementById('mmsg-'+key);
+  var status=sel?sel.value:'active';
+  var message=msg?msg.value.trim():'';
+  var{error}=await db.from('modules_config').upsert({key,status,message},{onConflict:'key'});
+  if(error){toast('Erreur: '+error.message,'e');return;}
+  modulesCache[key]={key,status,message};
+  updateModuleStatus(key,status);
+  toast('Module mis à jour !','s');
+  // Refresh pricing badges on landing
+  refreshModuleBadges();
+}
+
+async function refreshModuleBadges(){
+  var res=await db.from('modules_config').select('*');
+  if(res.error)return;
+  var rows=res.data||[];
+  rows.forEach(function(r){
+    var badge=document.getElementById('mod-badge-'+r.key);
+    if(!badge)return;
+    var st=MODULE_STATUSES[r.status]||MODULE_STATUSES.active;
+    if(r.status==='active'){badge.style.display='none';}
+    else{badge.style.display='inline-flex';badge.textContent=st.label;badge.style.background=st.bg;badge.style.color=st.color;badge.style.border='1px solid '+st.color+'44';}
+  });
 }
 
 init();
