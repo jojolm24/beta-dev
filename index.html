@@ -386,22 +386,24 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
 .contrat-amount{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:#22c55e;white-space:nowrap;}
 .contrat-actions{display:flex;gap:7px;align-items:center;}
 
-/* ── PERMISSIONS ── */
+/* ── PERMISSIONS DISCORD STYLE ── */
 .perm-grid{display:flex;flex-direction:column;gap:12px;}
-.perm-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:20px 22px;}
-.perm-hdr{display:flex;align-items:center;gap:12px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);}
+.perm-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
+.perm-hdr{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--border);background:var(--bg3);}
 .perm-av{width:38px;height:38px;border-radius:50%;border:2px solid rgba(79,110,247,.25);}
 .perm-name{font-size:14px;font-weight:700;}
 .perm-id{font-size:11px;color:var(--text3);font-family:'Outfit',monospace;}
-.perm-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;}
-.perm-item{display:flex;align-items:center;justify-content:space-between;background:var(--bg3);border-radius:9px;padding:10px 14px;}
-.perm-lbl{font-size:12px;font-weight:600;display:flex;align-items:center;gap:8px;}
-.toggle{position:relative;width:38px;height:20px;flex-shrink:0;}
-.toggle input{opacity:0;width:0;height:0;}
-.toggle-track{position:absolute;inset:0;background:var(--bg3);border:1px solid var(--border);border-radius:100px;cursor:pointer;transition:all .2s;}
-.toggle input:checked+.toggle-track{background:var(--primary);border-color:var(--primary);}
-.toggle-track::after{content:'';position:absolute;width:14px;height:14px;border-radius:50%;background:#fff;top:2px;left:2px;transition:transform .2s;}
-.toggle input:checked+.toggle-track::after{transform:translateX(18px);}
+.perm-list{display:flex;flex-direction:column;}
+.perm-item{display:flex;align-items:center;justify-content:space-between;padding:11px 20px;border-bottom:1px solid var(--border);transition:background .15s;}
+.perm-item:last-child{border-bottom:none;}
+.perm-item:hover{background:var(--bg3);}
+.perm-lbl{font-size:13px;font-weight:500;display:flex;align-items:center;gap:10px;color:var(--text2);}
+.perm-lbl svg{color:var(--text3);}
+.perm-check{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;flex-shrink:0;border:none;outline:none;}
+.perm-check.on{background:rgba(34,197,94,.15);color:#22c55e;}
+.perm-check.on:hover{background:rgba(34,197,94,.28);}
+.perm-check.off{background:rgba(239,68,68,.12);color:#ef4444;}
+.perm-check.off:hover{background:rgba(239,68,68,.25);}
 
 @media(max-width:1100px){.compte-grid{grid-template-columns:1fr 1fr;}}
 @media(max-width:900px){.hero{grid-template-columns:1fr;padding:48px 24px;}.terminal{display:none;}.pgrid3{grid-template-columns:1fr;}.about-grid{grid-template-columns:1fr;}.why-grid{grid-template-columns:1fr 1fr;}.section{padding:56px 24px;}.navbar{padding:0 20px;}.nav-links{display:none;}}
@@ -1106,51 +1108,138 @@ async function downloadPDF(id){
 }
 
 function generatePDFFromData(c){
-  if(typeof jspdf==='undefined'&&typeof window.jsPDF==='undefined'){toast('jsPDF non chargé','e');return;}
-  const{jsPDF}=window.jspdf||window;
-  const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
-  const W=210,margin=20;
-  // Background subtle
-  doc.setFillColor(8,8,16);doc.rect(0,0,W,297,'F');
-  // Header band
-  doc.setFillColor(79,110,247);doc.rect(0,0,W,32,'F');
-  // Logo text
-  doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(22);
-  doc.text('Dev Center',margin,20);
-  doc.setFontSize(10);doc.setFont('helvetica','normal');doc.setTextColor(180,190,255);
-  doc.text('Contrat de Prestation de Services',margin,28);
-  // Contract ID top right
-  doc.setTextColor(255,255,255);doc.setFontSize(9);doc.setFont('helvetica','bold');
-  doc.text('#'+c.id.substring(0,8).toUpperCase(),W-margin,20,{align:'right'});
-  doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(180,190,255);
-  doc.text(new Date(c.created_at).toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'}),W-margin,27,{align:'right'});
-  // Main content area
-  let y=50;
-  const sectionTitle=(txt,yPos)=>{doc.setFillColor(20,20,40);doc.rect(margin,yPos-5,W-2*margin,8,'F');doc.setTextColor(79,110,247);doc.setFont('helvetica','bold');doc.setFontSize(9);doc.text(txt.toUpperCase(),margin+3,yPos);return yPos+8;};
-  const row=(lbl,val,yPos,valColor)=>{doc.setFont('helvetica','normal');doc.setFontSize(10);doc.setTextColor(150,150,180);doc.text(lbl,margin+3,yPos);doc.setTextColor(valColor||[238,238,255]);doc.setFont('helvetica','bold');doc.text(String(val),margin+60,yPos);return yPos+8;};
-  y=sectionTitle('Informations du client',y);
-  y=row('Nom du client',c.username,y);
-  y=row('ID Discord',c.user_discord_id,y,[120,130,200]);
-  y+=4;
-  y=sectionTitle('Détails du contrat',y);
-  y=row('Module / Service',c.module,y);
-  y=row('Montant',parseFloat(c.amount||0).toFixed(2)+' EUR',y,[34,197,94]);
-  const statusLbl={active:'Actif',pending:'En attente',completed:'Terminé'};
-  y=row('Statut',statusLbl[c.status]||c.status,y);
-  y+=4;
-  y=sectionTitle('Établi par',y);
-  y=row('Admin',c.admin_name,y);
-  y=row('ID Admin',c.admin_id,y,[120,130,200]);
-  if(c.notes){y+=4;y=sectionTitle('Notes',y);doc.setTextColor(170,170,200);doc.setFont('helvetica','normal');doc.setFontSize(10);const lines=doc.splitTextToSize(c.notes,W-2*margin-6);doc.text(lines,margin+3,y);y+=lines.length*6;}
-  // Footer
-  doc.setFillColor(14,14,30);doc.rect(0,260,W,37,'F');
-  doc.setFillColor(79,110,247);doc.rect(0,260,W,1,'F');
-  doc.setTextColor(90,90,120);doc.setFontSize(8);doc.setFont('helvetica','normal');
-  doc.text('Ce document a été généré automatiquement par Dev Center.',margin,272);
-  doc.text('© '+new Date().getFullYear()+' Dev Center — Tous droits réservés.',margin,279);
-  doc.setTextColor(79,110,247);doc.text('discord.gg/fyBrf8UJuu',W-margin,272,{align:'right'});
-  doc.save('contrat-'+c.id.substring(0,8)+'-'+c.username.replace(/\s/g,'_')+'.pdf');
-  toast('PDF téléchargé !','s');
+  try{
+    let JsPDF=null;
+    if(window.jspdf&&window.jspdf.jsPDF) JsPDF=window.jspdf.jsPDF;
+    else if(window.jsPDF) JsPDF=window.jsPDF;
+    if(!JsPDF){toast('jsPDF non chargé','e');return;}
+
+    const doc=new JsPDF('p','mm','a4');
+    const W=210,H=297,m=20;
+
+    // Fond clair
+    doc.setFillColor(248,249,255);
+    doc.rect(0,0,W,H,'F');
+
+    // Header bleu
+    doc.setFillColor(79,110,247);
+    doc.rect(0,0,W,38,'F');
+    doc.setFillColor(130,160,255);
+    doc.rect(0,37,W,2,'F');
+
+    // Titre gauche
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(22);
+    doc.setTextColor(255,255,255);
+    doc.text('Dev Center',m,16);
+    doc.setFont('helvetica','normal');
+    doc.setFontSize(9);
+    doc.setTextColor(200,215,255);
+    doc.text('Contrat de Prestation de Services',m,24);
+    doc.text('discord.gg/fyBrf8UJuu',m,31);
+
+    // Ref + date côté droit (position fixe)
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(12);
+    doc.setTextColor(255,255,255);
+    doc.text('#'+c.id.substring(0,8).toUpperCase(),W-m,16,'right');
+    const dateStr=new Date(c.created_at||Date.now()).toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'});
+    doc.setFont('helvetica','normal');
+    doc.setFontSize(8);
+    doc.setTextColor(200,215,255);
+    doc.text(dateStr,W-m,24,'right');
+
+    let y=52;
+
+    const sec=function(title,yp){
+      doc.setFillColor(235,238,255);
+      doc.rect(m,yp-5,W-2*m,11,'F');
+      doc.setFillColor(79,110,247);
+      doc.rect(m,yp-5,3,11,'F');
+      doc.setFont('helvetica','bold');
+      doc.setFontSize(8);
+      doc.setTextColor(60,80,160);
+      doc.text(title.toUpperCase(),m+6,yp+2);
+      return yp+14;
+    };
+
+    const row=function(lbl,val,yp,r,g,b){
+      var vStr=String(val||'—');
+      doc.setFont('helvetica','normal');
+      doc.setFontSize(10);
+      doc.setTextColor(130,140,165);
+      doc.text(lbl,m+4,yp);
+      doc.setFont('helvetica','bold');
+      if(r!==undefined) doc.setTextColor(r,g,b);
+      else doc.setTextColor(25,25,45);
+      doc.text(vStr,m+58,yp);
+      doc.setDrawColor(220,224,245);
+      doc.setLineWidth(0.2);
+      doc.line(m,yp+3,W-m,yp+3);
+      return yp+10;
+    };
+
+    y=sec('Informations du client',y);
+    y=row('Nom du client',c.username,y);
+    y=row('ID Discord',c.user_discord_id,y,100,110,200);
+    y+=4;
+
+    y=sec('Détails du contrat',y);
+    y=row('Module / Service',c.module,y);
+    y=row('Montant',parseFloat(c.amount||0).toFixed(2)+' EUR',y,34,160,80);
+    var sLbl={active:'Actif',pending:'En attente',completed:'Terminé'};
+    y=row('Statut',sLbl[c.status]||c.status||'—',y);
+    y+=4;
+
+    y=sec('Établi par',y);
+    y=row('Responsable',c.admin_name||'—',y);
+    y=row('ID Admin',c.admin_id||'—',y,100,110,200);
+
+    if(c.notes&&String(c.notes).trim()){
+      y+=4;
+      y=sec('Notes',y);
+      doc.setFont('helvetica','normal');
+      doc.setFontSize(10);
+      doc.setTextColor(80,90,130);
+      var lines=doc.splitTextToSize(String(c.notes).trim(),W-2*m-8);
+      doc.text(lines,m+4,y);
+      y+=lines.length*6+4;
+    }
+
+    // Lignes de signature
+    if(y<225){
+      var sigY=Math.max(y+14,230);
+      doc.setDrawColor(200,205,230);
+      doc.setLineWidth(0.5);
+      doc.line(m,sigY,m+65,sigY);
+      doc.line(W-m-65,sigY,W-m,sigY);
+      doc.setFont('helvetica','normal');
+      doc.setFontSize(8);
+      doc.setTextColor(160,170,200);
+      doc.text('Signature du client',m,sigY+5);
+      doc.text('Signature — '+(c.admin_name||'Admin'),W-m-65,sigY+5);
+    }
+
+    // Footer
+    doc.setFillColor(235,238,255);
+    doc.rect(0,H-22,W,22,'F');
+    doc.setFillColor(79,110,247);
+    doc.rect(0,H-22,W,1,'F');
+    doc.setFont('helvetica','normal');
+    doc.setFontSize(8);
+    doc.setTextColor(130,140,175);
+    doc.text('Document generé automatiquement par Dev Center.',m,H-13);
+    doc.text('© '+new Date().getFullYear()+' Dev Center — Tous droits réservés.',m,H-7);
+    doc.setTextColor(79,110,247);
+    doc.text('discord.gg/fyBrf8UJuu',W-m,H-10,'right');
+
+    var fname='contrat-'+c.id.substring(0,8)+'-'+(c.username||'client').replace(/[^a-zA-Z0-9]/g,'_')+'.pdf';
+    doc.save(fname);
+    toast('PDF téléchargé !','s');
+  }catch(err){
+    console.error('[PDF]',err);
+    toast('Erreur PDF: '+err.message,'e');
+  }
 }
 
 async function deleteContrat(id){
@@ -1159,48 +1248,85 @@ async function deleteContrat(id){
   toast('Contrat supprimé','s');loadContrats();
 }
 
-/* ── PERMISSIONS ── */
+/* ── PERMISSIONS (global role config — style Discord) ── */
 const PERM_DEFS=[
-  {key:'can_view_tickets',label:'Voir ses tickets',icon:'<path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/>'},
-  {key:'can_view_all_tickets',label:'Voir tous les tickets',icon:'<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>'},
-  {key:'can_view_commandes',label:'Voir ses commandes',icon:'<path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/>'},
-  {key:'can_view_all_commandes',label:'Voir toutes les commandes',icon:'<line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>'},
-  {key:'can_close_permanent',label:'Suppression définitive',icon:'<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>'},
-  {key:'can_reply_tickets',label:'Répondre aux tickets',icon:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>'},
+  {key:'can_view_all_tickets',label:'Voir tous les tickets',cat:'Tickets',desc:'Accès à la liste globale de tous les tickets'},
+  {key:'can_reply_tickets',label:'Répondre aux tickets',cat:'Tickets',desc:'Envoyer des messages dans les fils de tickets'},
+  {key:'can_close_tickets',label:'Fermer les tickets',cat:'Tickets',desc:'Changer le statut (ouvert / en cours / fermé)'},
+  {key:'can_close_permanent',label:'Suppression définitive',cat:'Tickets',desc:'Supprimer un ticket et ses messages de la base'},
+  {key:'can_view_all_commandes',label:'Voir toutes les commandes',cat:'Commandes',desc:'Accès à la liste globale de toutes les commandes'},
+  {key:'can_reply_commandes',label:'Répondre aux commandes',cat:'Commandes',desc:'Envoyer des messages dans les fils de commandes'},
+  {key:'can_close_commandes',label:'Fermer les commandes',cat:'Commandes',desc:'Changer le statut d\'une commande'},
+  {key:'can_create_contrats',label:'Créer des contrats',cat:'Contrats',desc:'Créer un contrat client et générer un PDF'},
+  {key:'can_publish_changelogs',label:'Publier des changelogs',cat:'Communauté',desc:'Ajouter et supprimer des changelogs'},
+  {key:'can_publish_annonces',label:'Publier des annonces',cat:'Communauté',desc:'Ajouter et supprimer des annonces staff'},
 ];
+
+let staffPerms={};
 
 async function loadPerms(){
   const el=document.getElementById('list-perms');if(!el)return;
-  el.innerHTML='<div style="padding:30px;text-align:center;color:var(--text3);font-size:13px;">Chargement des membres staff...</div>';
-  const{data,error}=await db.from('staff_permissions').select('*').order('username');
-  if(error){el.innerHTML='<div class="empty"><h3>Erreur DB</h3><p>'+esc(error.message)+'<br><span style="font-size:11px;color:var(--text3);">Avez-vous créé la table staff_permissions ?</span></p></div>';return;}
-  if(!data||!data.length){el.innerHTML='<div class="empty"><div class="empty-box"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><h3>Aucun profil staff</h3><p>Les profils sont créés automatiquement à la 1ère connexion des membres staff.</p></div>';return;}
-  el.innerHTML=data.map(p=>{
-    const permsHtml=PERM_DEFS.map(d=>'<div class="perm-item"><div class="perm-lbl"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">'+d.icon+'</svg>'+d.label+'</div>'
-      +'<label class="toggle"><input type="checkbox" id="perm-'+p.discord_user_id+'-'+d.key+'" '+(p[d.key]?'checked':'')+' onchange="savePerm(\''+p.discord_user_id+'\',\''+d.key+'\',this.checked)"><div class="toggle-track"></div></label>'
-      +'</div>').join('');
-    return'<div class="perm-card fade-up"><div class="perm-hdr">'
-      +'<img class="perm-av" src="https://cdn.discordapp.com/embed/avatars/0.png" alt="" onerror="this.src=\'https://cdn.discordapp.com/embed/avatars/0.png\'">'
-      +'<div><div class="perm-name">'+esc(p.username||'Inconnu')+'</div><div class="perm-id">'+esc(p.discord_user_id)+'</div></div>'
-      +'<button class="btn-sm sm-red" style="margin-left:auto;" onclick="resetPerms(\''+p.discord_user_id+'\')">Réinitialiser</button>'
-      +'</div>'
-      +'<div class="perm-list">'+permsHtml+'</div>'
-      +'</div>';
-  }).join('');
+  el.innerHTML='<div style="padding:30px;text-align:center;color:var(--text3);font-size:13px;">Chargement...</div>';
+  // Load single config row from staff_role_config table
+  const{data,error}=await db.from('staff_role_config').select('*').eq('id',1).single();
+  if(error&&error.code!=='PGRST116'){
+    el.innerHTML='<div class="empty"><h3>Erreur DB</h3><p>'+esc(error.message)+'</p><div style="margin-top:12px;font-size:11px;color:var(--text3);background:var(--bg3);padding:12px;border-radius:8px;text-align:left;">Créez la table avec :<br><code>CREATE TABLE staff_role_config(id INT DEFAULT 1, can_view_all_tickets BOOLEAN DEFAULT true, can_reply_tickets BOOLEAN DEFAULT true, can_close_tickets BOOLEAN DEFAULT true, can_close_permanent BOOLEAN DEFAULT false, can_view_all_commandes BOOLEAN DEFAULT true, can_reply_commandes BOOLEAN DEFAULT true, can_close_commandes BOOLEAN DEFAULT true, can_create_contrats BOOLEAN DEFAULT true, can_publish_changelogs BOOLEAN DEFAULT false, can_publish_annonces BOOLEAN DEFAULT false);<br>INSERT INTO staff_role_config(id) VALUES(1);<br>ALTER TABLE staff_role_config DISABLE ROW LEVEL SECURITY;</code></div></div>';
+    return;
+  }
+  staffPerms=data||{};
+  renderPermsPanel(el);
 }
 
-async function savePerm(userId,key,val){
-  const up={};up[key]=val;up.updated_at=new Date().toISOString();
-  const{error}=await db.from('staff_permissions').update(up).eq('discord_user_id',userId);
-  if(error)toast('Erreur: '+error.message,'e');
-  else toast('Permission mise à jour','s');
+function renderPermsPanel(el){
+  const cats=[...new Set(PERM_DEFS.map(p=>p.cat))];
+  let html='<div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;">'
+    +'<div style="padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;">'
+    +'<div style="width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,rgba(79,110,247,.2),rgba(168,85,247,.15));display:flex;align-items:center;justify-content:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>'
+    +'<div><div style="font-family:Syne,sans-serif;font-size:16px;font-weight:800;">Rôle Staff</div>'
+    +'<div style="font-size:12px;color:var(--text3);">Permissions globales applicables à tous les membres avec le rôle staff</div></div>'
+    +'</div>';
+
+  cats.forEach(cat=>{
+    const defs=PERM_DEFS.filter(p=>p.cat===cat);
+    html+='<div style="padding:0 0 4px;">'
+      +'<div style="padding:10px 22px 6px;font-size:10px;font-weight:800;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;background:var(--bg3);">'+cat+'</div>';
+    defs.forEach(d=>{
+      const allowed=staffPerms[d.key]!==false;// default true
+      html+='<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 22px;border-bottom:1px solid var(--border);transition:background .15s;" onmouseover="this.style.background=\'var(--bg3)\'" onmouseout="this.style.background=\'\'">'
+        +'<div style="flex:1;">'
+        +'<div style="font-size:13px;font-weight:600;margin-bottom:2px;">'+d.label+'</div>'
+        +'<div style="font-size:11px;color:var(--text3);">'+d.desc+'</div>'
+        +'</div>'
+        +'<button onclick="togglePerm(\''+d.key+'\')" style="width:32px;height:32px;border-radius:8px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;background:'+(allowed?'rgba(34,197,94,.12)':'rgba(239,68,68,.1)')+';" id="perm-btn-'+d.key+'">'
+        +(allowed
+          ?'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>'
+          :'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
+        )
+        +'</button>'
+        +'</div>';
+    });
+    html+='</div>';
+  });
+  html+='</div>';
+  el.innerHTML=html;
 }
 
-async function resetPerms(userId){
-  if(!confirm('Réinitialiser toutes les permissions de ce membre ?'))return;
-  const defaults={can_view_tickets:true,can_view_all_tickets:true,can_view_commandes:true,can_view_all_commandes:true,can_close_permanent:false,can_reply_tickets:true,updated_at:new Date().toISOString()};
-  await db.from('staff_permissions').update(defaults).eq('discord_user_id',userId);
-  toast('Permissions réinitialisées','s');loadPerms();
+async function togglePerm(key){
+  const current=staffPerms[key]!==false;
+  const newVal=!current;
+  staffPerms[key]=newVal;
+  // Optimistic UI update
+  const btn=document.getElementById('perm-btn-'+key);
+  if(btn){
+    btn.style.background=newVal?'rgba(34,197,94,.12)':'rgba(239,68,68,.1)';
+    btn.innerHTML=newVal
+      ?'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>'
+      :'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+  }
+  const up={};up[key]=newVal;
+  const{error}=await db.from('staff_role_config').update(up).eq('id',1);
+  if(error){toast('Erreur: '+error.message,'e');staffPerms[key]=current;renderPermsPanel(document.getElementById('list-perms'));}
+  else toast((newVal?'✅ Autorisé':'❌ Refusé')+' — '+PERM_DEFS.find(d=>d.key===key)?.label,'s');
 }
 
 init();
