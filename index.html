@@ -10,6 +10,7 @@
 <meta property="og:image" content="https://cdn.discordapp.com/icons/1452963098284785765/4255d99dd972ab407c31044fe9a899b0.png?size=256">
 <meta name="theme-color" content="#4f6ef7">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -364,6 +365,44 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
 /* ── BOT CARD ── */
 .bot-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:28px;max-width:460px;margin:0 auto;}
 
+/* ── SUPPORT ICON TOOLTIP ── */
+.support-ico{position:relative;display:inline-flex;align-items:center;cursor:pointer;}
+.support-ico svg{color:#4f6ef7;opacity:.9;transition:opacity .15s;}
+.support-ico:hover svg{opacity:1;}
+.support-tip{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#1e1e3a;border:1px solid rgba(79,110,247,.3);color:#eeeeff;font-size:11px;font-weight:600;padding:5px 10px;border-radius:8px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .15s;z-index:100;box-shadow:0 4px 12px rgba(0,0,0,.4);}
+.support-tip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#1e1e3a;}
+.support-ico:hover .support-tip{opacity:1;}
+[data-theme="light"] .support-tip{background:#fff;color:#0a0c1e;border-color:rgba(79,110,247,.2);box-shadow:0 4px 16px rgba(79,110,247,.15);}
+
+/* ── CONTRATS ── */
+.contrat-grid{display:flex;flex-direction:column;gap:10px;}
+.contrat-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:20px 22px;display:flex;align-items:center;gap:16px;transition:all .25s;cursor:default;position:relative;overflow:hidden;}
+.contrat-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#4f6ef7,#a78bfa);}
+.contrat-card:hover{border-color:rgba(79,110,247,.3);box-shadow:var(--shadow);}
+.contrat-num{font-family:'Outfit',monospace;font-size:11px;font-weight:800;background:var(--primary-l);color:var(--primary);padding:4px 10px;border-radius:7px;border:1px solid rgba(79,110,247,.2);white-space:nowrap;}
+.contrat-info{flex:1;min-width:0;}
+.contrat-user{font-size:14px;font-weight:700;margin-bottom:3px;}
+.contrat-meta{font-size:12px;color:var(--text3);display:flex;gap:12px;flex-wrap:wrap;}
+.contrat-amount{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:#22c55e;white-space:nowrap;}
+.contrat-actions{display:flex;gap:7px;align-items:center;}
+
+/* ── PERMISSIONS ── */
+.perm-grid{display:flex;flex-direction:column;gap:12px;}
+.perm-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:20px 22px;}
+.perm-hdr{display:flex;align-items:center;gap:12px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);}
+.perm-av{width:38px;height:38px;border-radius:50%;border:2px solid rgba(79,110,247,.25);}
+.perm-name{font-size:14px;font-weight:700;}
+.perm-id{font-size:11px;color:var(--text3);font-family:'Outfit',monospace;}
+.perm-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;}
+.perm-item{display:flex;align-items:center;justify-content:space-between;background:var(--bg3);border-radius:9px;padding:10px 14px;}
+.perm-lbl{font-size:12px;font-weight:600;display:flex;align-items:center;gap:8px;}
+.toggle{position:relative;width:38px;height:20px;flex-shrink:0;}
+.toggle input{opacity:0;width:0;height:0;}
+.toggle-track{position:absolute;inset:0;background:var(--bg3);border:1px solid var(--border);border-radius:100px;cursor:pointer;transition:all .2s;}
+.toggle input:checked+.toggle-track{background:var(--primary);border-color:var(--primary);}
+.toggle-track::after{content:'';position:absolute;width:14px;height:14px;border-radius:50%;background:#fff;top:2px;left:2px;transition:transform .2s;}
+.toggle input:checked+.toggle-track::after{transform:translateX(18px);}
+
 @media(max-width:1100px){.compte-grid{grid-template-columns:1fr 1fr;}}
 @media(max-width:900px){.hero{grid-template-columns:1fr;padding:48px 24px;}.terminal{display:none;}.pgrid3{grid-template-columns:1fr;}.about-grid{grid-template-columns:1fr;}.why-grid{grid-template-columns:1fr 1fr;}.section{padding:56px 24px;}.navbar{padding:0 20px;}.nav-links{display:none;}}
 @media(max-width:700px){.sidebar{width:56px;}.sb-link span,.sb-lbl,.sb-count{display:none;}.sb-link{justify-content:center;}.sb-link .sb-icon{margin:0;}.app-main{padding:16px;}.compte-grid{grid-template-columns:1fr;}}
@@ -513,12 +552,12 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
 <!-- APP -->
 <div id="app-page" class="page">
   <div class="topbar">
-    <div class="topbar-logo" onclick="logout()">
+    <div class="topbar-logo" onclick="goToLanding()" style="cursor:pointer;">
       <img src="https://cdn.discordapp.com/icons/1452963098284785765/4255d99dd972ab407c31044fe9a899b0.png?size=64" class="topbar-logo-img" alt="">
       Dev Center
     </div>
     <div class="topbar-r">
-      <button class="btn-home" onclick="showPage('landing-page')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Accueil</button>
+      <button class="btn-home" onclick="goToLanding()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Accueil</button>
       <button class="btn-icon" onclick="toggleTheme()"><svg id="ti2" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
       <div class="user-pill"><img id="user-av" src="" alt=""><span id="user-nm"></span><span id="staff-bdg" class="badge-staff" style="display:none">STAFF</span></div>
       <button class="btn-logout" onclick="logout()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Déconnexion</button>
@@ -537,7 +576,12 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
         <div class="sb-lbl">Staff</div>
         <button class="sb-link" id="nav-all-t" onclick="goPanel('all-t')"><div class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></div><span>Tous les tickets</span></button>
         <button class="sb-link" id="nav-all-c" onclick="goPanel('all-c')"><div class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></div><span>Toutes les commandes</span></button>
+        <button class="sb-link" id="nav-contrats" onclick="goPanel('contrats')"><div class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div><span>Contrats</span></button>
         <button class="sb-link" id="nav-annonces" onclick="goPanel('annonces')"><div class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 17H2a3 3 0 0 0 3-3V9a7 7 0 0 1 14 0v5a3 3 0 0 0 3 3zm-8.27 4a2 2 0 0 1-3.46 0"/></svg></div><span>Annonces</span></button>
+        <div id="admin-nav" style="display:none">
+          <div class="sb-lbl">Admin</div>
+          <button class="sb-link" id="nav-perms" onclick="goPanel('perms')"><div class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><span>Permissions staff</span></button>
+        </div>
       </div>
     </aside>
     <main class="app-main">
@@ -608,6 +652,16 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
         <div class="ph"><div class="ph-left"><h2>Annonces Staff</h2><p>Communications internes de l'équipe.</p></div><button class="btn-primary" id="btn-add-ann" style="display:none" onclick="document.getElementById('modal-ann').classList.add('open')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nouvelle annonce</button></div>
         <div class="ann-grid" id="list-ann"></div>
       </div>
+      <!-- CONTRATS -->
+      <div class="dash-panel" id="panel-contrats">
+        <div class="ph"><div class="ph-left"><h2>Contrats</h2><p>Créez et gérez les contrats clients.</p></div><button class="btn-primary" onclick="document.getElementById('modal-contrat').classList.add('open')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nouveau contrat</button></div>
+        <div class="contrat-grid" id="list-contrats"></div>
+      </div>
+      <!-- PERMISSIONS -->
+      <div class="dash-panel" id="panel-perms">
+        <div class="ph"><div class="ph-left"><h2>Permissions Staff</h2><p>Gérez les droits de chaque membre du staff.</p></div></div>
+        <div class="perm-grid" id="list-perms"></div>
+      </div>
     </main>
   </div>
 </div>
@@ -664,6 +718,29 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
       <div class="form-group"><label class="f-lbl">Contenu</label><textarea class="f-textarea" id="ann-body" placeholder="Rédigez votre annonce..." style="min-height:120px;"></textarea></div>
     </div>
     <div class="modal-acts"><button class="btn-cancel" onclick="document.getElementById('modal-ann').classList.remove('open')">Annuler</button><button class="btn-primary" style="background:#a855f7;" onclick="submitAnn()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Publier</button></div>
+  </div>
+</div>
+
+<!-- MODAL CONTRAT -->
+<div class="modal-ov" id="modal-contrat">
+  <div class="modal">
+    <div class="modal-hdr" style="background:linear-gradient(135deg,rgba(34,197,94,.12),rgba(6,182,212,.06));">
+      <div class="modal-hdr-icon" style="background:rgba(34,197,94,.15);color:#22c55e;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+      <div><div class="modal-hdr-title">Nouveau contrat</div><div class="modal-hdr-sub">Créer un contrat client avec PDF</div></div>
+    </div>
+    <div class="modal-body">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+        <div><label class="f-lbl">ID Discord du client</label><input class="f-input" id="ct-uid" placeholder="ex: 538812769207307300"></div>
+        <div><label class="f-lbl">Nom du client</label><input class="f-input" id="ct-name" placeholder="Nom affiché..."></div>
+      </div>
+      <div class="form-group"><label class="f-lbl">Module / Service</label><select class="f-select" id="ct-module"><option value="Serveur Discord Free">Serveur Discord — Free</option><option value="Serveur Discord Boss">Serveur Discord — Boss</option><option value="Serveur Discord Master">Serveur Discord — Master</option><option value="Site Web Starter">Site Web — Starter</option><option value="Site Web Pro">Site Web — Pro</option><option value="Bot Discord Starter">Bot Discord — Starter</option><option value="Autre">Autre</option></select></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+        <div><label class="f-lbl">Montant (€)</label><input class="f-input" id="ct-amount" type="number" placeholder="0.00" min="0" step="0.01"></div>
+        <div><label class="f-lbl">Statut</label><select class="f-select" id="ct-status"><option value="active">Actif</option><option value="pending">En attente</option><option value="completed">Terminé</option></select></div>
+      </div>
+      <div class="form-group"><label class="f-lbl">Notes</label><textarea class="f-textarea" id="ct-notes" placeholder="Détails supplémentaires..." style="min-height:80px;"></textarea></div>
+    </div>
+    <div class="modal-acts"><button class="btn-cancel" onclick="document.getElementById('modal-contrat').classList.remove('open')">Annuler</button><button class="btn-primary" style="background:#22c55e;" onclick="submitContrat()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Créer &amp; Générer PDF</button></div>
   </div>
 </div>
 
@@ -729,6 +806,7 @@ async function handleOAuth(token){
 }
 function loadSession(){const exp=parseInt(sessionStorage.getItem('dc_expiry')||'0');if(Date.now()>exp){sessionStorage.clear();return false;}const s=sessionStorage.getItem('dc_user');if(!s)return false;me=JSON.parse(s);isStaff=sessionStorage.getItem('dc_staff')==='true';isAdmin=sessionStorage.getItem('dc_admin')==='true';return true;}
 function logout(){clearInterval(rtInterval);sessionStorage.clear();me=null;isStaff=false;isAdmin=false;showPage('landing-page');}
+function goToLanding(){showPage('landing-page');}// ne déconnecte pas
 
 /* ── INIT ── */
 async function init(){
@@ -751,7 +829,7 @@ function launchApp(){
   document.getElementById('c-staff-val').innerHTML=isStaff?'<span class="c-badge c-green">Oui</span>':'<span class="c-badge c-gray">Non</span>';
   if(me.email) document.getElementById('c-email-val').textContent=me.email;
   if(isStaff){document.getElementById('staff-bdg').style.display='inline-block';document.getElementById('staff-nav').style.display='block';}
-  if(isAdmin){document.getElementById('btn-add-cl').style.display='inline-flex';document.getElementById('btn-add-ann').style.display='inline-flex';}
+  if(isAdmin){document.getElementById('btn-add-cl').style.display='inline-flex';document.getElementById('btn-add-ann').style.display='inline-flex';document.getElementById('admin-nav').style.display='block';}
   showPage('app-page');
   initStars();
   loadMyTickets();
@@ -773,6 +851,8 @@ function goPanel(n){
   if(n==='compte')loadEmail();
   if(n==='changelogs')loadChangelogs();
   if(n==='annonces')loadAnnonces();
+  if(n==='contrats')loadContrats();
+  if(n==='perms')loadPerms();
 }
 
 /* ── HELPERS ── */
@@ -857,7 +937,8 @@ async function loadMsgs(id,fkField,msgTable,silent){
   const wasBottom=el.scrollHeight-el.scrollTop<=el.clientHeight+40;
   const{data}=await db.from(msgTable).select('*').eq(fkField,id).order('created_at',{ascending:true});
   if(!data||!data.length){if(!silent)el.innerHTML='<div style="text-align:center;padding:24px;font-size:13px;color:var(--text3);font-family:Outfit,monospace;">// Aucun message pour l\'instant</div>';return;}
-  const newHtml=data.map(m=>'<div class="msg-item"><img class="msg-av" src="'+esc(m.avatar_url||'https://cdn.discordapp.com/embed/avatars/0.png')+'" alt=""><div class="msg-c"><div class="msg-ar"><span class="msg-name">'+esc(m.username)+'</span>'+(m.is_staff?'<span class="badge-staff">STAFF</span>':'')+'<span class="msg-time">'+fd(m.created_at)+'</span></div><div class="msg-txt">'+esc(m.content)+'</div></div></div>').join('');
+  const supportIcon='<span class="support-ico" title="Support"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.65 3.38 2 2 0 0 1 3.62 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l.77-.77a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span class="support-tip">Membre du support Dev Center</span></span>';
+  const newHtml=data.map(m=>'<div class="msg-item"><img class="msg-av" src="'+esc(m.avatar_url||'https://cdn.discordapp.com/embed/avatars/0.png')+'" alt=""><div class="msg-c"><div class="msg-ar"><span class="msg-name">'+esc(m.username)+'</span>'+(m.is_staff?supportIcon:'')+'<span class="msg-time">'+fd(m.created_at)+'</span></div><div class="msg-txt">'+esc(m.content)+'</div></div></div>').join('');
   if(el.innerHTML!==newHtml){el.innerHTML=newHtml;if(!silent||wasBottom)el.scrollTop=el.scrollHeight;}
 }
 
@@ -976,6 +1057,151 @@ async function loadAnnonces(){
 }
 async function submitAnn(){const title=document.getElementById('ann-title').value.trim();const body=document.getElementById('ann-body').value.trim();if(!title||!body){toast('Remplis tous les champs','e');return;}const{error}=await db.from('annonces').insert({title,body,author:me.username,avatar_url:me.avatar,author_id:me.id});if(error){toast('Erreur: '+error.message,'e');return;}document.getElementById('modal-ann').classList.remove('open');['ann-title','ann-body'].forEach(id=>document.getElementById(id).value='');toast('Annonce publiée !','s');loadAnnonces();}
 async function deleteAnn(id){if(!confirm('Supprimer cette annonce ?'))return;await db.from('annonces').delete().eq('id',id);toast('Supprimée','s');loadAnnonces();}
+
+/* ── CONTRATS ── */
+async function loadContrats(){
+  const el=document.getElementById('list-contrats');if(!el)return;
+  el.innerHTML='<div style="padding:30px;text-align:center;color:var(--text3);font-size:13px;">Chargement...</div>';
+  const{data,error}=await db.from('contrats').select('*').order('created_at',{ascending:false});
+  if(error){el.innerHTML='<div class="empty"><h3>Erreur DB</h3><p>'+esc(error.message)+'</p></div>';return;}
+  if(!data||!data.length){el.innerHTML='<div class="empty"><div class="empty-box"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg></div><h3>Aucun contrat</h3><p>Créez votre premier contrat client.</p></div>';return;}
+  const statusClr={active:'#22c55e',pending:'#f59e0b',completed:'#9898b8'};
+  const statusLbl={active:'Actif',pending:'En attente',completed:'Terminé'};
+  el.innerHTML=data.map(c=>'<div class="contrat-card fade-up">'
+    +'<div class="contrat-num">#'+c.id.substring(0,8).toUpperCase()+'</div>'
+    +'<div class="contrat-info">'
+    +'<div class="contrat-user">'+esc(c.username||'Inconnu')+'</div>'
+    +'<div class="contrat-meta"><span>ID: '+esc(c.user_discord_id)+'</span><span>'+esc(c.module)+'</span><span style="color:'+(statusClr[c.status]||'#9898b8')+'">● '+(statusLbl[c.status]||c.status)+'</span><span>'+fd(c.created_at)+'</span></div>'
+    +(c.notes?'<div style="font-size:12px;color:var(--text3);margin-top:5px;font-style:italic;">'+esc(c.notes)+'</div>':'')
+    +'</div>'
+    +'<div class="contrat-amount">'+parseFloat(c.amount||0).toFixed(2)+' €</div>'
+    +'<div class="contrat-actions">'
+    +'<button class="btn-sm sm-green" onclick="downloadPDF(\''+c.id+'\')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>PDF</button>'
+    +'<button class="btn-del-sm" onclick="deleteContrat(\''+c.id+'\')">Supprimer</button>'
+    +'</div>'
+    +'</div>').join('');
+}
+
+async function submitContrat(){
+  const uid=document.getElementById('ct-uid').value.trim();
+  const name=document.getElementById('ct-name').value.trim();
+  const module=document.getElementById('ct-module').value;
+  const amount=parseFloat(document.getElementById('ct-amount').value)||0;
+  const status=document.getElementById('ct-status').value;
+  const notes=document.getElementById('ct-notes').value.trim();
+  if(!uid||!name){toast('Remplis ID Discord et nom du client','e');return;}
+  const row={user_discord_id:uid,username:name,module,amount,status,notes,admin_id:me.id,admin_name:me.username};
+  const{data,error}=await db.from('contrats').insert(row).select().single();
+  if(error){toast('Erreur: '+error.message,'e');return;}
+  document.getElementById('modal-contrat').classList.remove('open');
+  ['ct-uid','ct-name','ct-amount','ct-notes'].forEach(id=>document.getElementById(id).value='');
+  toast('Contrat créé !','s');
+  loadContrats();
+  if(data) generatePDFFromData(data);
+}
+
+async function downloadPDF(id){
+  const{data}=await db.from('contrats').select('*').eq('id',id).single();
+  if(data) generatePDFFromData(data);
+}
+
+function generatePDFFromData(c){
+  if(typeof jspdf==='undefined'&&typeof window.jsPDF==='undefined'){toast('jsPDF non chargé','e');return;}
+  const{jsPDF}=window.jspdf||window;
+  const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+  const W=210,margin=20;
+  // Background subtle
+  doc.setFillColor(8,8,16);doc.rect(0,0,W,297,'F');
+  // Header band
+  doc.setFillColor(79,110,247);doc.rect(0,0,W,32,'F');
+  // Logo text
+  doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(22);
+  doc.text('Dev Center',margin,20);
+  doc.setFontSize(10);doc.setFont('helvetica','normal');doc.setTextColor(180,190,255);
+  doc.text('Contrat de Prestation de Services',margin,28);
+  // Contract ID top right
+  doc.setTextColor(255,255,255);doc.setFontSize(9);doc.setFont('helvetica','bold');
+  doc.text('#'+c.id.substring(0,8).toUpperCase(),W-margin,20,{align:'right'});
+  doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(180,190,255);
+  doc.text(new Date(c.created_at).toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'}),W-margin,27,{align:'right'});
+  // Main content area
+  let y=50;
+  const sectionTitle=(txt,yPos)=>{doc.setFillColor(20,20,40);doc.rect(margin,yPos-5,W-2*margin,8,'F');doc.setTextColor(79,110,247);doc.setFont('helvetica','bold');doc.setFontSize(9);doc.text(txt.toUpperCase(),margin+3,yPos);return yPos+8;};
+  const row=(lbl,val,yPos,valColor)=>{doc.setFont('helvetica','normal');doc.setFontSize(10);doc.setTextColor(150,150,180);doc.text(lbl,margin+3,yPos);doc.setTextColor(valColor||[238,238,255]);doc.setFont('helvetica','bold');doc.text(String(val),margin+60,yPos);return yPos+8;};
+  y=sectionTitle('Informations du client',y);
+  y=row('Nom du client',c.username,y);
+  y=row('ID Discord',c.user_discord_id,y,[120,130,200]);
+  y+=4;
+  y=sectionTitle('Détails du contrat',y);
+  y=row('Module / Service',c.module,y);
+  y=row('Montant',parseFloat(c.amount||0).toFixed(2)+' EUR',y,[34,197,94]);
+  const statusLbl={active:'Actif',pending:'En attente',completed:'Terminé'};
+  y=row('Statut',statusLbl[c.status]||c.status,y);
+  y+=4;
+  y=sectionTitle('Établi par',y);
+  y=row('Admin',c.admin_name,y);
+  y=row('ID Admin',c.admin_id,y,[120,130,200]);
+  if(c.notes){y+=4;y=sectionTitle('Notes',y);doc.setTextColor(170,170,200);doc.setFont('helvetica','normal');doc.setFontSize(10);const lines=doc.splitTextToSize(c.notes,W-2*margin-6);doc.text(lines,margin+3,y);y+=lines.length*6;}
+  // Footer
+  doc.setFillColor(14,14,30);doc.rect(0,260,W,37,'F');
+  doc.setFillColor(79,110,247);doc.rect(0,260,W,1,'F');
+  doc.setTextColor(90,90,120);doc.setFontSize(8);doc.setFont('helvetica','normal');
+  doc.text('Ce document a été généré automatiquement par Dev Center.',margin,272);
+  doc.text('© '+new Date().getFullYear()+' Dev Center — Tous droits réservés.',margin,279);
+  doc.setTextColor(79,110,247);doc.text('discord.gg/fyBrf8UJuu',W-margin,272,{align:'right'});
+  doc.save('contrat-'+c.id.substring(0,8)+'-'+c.username.replace(/\s/g,'_')+'.pdf');
+  toast('PDF téléchargé !','s');
+}
+
+async function deleteContrat(id){
+  if(!confirm('Supprimer ce contrat définitivement ?'))return;
+  await db.from('contrats').delete().eq('id',id);
+  toast('Contrat supprimé','s');loadContrats();
+}
+
+/* ── PERMISSIONS ── */
+const PERM_DEFS=[
+  {key:'can_view_tickets',label:'Voir ses tickets',icon:'<path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/>'},
+  {key:'can_view_all_tickets',label:'Voir tous les tickets',icon:'<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>'},
+  {key:'can_view_commandes',label:'Voir ses commandes',icon:'<path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/>'},
+  {key:'can_view_all_commandes',label:'Voir toutes les commandes',icon:'<line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>'},
+  {key:'can_close_permanent',label:'Suppression définitive',icon:'<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>'},
+  {key:'can_reply_tickets',label:'Répondre aux tickets',icon:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>'},
+];
+
+async function loadPerms(){
+  const el=document.getElementById('list-perms');if(!el)return;
+  el.innerHTML='<div style="padding:30px;text-align:center;color:var(--text3);font-size:13px;">Chargement des membres staff...</div>';
+  const{data,error}=await db.from('staff_permissions').select('*').order('username');
+  if(error){el.innerHTML='<div class="empty"><h3>Erreur DB</h3><p>'+esc(error.message)+'<br><span style="font-size:11px;color:var(--text3);">Avez-vous créé la table staff_permissions ?</span></p></div>';return;}
+  if(!data||!data.length){el.innerHTML='<div class="empty"><div class="empty-box"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><h3>Aucun profil staff</h3><p>Les profils sont créés automatiquement à la 1ère connexion des membres staff.</p></div>';return;}
+  el.innerHTML=data.map(p=>{
+    const permsHtml=PERM_DEFS.map(d=>'<div class="perm-item"><div class="perm-lbl"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">'+d.icon+'</svg>'+d.label+'</div>'
+      +'<label class="toggle"><input type="checkbox" id="perm-'+p.discord_user_id+'-'+d.key+'" '+(p[d.key]?'checked':'')+' onchange="savePerm(\''+p.discord_user_id+'\',\''+d.key+'\',this.checked)"><div class="toggle-track"></div></label>'
+      +'</div>').join('');
+    return'<div class="perm-card fade-up"><div class="perm-hdr">'
+      +'<img class="perm-av" src="https://cdn.discordapp.com/embed/avatars/0.png" alt="" onerror="this.src=\'https://cdn.discordapp.com/embed/avatars/0.png\'">'
+      +'<div><div class="perm-name">'+esc(p.username||'Inconnu')+'</div><div class="perm-id">'+esc(p.discord_user_id)+'</div></div>'
+      +'<button class="btn-sm sm-red" style="margin-left:auto;" onclick="resetPerms(\''+p.discord_user_id+'\')">Réinitialiser</button>'
+      +'</div>'
+      +'<div class="perm-list">'+permsHtml+'</div>'
+      +'</div>';
+  }).join('');
+}
+
+async function savePerm(userId,key,val){
+  const up={};up[key]=val;up.updated_at=new Date().toISOString();
+  const{error}=await db.from('staff_permissions').update(up).eq('discord_user_id',userId);
+  if(error)toast('Erreur: '+error.message,'e');
+  else toast('Permission mise à jour','s');
+}
+
+async function resetPerms(userId){
+  if(!confirm('Réinitialiser toutes les permissions de ce membre ?'))return;
+  const defaults={can_view_tickets:true,can_view_all_tickets:true,can_view_commandes:true,can_view_all_commandes:true,can_close_permanent:false,can_reply_tickets:true,updated_at:new Date().toISOString()};
+  await db.from('staff_permissions').update(defaults).eq('discord_user_id',userId);
+  toast('Permissions réinitialisées','s');loadPerms();
+}
 
 init();
 </script>
